@@ -1,0 +1,167 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace SMAC.Database
+{
+    public class ThreadEntity
+    {
+        private static SmacEntities context;
+
+        private static void CreateThread(string userId, string title, string secName, string className, 
+            string subjName, int schoolId, string content, int? repliedTo)
+        {
+            try
+            {
+                context = new SmacEntities();
+
+                var thread = new Thread()
+                {
+                    Section = SectionEntity.GetSection(schoolId, subjName, className, secName),
+                    RepliedTo = repliedTo,
+                    DateTimePosted = DateTime.Now,
+                    Content = content,
+                    ThreadTitle = title,
+                    User = UserEntity.GetUser(userId)
+                };
+
+                context.Threads.Add(thread);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static void UpdateThread(int threadId, string content)
+        {
+            try
+            {
+                context = new SmacEntities();
+
+                var thread = GetThread(threadId);
+                thread.Content = content;
+
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static Thread GetThread(int threadId)
+        {
+            try
+            {
+                context = new SmacEntities();
+
+                return (from a in context.Threads where a.ThreadId == threadId select a).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static List<Thread> GetAllPostsByUser(string userId)
+        {
+            try
+            {
+                context = new SmacEntities();
+
+                return (from a in context.Threads where a.UserId == userId select a).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static List<Thread> GetAllOriginalPostsByUser(string userId)
+        {
+            try
+            {
+                context = new SmacEntities();
+
+                return (from a in context.Threads where a.UserId == userId && a.RepliedTo == null select a).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static List<Thread> GetAllPostsOfThread(int threadId)
+        {
+            try
+            {
+                context = new SmacEntities();
+
+                return (from a in context.Threads where a.ThreadId == threadId || a.RepliedTo == threadId select a)
+                    .OrderBy(t=>t.DateTimePosted).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static List<Thread> GetSectionPosts(string secName, string className, string subjName, int schoolId)
+        {
+            try
+            {
+                context = new SmacEntities();
+
+                return (from a in context.Threads
+                        where a.ClassName == className && a.SubjectName == subjName
+                        && a.SectionName == secName && a.SchoolId == schoolId
+                        && a.RepliedTo == null
+                        select a).OrderByDescending(t => t.DateTimePosted).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static List<Thread> GetNewPosts(string secName, string className, string subjName, int schoolId, DateTime lastLoggedOut)
+        {
+            try
+            {
+                context = new SmacEntities();
+
+                return (from a in context.Threads
+                            where a.ClassName == className && a.SubjectName == subjName
+                            && a.SectionName == secName && a.SchoolId == schoolId
+                            && a.DateTimePosted > lastLoggedOut select a).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static void DeleteThread(int threadId)
+        {
+            try
+            {
+                context = new SmacEntities();
+
+                var thread = GetThread(threadId);
+
+                if (thread != null)
+                {
+                    context.Threads.Remove(thread);
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+    }
+}

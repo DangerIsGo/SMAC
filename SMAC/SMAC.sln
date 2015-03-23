@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMAC", "SMAC\SMAC.csproj", "{FDFA7D53-B276-4AFA-864B-9C496B76530D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMAC.Database", "SMAC.Database\SMAC.Database.csproj", "{74E1C71C-C2E5-4592-8614-E6BDCE33BF0E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FDFA7D53-B276-4AFA-864B-9C496B76530D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDFA7D53-B276-4AFA-864B-9C496B76530D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDFA7D53-B276-4AFA-864B-9C496B76530D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDFA7D53-B276-4AFA-864B-9C496B76530D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74E1C71C-C2E5-4592-8614-E6BDCE33BF0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74E1C71C-C2E5-4592-8614-E6BDCE33BF0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74E1C71C-C2E5-4592-8614-E6BDCE33BF0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74E1C71C-C2E5-4592-8614-E6BDCE33BF0E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

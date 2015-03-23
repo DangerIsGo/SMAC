@@ -1,0 +1,449 @@
+﻿
+.border-radius-mixin(@val) {
+    -webkit-border-radius: @val;
+    -moz-border-radius: @val;
+    border-radius: @val;
+}
+
+.user-select-mixin(@val) {
+  -moz-user-select: @val;
+  -webkit-user-select: @val;
+  -ms-user-select: @val;
+}
+
+#Submit {
+    .border-radius-mixin(5px);
+    border: 1px solid lightslategrey;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background-color: lightgray;
+
+    .mainContent {
+        width: 1000px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        padding-top: 20px;
+
+        .contentContainer {
+
+            border: 1px solid grey;
+            .border-radius-mixin(2px);
+            background-color: white;
+
+            .banner {
+                width: 100%;
+                height: 40px;
+                font-size: 22px;
+                text-align: center;
+                border-bottom:1px solid grey;
+                padding-top: 5px;
+                background-color: white;
+                .user-select-mixin(none);
+                cursor: default;
+
+                &.master {
+                    background-color: white;
+                }
+            }
+
+            .loginPanel {
+                text-align: center;
+                font-size: 18px;
+                margin-top: 10px;
+                padding-bottom: 18px;
+
+                .loginInput {
+                    margin-top: 15px;
+
+                    span {
+                        margin-right: 15px;
+                    }
+
+                    input[type="text"], input[type="password"] {
+                        width: 250px;
+                    }
+
+                    input[type="button"] {
+                        width: 145px;
+                    }
+                }
+            }
+
+            .mainHeader {
+                width: 100%;
+                padding: 5px 0;
+                border-bottom:1px solid grey;
+                background-color: white;
+
+                .headerRow {
+                    line-height: 40px;
+                    padding-left: 14px;
+
+                    &:nth-child(1) {
+
+                        .headerOption:nth-child(1) {
+                            border: 0;
+                            cursor: default;
+                            background-color: transparent;
+                            &:hover {
+                                background-color: transparent;
+                            }
+                        }
+                        margin-bottom: 10px;
+                    }
+
+                    .headerOption {
+                        display: inline-block;
+                        width: 240px;
+                        text-align: center;
+                        font-size: 18px;
+                        background-color: skyblue;
+                        border: 1px solid black;
+                        .border-radius-mixin(5px);
+                        cursor: pointer;
+                        .user-select-mixin(none);
+
+                        &.active {
+                            background-color: silver;
+                            cursor: default;
+
+                            &:hover {
+                                background-color: silver;
+                                cursor: default;
+                            }
+                        }
+
+                        &.small {
+                            width: 180px;
+                        }
+
+                        &.welcome {
+                            width: 420px;
+                            text-align: left;
+                            padding-left: 8px;
+                        }
+
+                        #greeting {
+                            font-size: 16px;
+                            font-weight: bold;
+                        }
+
+                        .fa {
+                            &.right {
+                                margin-right: 10px;
+                            }
+                            &.left {
+                                margin-left: 10px;
+                            }
+                        }
+
+                        &.blank {
+                            background-color: transparent;
+                            border: 0;
+                            cursor: default;
+
+                            &:hover {
+                                background-color: transparent;
+                            }
+                        }
+
+                        &:hover {
+                            background-color: skyblue + #222222;
+                        }
+                    }
+                }
+            }
+
+            .mainBody {
+                text-align: center;
+                height: 600px;
+                position: relative;
+
+                .gradeBody {
+                    text-align: left;
+                    padding-left: 50px;
+                    font-size: 16px;
+
+                    .gradeHeader {
+                        margin-top: 25px;
+                    }
+
+                    .gradeSelect {
+                        margin-top: 5px;
+
+                        select {
+                            .border-radius-mixin(5px);
+                        }
+                    }
+
+                    #gradeTable {
+                        border: 0;
+                        margin-top: 30px;
+                        font-size: 16px;
+                        font-style: italic;
+
+                        &.enroll {
+                            border: 1px solid lightgrey;
+                            font-style: normal;
+                        }
+
+                        .gradeTableHeader {
+                            border-bottom: 1px solid #F0F0F0;
+                            background-color: lightyellow;
+                            height: 30px;
+
+                            th {
+                                border-right: 1px solid #F0F0F0;
+                                padding-left: 3px;
+
+                                &:nth-child(1) {
+                                    width: 275px;
+                                }
+
+                                &:nth-child(2) {
+                                    width: 175px;
+                                }
+
+                                &:nth-child(3) {
+                                    width: 75px;
+                                }
+                            }
+                        }
+
+                        .gradeTableRow {
+                            height: 30px;
+
+                            &:nth-child(odd) {
+                                background-color: #F0F0F0;
+                            }
+
+                            td {
+                                padding-left: 3px;
+
+                                &:nth-child(2) {
+                                }
+
+                                &:nth-child(3) {
+                                    text-align: center;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .blockRow {
+                    margin-top: 11px;
+
+                    .block {
+                        width: 400px;
+                        height: 250px;
+                        background-color: white;
+                        border: 1px solid #d3d3d3;
+                        display: inline-block;
+                        text-align: center;
+                        .border-radius-mixin(5px);
+                        position: absolute;
+
+                        .blockHeader {
+                            background-color: lightyellow;
+                            font-size: 20px;
+                        }
+
+                        .blockCols {
+                            text-align: left;
+
+                            .blockColLbls {
+                                text-align: right;
+                                height: 100%;
+                                width: 130px;
+                                display: inline-block;
+                            }
+
+                            .blockColVals {
+                                display: inline-block;
+                                margin-left: 10px;
+                            }
+                        }
+
+                        .blockRow {
+                            &.multSch {
+                                text-align: left;
+                                padding-left: 8px;
+
+                                span {
+                                    float: left;
+
+                                    &:nth-child(2) {
+                                        width: 344px;
+                                        text-align: center;
+                                    }
+
+                                    &.arrow {
+                                        width: 20px;
+                                    }
+
+                                    &.rightArrow {
+                                        text-align: right;
+                                    }
+
+                                    i {
+                                        color: lightgray;
+                                        cursor: default;
+                                        .user-select-mixin(none);
+
+                                        &.active {
+                                            color: black;
+                                            cursor: pointer;
+                                        }
+                                    }
+                                }                                
+                            }
+                        }
+
+                        .listCont {
+                            overflow-y: auto;
+                            height: 220px;
+
+                            ul {
+                                li {
+                                    text-align: left;
+                                    margin-top: 10px;
+
+                                    div {
+                                        &:nth-child(2) {
+                                            margin-top: 3px;
+                                            font-size: 10px;
+                                            font-style: italic;
+                                        }
+                                    }
+                                }
+                            }  
+                        }                                              
+
+                        &#schoolBlock {
+                            top: 0;
+                            left: 60px;
+                        }
+
+                        &#newsBlock {
+                            top: 0;
+                            left: 540px;
+                        }
+
+                        &#resourceBlock {
+                            top: 300px;
+                            left: 60px;
+                        }
+
+                        &#khanBlock {
+                            top: 300px;
+                            left: 540px;
+                        }
+
+                        &.loading {
+                            background-color: #d3d3d3;
+                        }
+
+                        .loading-image {
+                            margin-top: 117px;
+                        }
+
+                        &:nth-child(1) {
+                            margin-right: 30px;
+                        }
+                    }
+                }
+                
+            }
+        }
+    }
+}
+
+.saveBtn {
+    background-color:  forestgreen;
+    color: white;
+
+    &:hover {
+    background-color:  forestgreen + #222222;
+    color: white;
+    }
+}
+
+.cancelBtn {
+    background-color:  skyblue;
+    color: black;
+
+    &:hover {
+        background-color:  skyblue + #222222;
+        color: black;
+    }
+}
+
+.ctrlPanel {
+    position: relative;
+
+    .invalidField {
+        background-color: lightcoral;
+    }
+
+    .triCol {
+        width: 184px;
+        display: inline-block;
+        float: left;
+         
+        &:not(:nth-child(3)) {
+            margin-right: 8px;
+        }
+    }    
+
+    input[type="text"], input[type="password"], select {
+        .border-radius-mixin(5px);
+        border: 1px solid #d3d3d3;
+        padding-left: 2px;
+        width: 90%;
+        height: 24px;
+    }
+
+    label {
+        margin-left: 10px;
+        font-weight: normal;
+    }
+
+    .oneCol {
+        width: 100%;
+    }
+
+    .ctrlEmailHead {
+        display: block;
+        height: 20px;
+    }
+
+    .ctrlLblRow {
+        display: block;
+        height: 20px;
+    }
+
+    .ctrlChkRow {
+        margin-top: 10px;
+        display: block;
+        height: 27px;
+    }
+
+    .ctrlEmailRow {
+        width: 100%;
+        height: 40px;
+        input {
+            width: 97%;
+        }
+    }
+
+    .ctrlValRow {
+        display: block;
+        height: 40px;
+    }
+}

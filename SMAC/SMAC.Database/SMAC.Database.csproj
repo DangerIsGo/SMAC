@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{74E1C71C-C2E5-4592-8614-E6BDCE33BF0E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SMAC.Database</RootNamespace>
+    <AssemblyName>SMAC.Database</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Admin.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Class.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Club.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ClubEnrollment.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ClubSchedule.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Day.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Enrollment.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\AdminEntity.cs" />
+    <Compile Include="Entities\ClassEntity.cs" />
+    <Compile Include="Entities\ClubEnrollmentEntity.cs" />
+    <Compile Include="Entities\ClubEntity.cs" />
+    <Compile Include="Entities\ClubScheduleEntity.cs" />
+    <Compile Include="Entities\EnrollmentEntity.cs" />
+    <Compile Include="Entities\GenderEntity.cs" />
+    <Compile Include="Entities\GradeEntity.cs" />
+    <Compile Include="Entities\KhanShareEntity.cs" />
+    <Compile Include="Entities\LatestNewsEntity.cs" />
+    <Compile Include="Entities\MarkingPeriodEntity.cs" />
+    <Compile Include="Entities\PrivateMessageEntity.cs" />
+    <Compile Include="Entities\SchoolEntity.cs" />
+    <Compile Include="Entities\SchoolYearEntity.cs" />
+    <Compile Include="Entities\SectionEntity.cs" />
+    <Compile Include="Entities\SectionScheduleEntity.cs" />
+    <Compile Include="Entities\StaffEntity.cs" />
+    <Compile Include="Entities\StudentEntity.cs" />
+    <Compile Include="Entities\SubjectEntity.cs" />
+    <Compile Include="Entities\TeacherEntity.cs" />
+    <Compile Include="Entities\TeacherScheduleEntity.cs" />
+    <Compile Include="Entities\ThreadEntity.cs" />
+    <Compile Include="Entities\TimeSlotEntity.cs" />
+    <Compile Include="Entities\UserCredentialEntity.cs" />
+    <Compile Include="Entities\UserEntity.cs" />
+    <Compile Include="Gender.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Grade.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="KhanShare.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LatestNews.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MarkingPeriod.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PrivateMessage.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="School.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SchoolYear.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Section.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SectionSchedule.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SmacModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SmacModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SmacModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SmacModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SmacModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Staff.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Student.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Subject.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Teacher.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TeacherSchedule.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Thread.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TimeSlot.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="User.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserCredential.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="SmacModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>SmacModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="SmacModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SmacModel.edmx</DependentUpon>
+      <LastGenOutput>SmacModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="SmacModel.edmx.diagram">
+      <DependentUpon>SmacModel.edmx</DependentUpon>
+    </None>
+    <None Include="SmacModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SmacModel.edmx</DependentUpon>
+      <LastGenOutput>SmacModel.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
