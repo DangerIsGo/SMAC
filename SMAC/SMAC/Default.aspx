@@ -11,7 +11,7 @@
         <link href="//code.jquery.com/ui/1.11.4/jquery-ui.min.js" rel="stylesheet" />
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-        <link href="/Content/Site.less?v=1.02" rel="stylesheet" /> 
+        <link href="/Content/Site.less" rel="stylesheet" /> 
 
         <script>
             $(document).ready(function () {
