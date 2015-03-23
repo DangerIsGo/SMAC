@@ -95,7 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\Site.less" />
+    <Content Include="Content\Site.less" />
     <Content Include="Classes.aspx" />
     <Content Include="Clubs.aspx" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
