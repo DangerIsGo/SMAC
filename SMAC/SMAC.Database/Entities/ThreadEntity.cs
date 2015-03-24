@@ -7,27 +7,26 @@ namespace SMAC.Database
 {
     public class ThreadEntity
     {
-        private static SmacEntities context;
-
         private static void CreateThread(string userId, string title, string secName, string className, 
             string subjName, int schoolId, string content, int? repliedTo)
         {
             try
             {
-                context = new SmacEntities();
-
-                var thread = new Thread()
+                using (SmacEntities context = new SmacEntities())
                 {
-                    Section = SectionEntity.GetSection(schoolId, subjName, className, secName),
-                    RepliedTo = repliedTo,
-                    DateTimePosted = DateTime.Now,
-                    Content = content,
-                    ThreadTitle = title,
-                    User = UserEntity.GetUser(userId)
-                };
+                    var thread = new Thread()
+                    {
+                        Section = SectionEntity.GetSection(schoolId, subjName, className, secName),
+                        RepliedTo = repliedTo,
+                        DateTimePosted = DateTime.Now,
+                        Content = content,
+                        ThreadTitle = title,
+                        User = UserEntity.GetUser(userId)
+                    };
 
-                context.Threads.Add(thread);
-                context.SaveChanges();
+                    context.Threads.Add(thread);
+                    context.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
@@ -39,12 +38,13 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                var thread = GetThread(threadId);
-                thread.Content = content;
-
-                context.SaveChanges();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    var thread = GetThread(threadId);
+                    thread.Content = content;
+                    context.Entry(thread).State = System.Data.Entity.EntityState.Modified;
+                    context.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
@@ -56,9 +56,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                return (from a in context.Threads where a.ThreadId == threadId select a).FirstOrDefault();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Threads where a.ThreadId == threadId select a).FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -70,9 +71,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                return (from a in context.Threads where a.UserId == userId select a).ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Threads where a.UserId == userId select a).ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -84,9 +86,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                return (from a in context.Threads where a.UserId == userId && a.RepliedTo == null select a).ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Threads where a.UserId == userId && a.RepliedTo == null select a).ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -98,10 +101,11 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                return (from a in context.Threads where a.ThreadId == threadId || a.RepliedTo == threadId select a)
-                    .OrderBy(t=>t.DateTimePosted).ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Threads where a.ThreadId == threadId || a.RepliedTo == threadId select a)
+                        .OrderBy(t => t.DateTimePosted).ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -113,13 +117,14 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                return (from a in context.Threads
-                        where a.ClassName == className && a.SubjectName == subjName
-                        && a.SectionName == secName && a.SchoolId == schoolId
-                        && a.RepliedTo == null
-                        select a).OrderByDescending(t => t.DateTimePosted).ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Threads
+                            where a.ClassName == className && a.SubjectName == subjName
+                            && a.SectionName == secName && a.SchoolId == schoolId
+                            && a.RepliedTo == null
+                            select a).OrderByDescending(t => t.DateTimePosted).ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -131,12 +136,14 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                return (from a in context.Threads
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Threads
                             where a.ClassName == className && a.SubjectName == subjName
                             && a.SectionName == secName && a.SchoolId == schoolId
-                            && a.DateTimePosted > lastLoggedOut select a).ToList();
+                            && a.DateTimePosted > lastLoggedOut
+                            select a).ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -148,14 +155,15 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                var thread = GetThread(threadId);
-
-                if (thread != null)
+                using (SmacEntities context = new SmacEntities())
                 {
-                    context.Threads.Remove(thread);
-                    context.SaveChanges();
+                    var thread = GetThread(threadId);
+
+                    if (thread != null)
+                    {
+                        context.Threads.Remove(thread);
+                        context.SaveChanges();
+                    }
                 }
             }
             catch (Exception ex)

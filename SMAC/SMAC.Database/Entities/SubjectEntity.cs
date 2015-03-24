@@ -6,8 +6,6 @@ namespace SMAC.Database
 {
     public class SubjectEntity
     {
-        private static SmacEntities context;
-
         public static void CreateSubject(int schoolId, string subjName)
         {
             CreateEditSubject("ADD", schoolId, subjName, null);
@@ -22,8 +20,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return (from a in context.Subjects where a.SubjectName == subjName && a.SchoolId == schoolId select a).FirstOrDefault();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Subjects where a.SubjectName == subjName && a.SchoolId == schoolId select a).FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -35,8 +35,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return SchoolEntity.GetSchool(schoolId).Subjects.ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return SchoolEntity.GetSchool(schoolId).Subjects.ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -48,11 +50,12 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                var subject = GetSubject(schoolId, subjName);
-                context.Subjects.Remove(subject);
-                context.SaveChanges();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    var subject = GetSubject(schoolId, subjName);
+                    context.Subjects.Remove(subject);
+                    context.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
@@ -64,43 +67,44 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                if (op.Equals("ADD"))
+                using (SmacEntities context = new SmacEntities())
                 {
-                    if (GetSubject(schoolId, subjName) != null)
+                    if (op.Equals("ADD"))
                     {
-                        throw new Exception("Subject was not created.  Subject name already exists for this school.");
-                    }
-                    else
-                    {
-                        Subject subject = new Subject()
+                        if (GetSubject(schoolId, subjName) != null)
                         {
-                            School = (from a in context.Schools where a.SchoolId == schoolId select a).FirstOrDefault(),
-                            SubjectName = subjName
-                        };
+                            throw new Exception("Subject was not created.  Subject name already exists for this school.");
+                        }
+                        else
+                        {
+                            Subject subject = new Subject()
+                            {
+                                School = (from a in context.Schools where a.SchoolId == schoolId select a).FirstOrDefault(),
+                                SubjectName = subjName
+                            };
 
-                        context.Subjects.Add(subject);
-                        context.SaveChanges();
+                            context.Subjects.Add(subject);
+                            context.SaveChanges();
+                        }
                     }
-                }
-                else if (op.Equals("EDIT"))
-                {
-                    if (GetSubject(schoolId, subjName) == null)
+                    else if (op.Equals("EDIT"))
                     {
-                        throw new Exception("Subject was not updated.  Subject name not found.");
-                    }
-                    else if (GetSubject(schoolId, newSubjName) != null)
-                    {
-                        throw new Exception("Subject was not updated.  New subject name already exists in database.");
-                    }
-                    else
-                    {
-                        var subject = GetSubject(schoolId, subjName);
+                        if (GetSubject(schoolId, subjName) == null)
+                        {
+                            throw new Exception("Subject was not updated.  Subject name not found.");
+                        }
+                        else if (GetSubject(schoolId, newSubjName) != null)
+                        {
+                            throw new Exception("Subject was not updated.  New subject name already exists in database.");
+                        }
+                        else
+                        {
+                            var subject = GetSubject(schoolId, subjName);
 
-                        subject.SubjectName = newSubjName;
-
-                        context.SaveChanges();
+                            subject.SubjectName = newSubjName;
+                            context.Entry(subject).State = System.Data.Entity.EntityState.Modified;
+                            context.SaveChanges();
+                        }
                     }
                 }
             }

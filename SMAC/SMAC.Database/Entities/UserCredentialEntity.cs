@@ -8,23 +8,25 @@ namespace SMAC.Database
 {
     public class UserCredentialEntity
     {
-        private static SmacEntities context;
-
         public static void CreateUserCred(string id, string username, string password)
         {
             try
             {
-                context = new SmacEntities();
+                using (SmacEntities context = new SmacEntities())
+                { 
+                    if (DoesUsernameExist(username, id))
+                        throw new Exception("Username already exists.  Please select another.");
 
-                UserCredential cred = new UserCredential()
-                {
-                    Password = password,
-                    UserName = GetSHA256Hash(password),
-                    User = UserEntity.GetUser(id)
-                };
+                    UserCredential cred = new UserCredential()
+                    {
+                        Password = password,
+                        UserName = GetSHA256Hash(password),
+                        User = UserEntity.GetUser(id)
+                    };
 
-                context.UserCredentials.Add(cred);
-                context.SaveChanges();
+                    context.UserCredentials.Add(cred);
+                    context.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
@@ -36,9 +38,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                return (from a in context.UserCredentials where a.UserId == id select a).FirstOrDefault();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.UserCredentials where a.UserId == id select a).FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -62,19 +65,25 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    var cred = GetUserCred(id);
 
-                var cred = GetUserCred(id);
+                    if (cred == null)
+                        throw new Exception("User Credentials could not be found.");
 
-                if (cred == null)
-                    throw new Exception("User Credentials could not be found.");
+                    if (DoesUsernameExist(username, id))
+                        throw new Exception("Username already exists.  Please select another.");
 
-                cred.UserName = username;
+                    cred.UserName = username;
 
-                if (password != null)
-                    cred.Password = GetSHA256Hash(password);
+                    if (password != null)
+                        cred.Password = GetSHA256Hash(password);
 
-                context.SaveChanges();
+                    context.Entry(cred).State = System.Data.Entity.EntityState.Modified;
+
+                    context.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
@@ -86,15 +95,16 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    var cred = GetUserCred(id);
 
-                var cred = GetUserCred(id);
+                    if (cred == null)
+                        throw new Exception("User Credentials could not be found.");
 
-                if (cred == null)
-                    throw new Exception("User Credentials could not be found.");
-
-                context.UserCredentials.Remove(cred);
-                context.SaveChanges();
+                    context.UserCredentials.Remove(cred);
+                    context.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
@@ -102,13 +112,14 @@ namespace SMAC.Database
             }
         }
 
-        public static bool DoesUsernameExist(string username)
+        public static bool DoesUsernameExist(string username, string userId)
         {
             try
             {
-                context = new SmacEntities();
-
-                return (from a in context.UserCredentials where a.UserName == username select a).Count() > 0;
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.UserCredentials where a.UserName == username && a.UserId != userId select a).Count() > 0;
+                }
             }
 
             catch (Exception ex)
@@ -121,22 +132,32 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    User user = null;
 
-                username = username.ToLower();
+                    username = username.ToLower();
 
-                // Match username
-                var cred = (from a in context.UserCredentials where a.UserName == username select a).FirstOrDefault();
+                    // Match username
+                    var cred = (from a in context.UserCredentials where a.UserName == username select a).FirstOrDefault();
 
-                if (cred == null)
-                    throw new Exception("Username or password could not be found.");
+                    if (cred == null)
+                        throw new Exception("Username or password could not be found.");
 
-                // Match password
-                string pass = GetSHA256Hash(password);
-                if (cred.Password == pass)
-                    return cred.User;
-                else
-                    throw new Exception("Username or password could not be found.");
+                    // Match password
+                    string pass = GetSHA256Hash(password);
+                    if (cred.Password == pass)
+                        user = cred.User;
+                    else
+                        throw new Exception("Username or password could not be found.");
+
+                    if (cred.User.Student == null && cred.User.Teacher == null && cred.User.Admin == null && cred.User.Staff == null)
+                    {
+                        throw new Exception("User has not been placed into a role.  Please contact your lazy administrator.");
+                    }
+                    else
+                        return user;
+                }
             }
             catch (Exception ex)
             {

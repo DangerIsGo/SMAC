@@ -5,30 +5,29 @@ namespace SMAC.Database
 {
     public class KhanShareEntity
     {
-        private static SmacEntities context;
-
         public static KhanShare CreateKhanShare(string title, string url, string apiId)
         {
             try
             {
-                context = new SmacEntities();
-
-                var ks = GetKhanShare(title, url, apiId);
-
-                if (ks != null)
+                using (SmacEntities context = new SmacEntities())
                 {
-                    KhanShare newKs = new KhanShare()
+                    var ks = GetKhanShare(title, url, apiId);
+
+                    if (ks != null)
                     {
-                        ApiId = apiId,
-                        Url = url,
-                        Title = title
-                    };
+                        KhanShare newKs = new KhanShare()
+                        {
+                            ApiId = apiId,
+                            Url = url,
+                            Title = title
+                        };
 
-                    context.KhanShares.Add(newKs);
-                    context.SaveChanges();                    
+                        context.KhanShares.Add(newKs);
+                        context.SaveChanges();
+                    }
+
+                    return GetKhanShare(title, url, apiId);
                 }
-
-                return GetKhanShare(title, url, apiId);
             }
             catch (Exception ex)
             {
@@ -40,9 +39,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                return (from a in context.KhanShares where a.ApiId == apiId && a.Url == url && a.Title == title select a).FirstOrDefault();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.KhanShares where a.ApiId == apiId && a.Url == url && a.Title == title select a).FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -54,9 +54,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                return (from a in context.KhanShares where a.KhanShareId == id select a).FirstOrDefault();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.KhanShares where a.KhanShareId == id select a).FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -68,14 +69,15 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                var ks = GetKhanShare(id);
-
-                if (ks != null)
+                using (SmacEntities context = new SmacEntities())
                 {
-                    context.KhanShares.Remove(ks);
-                    context.SaveChanges();
+                    var ks = GetKhanShare(id);
+
+                    if (ks != null)
+                    {
+                        context.KhanShares.Remove(ks);
+                        context.SaveChanges();
+                    }
                 }
             }
             catch (Exception ex)

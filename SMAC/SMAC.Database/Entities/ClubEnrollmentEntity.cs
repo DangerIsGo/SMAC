@@ -6,23 +6,22 @@ namespace SMAC.Database
 {
     public class ClubEnrollmentEntity
     {
-        private static SmacEntities context;
-
         public static void CreateEnrollment(string sId, string clubName, int schoolId, bool isLeader)
         {
             try
             {
-                context = new SmacEntities();
-
-                ClubEnrollment enroll = new ClubEnrollment()
+                using (SmacEntities context = new SmacEntities())
                 {
-                    User = UserEntity.GetUser(sId),
-                    Club = GetClub(clubName, schoolId),
-                    IsLeader = isLeader
-                };
+                    ClubEnrollment enroll = new ClubEnrollment()
+                    {
+                        User = UserEntity.GetUser(sId),
+                        Club = GetClub(clubName, schoolId),
+                        IsLeader = isLeader
+                    };
 
-                context.ClubEnrollments.Add(enroll);
-                context.SaveChanges();
+                    context.ClubEnrollments.Add(enroll);
+                    context.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
@@ -34,14 +33,15 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                var enroll = GetEnrollment(clubName, schoolId, sId);
-                if (enroll != null)
+                using (SmacEntities context = new SmacEntities())
                 {
-                    context.ClubEnrollments.Remove(enroll);
-                    context.SaveChanges();
+                    var enroll = GetEnrollment(clubName, schoolId, sId);
+                    if (enroll != null)
+                    {
+                        context.ClubEnrollments.Remove(enroll);
+                        context.SaveChanges();
+                    }
                 }
-
             }
             catch (Exception ex)
             {
@@ -53,8 +53,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return (from a in context.ClubEnrollments where a.SchoolId == schoolId && a.ClubName == clubName && a.UserId == sId select a).FirstOrDefault();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.ClubEnrollments where a.SchoolId == schoolId && a.ClubName == clubName && a.UserId == sId select a).FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -66,9 +68,11 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                List<Student> students = new List<Student>();
-                return GetClub(clubName, schoolId).ClubEnrollments.Select(t => t.User.Student).ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    List<Student> students = new List<Student>();
+                    return GetClub(clubName, schoolId).ClubEnrollments.Select(t => t.User.Student).ToList();
+                }
 
             }
             catch (Exception ex)
@@ -81,8 +85,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return (from a in context.Clubs where a.ClubName == clubName && a.SchoolId == schoolId select a).FirstOrDefault();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Clubs where a.ClubName == clubName && a.SchoolId == schoolId select a).FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -94,8 +100,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return SchoolEntity.GetSchool(schoolId).Clubs.ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return SchoolEntity.GetSchool(schoolId).Clubs.ToList();
+                }
             }
             catch (Exception ex)
             {

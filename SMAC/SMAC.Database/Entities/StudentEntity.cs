@@ -5,42 +5,41 @@ namespace SMAC.Database
 {
     public class StudentEntity
     {
-        private static SmacEntities context;
-
         public static void CreateUserAsStudent(string Id, string fName, string mName, string lName, string email, string phone,
                                         string gender, bool isActive, DateTime startDate, DateTime? endDate)
         {
             try
             {
-                context = new SmacEntities();
-
-                if (UserEntity.GetUser(Id) != null)
+                using (SmacEntities context = new SmacEntities())
                 {
-                    throw new Exception("Student not created.  User already exists.");
-                }
-                else
-                {
-                    Student Student = new Student
+                    if (UserEntity.GetUser(Id) != null)
                     {
-                        User = new User()
+                        throw new Exception("Student not created.  User already exists.");
+                    }
+                    else
+                    {
+                        Student Student = new Student
                         {
-                            UserId = Id,
-                            FirstName = fName,
-                            MiddleName = mName,
-                            LastName = lName,
-                            EmailAddress = email,
-                            PhoneNumber = phone,
-                            GenderType = gender,
-                            StartDate = startDate,
-                            EndDate = endDate,
-                            IsActive = isActive
-                        },
-                        UserId = Id
-                    };
+                            User = new User()
+                            {
+                                UserId = Id,
+                                FirstName = fName,
+                                MiddleName = mName,
+                                LastName = lName,
+                                EmailAddress = email,
+                                PhoneNumber = phone,
+                                GenderType = gender,
+                                StartDate = startDate,
+                                EndDate = endDate,
+                                IsActive = isActive
+                            },
+                            UserId = Id
+                        };
 
-                    context.Students.Add(Student);
+                        context.Students.Add(Student);
 
-                    context.SaveChanges();
+                        context.SaveChanges();
+                    }
                 }
             }
             catch (Exception ex)
@@ -53,8 +52,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return (from a in context.Students where a.UserId == Id select a).FirstOrDefault();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Students where a.UserId == Id select a).FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -66,26 +67,27 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                if (UserEntity.GetUser(uId) == null)
+                using (SmacEntities context = new SmacEntities())
                 {
-                    throw new Exception("User not set as Student.  User ID doesn't exist.");
-                }
-                else
-                {
-                    if (IsStudent(uId))
+                    if (UserEntity.GetUser(uId) == null)
                     {
-                        throw new Exception("User not set as Student.  User already set as Student.");
+                        throw new Exception("User not set as Student.  User ID doesn't exist.");
                     }
                     else
                     {
-                        Student Student = new Student();
-                        Student.UserId = uId;
-                        Student.User = UserEntity.GetUser(uId);
+                        if (IsStudent(uId))
+                        {
+                            throw new Exception("User not set as Student.  User already set as Student.");
+                        }
+                        else
+                        {
+                            Student Student = new Student();
+                            Student.UserId = uId;
+                            Student.User = UserEntity.GetUser(uId);
 
-                        context.Students.Add(Student);
-                        context.SaveChanges();
+                            context.Students.Add(Student);
+                            context.SaveChanges();
+                        }
                     }
                 }
             }
@@ -97,33 +99,35 @@ namespace SMAC.Database
 
         public static bool IsStudent(string uId)
         {
-            context = new SmacEntities();
-
-            return (from a in context.Students where a.UserId == uId select a).FirstOrDefault() != null;
+            using (SmacEntities context = new SmacEntities())
+            {
+                return (from a in context.Students where a.UserId == uId select a).FirstOrDefault() != null;
+            }
         }
 
         public static void RevokeStudent(string uId)
         {
             try
             {
-                context = new SmacEntities();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    if (UserEntity.GetUser(uId) == null)
+                    {
+                        throw new Exception("User not removed as Student.  User doesn't exist.");
+                    }
+                    else if (!IsStudent(uId))
+                    {
+                        throw new Exception("User not removed as Student.  User not an Student.");
+                    }
+                    else
+                    {
+                        Student Student = new Student();
+                        Student.UserId = uId;
+                        Student.User = UserEntity.GetUser(uId);
 
-                if (UserEntity.GetUser(uId) == null)
-                {
-                    throw new Exception("User not removed as Student.  User doesn't exist.");
-                }
-                else if (!IsStudent(uId))
-                {
-                    throw new Exception("User not removed as Student.  User not an Student.");
-                }
-                else
-                {
-                    Student Student = new Student();
-                    Student.UserId = uId;
-                    Student.User = UserEntity.GetUser(uId);
-
-                    context.Students.Add(Student);
-                    context.SaveChanges();
+                        context.Students.Add(Student);
+                        context.SaveChanges();
+                    }
                 }
             }
             catch (Exception ex)

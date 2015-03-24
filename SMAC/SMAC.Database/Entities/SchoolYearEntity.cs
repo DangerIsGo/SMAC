@@ -7,8 +7,6 @@ namespace SMAC.Database
 {
     public class SchoolYearEntity
     {
-        private static SmacEntities context;
-
         public static void CreateSchoolYear(int schoolId, string year)
         {
             CreateEditSchoolYear("ADD", schoolId, year, null);
@@ -23,8 +21,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return (from a in context.SchoolYears where a.SchoolId == schoolId && a.Year == year select a).FirstOrDefault();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.SchoolYears where a.SchoolId == schoolId && a.Year == year select a).FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -36,8 +36,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return SchoolEntity.GetSchool(schoolId).SchoolYears.ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return SchoolEntity.GetSchool(schoolId).SchoolYears.ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -49,43 +51,44 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                if (op.Equals("ADD"))
+                using (SmacEntities context = new SmacEntities())
                 {
-                    if (GetSchoolYear(schoolId, year) != null)
+                    if (op.Equals("ADD"))
                     {
-                        throw new Exception("School year was not created.  School year already exists for this school.");
-                    }
-                    else
-                    {
-                        SchoolYear schoolyear = new SchoolYear()
+                        if (GetSchoolYear(schoolId, year) != null)
                         {
-                            School = (from a in context.Schools where a.SchoolId == schoolId select a).FirstOrDefault(),
-                            Year = year
-                        };
+                            throw new Exception("School year was not created.  School year already exists for this school.");
+                        }
+                        else
+                        {
+                            SchoolYear schoolyear = new SchoolYear()
+                            {
+                                School = (from a in context.Schools where a.SchoolId == schoolId select a).FirstOrDefault(),
+                                Year = year
+                            };
 
-                        context.SchoolYears.Add(schoolyear);
-                        context.SaveChanges();
+                            context.SchoolYears.Add(schoolyear);
+                            context.SaveChanges();
+                        }
                     }
-                }
-                else if (op.Equals("EDIT"))
-                {
-                    if (GetSchoolYear(schoolId, year) == null)
+                    else if (op.Equals("EDIT"))
                     {
-                        throw new Exception("Subject was not updated.  Subject name not found.");
-                    }
-                    else if (GetSchoolYear(schoolId, newYear) != null)
-                    {
-                        throw new Exception("Subject was not updated.  New subject name already exists in database.");
-                    }
-                    else
-                    {
-                        var schYear = GetSchoolYear(schoolId, year);
+                        if (GetSchoolYear(schoolId, year) == null)
+                        {
+                            throw new Exception("Subject was not updated.  Subject name not found.");
+                        }
+                        else if (GetSchoolYear(schoolId, newYear) != null)
+                        {
+                            throw new Exception("Subject was not updated.  New subject name already exists in database.");
+                        }
+                        else
+                        {
+                            var schYear = GetSchoolYear(schoolId, year);
 
-                        schYear.Year = newYear;
-
-                        context.SaveChanges();
+                            schYear.Year = newYear;
+                            context.Entry(schYear).State = System.Data.Entity.EntityState.Modified;
+                            context.SaveChanges();
+                        }
                     }
                 }
             }

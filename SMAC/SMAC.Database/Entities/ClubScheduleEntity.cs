@@ -7,23 +7,22 @@ namespace SMAC.Database
 {
     public class ClubScheduleEntity
     {
-        private static SmacEntities context;
-
         public static void CreateSchedule(string clubName, int schoolId, int tsId, string day)
         {
             try
             {
-                context = new SmacEntities();
-
-                ClubSchedule sch = new ClubSchedule()
+                using (SmacEntities context = new SmacEntities())
                 {
-                    Club = ClubEntity.GetClub(clubName, schoolId),
-                    DayValue = day,
-                    TimeSlot = TimeSlotEntity.GetTimeSlot(tsId)
-                };
+                    ClubSchedule sch = new ClubSchedule()
+                    {
+                        Club = ClubEntity.GetClub(clubName, schoolId),
+                        DayValue = day,
+                        TimeSlot = TimeSlotEntity.GetTimeSlot(tsId)
+                    };
 
-                context.ClubSchedules.Add(sch);
-                context.SaveChanges();
+                    context.ClubSchedules.Add(sch);
+                    context.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
@@ -35,18 +34,18 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                var sch = (from a in context.ClubSchedules 
-                           where a.ClubName == clubName && a.SchoolId == schoolId && a.TimeSlotId == tsId && a.DayValue == day 
-                           select a).FirstOrDefault();
-
-                if (sch != null)
+                using (SmacEntities context = new SmacEntities())
                 {
-                    context.ClubSchedules.Remove(sch);
-                    context.SaveChanges();
-                }
+                    var sch = (from a in context.ClubSchedules
+                               where a.ClubName == clubName && a.SchoolId == schoolId && a.TimeSlotId == tsId && a.DayValue == day
+                               select a).FirstOrDefault();
 
+                    if (sch != null)
+                    {
+                        context.ClubSchedules.Remove(sch);
+                        context.SaveChanges();
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -58,9 +57,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                return (from a in context.ClubSchedules where a.ClubName == clubName && a.SchoolId == schoolId select a).ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.ClubSchedules where a.ClubName == clubName && a.SchoolId == schoolId select a).ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -72,10 +72,12 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                return (from a in context.ClubSchedules 
-                        where a.SchoolId == schoolId && a.DayValue == day select a).ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.ClubSchedules
+                            where a.SchoolId == schoolId && a.DayValue == day
+                            select a).ToList();
+                }
             }
             catch (Exception ex)
             {

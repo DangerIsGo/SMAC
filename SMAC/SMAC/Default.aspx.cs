@@ -32,7 +32,7 @@ namespace SMAC
                 Session["Email"] = usr.EmailAddress;
                 Session["MiddleName"] = usr.MiddleName;
                 Session["UserName"] = usr.UserCredential.UserName;
-                Session["Gender"] = usr.Gender.GenderType;
+                Session["Gender"] = usr.GenderType;
                 Session["Genders"] = sb.ToString();
 
                 Response.Redirect("/Home.aspx");

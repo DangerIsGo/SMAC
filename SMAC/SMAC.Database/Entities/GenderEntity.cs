@@ -5,47 +5,49 @@ namespace SMAC.Database
 {
     public class GenderEntity
     {
-        private static SmacEntities context;
-
         public static void CreateGender(string gType)
         {
-            context = new SmacEntities();
-
-            Gender gender = new Gender()
+            using (SmacEntities context = new SmacEntities())
             {
-                GenderType = gType
-            };
+                Gender gender = new Gender()
+                {
+                    GenderType = gType
+                };
 
-            context.Genders.Add(gender);
-            context.SaveChanges();
+                context.Genders.Add(gender);
+                context.SaveChanges();
+            }
         }
 
         public static Gender GetGender(string gType)
         {
-            context = new SmacEntities();
-
-            return (from a in context.Genders where a.GenderType == gType select a).FirstOrDefault();
+            using (SmacEntities context = new SmacEntities())
+            {
+                return (from a in context.Genders where a.GenderType == gType select a).FirstOrDefault();
+            }
         }
 
         public static List<Gender> GetGenders()
         {
-            context = new SmacEntities();
-
-            return (from a in context.Genders select a).ToList();
+            using (SmacEntities context = new SmacEntities())
+            {
+                return (from a in context.Genders select a).ToList();
+            }
         }
 
         public static void UpdateGender(string gType, string newValue)
         {
-            context = new SmacEntities();
-
-            Gender gender = (from a in context.Genders where a.GenderType == gType select a).FirstOrDefault();
-
-            if (gender != null)
+            using (SmacEntities context = new SmacEntities())
             {
-                gender.GenderType = newValue;
-            }
+                Gender gender = (from a in context.Genders where a.GenderType == gType select a).FirstOrDefault();
 
-            context.SaveChanges();
+                if (gender != null)
+                {
+                    gender.GenderType = newValue;
+                    context.Entry(gender).State = System.Data.Entity.EntityState.Modified;
+                    context.SaveChanges();
+                }
+            }
         }
     }
 }

@@ -7,8 +7,6 @@ namespace SMAC.Database
 {
     public class ClassEntity
     {
-        public static SmacEntities context;
-
         public static void CreateClass(int schoolId, string subjName, string className, string description)
         {
             CreateEditClass("ADD", schoolId, subjName, className, description, null);
@@ -23,8 +21,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return SubjectEntity.GetSubject(schoolId, subjName).Classes.ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return SubjectEntity.GetSubject(schoolId, subjName).Classes.ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -36,16 +36,18 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                var sch = SchoolEntity.GetSchool(schoolId);
-                if (sch != null)
+                using (SmacEntities context = new SmacEntities())
                 {
-                    List<Class> classList = new List<Class>();
-                    sch.Subjects.ToList().ForEach(t => t.Classes.ToList().ForEach(m => classList.Add(m)));
-                    return classList;
+                    var sch = SchoolEntity.GetSchool(schoolId);
+                    if (sch != null)
+                    {
+                        List<Class> classList = new List<Class>();
+                        sch.Subjects.ToList().ForEach(t => t.Classes.ToList().ForEach(m => classList.Add(m)));
+                        return classList;
+                    }
+                    else
+                        throw new Exception("School name not found.  Aborting.");
                 }
-                else
-                    throw new Exception("School name not found.  Aborting.");
             }
             catch (Exception ex)
             {
@@ -57,8 +59,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return (from a in context.Classes where a.ClassName == className && a.SubjectName == subjName && a.SchoolId == schoolId select a).FirstOrDefault();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Classes where a.ClassName == className && a.SubjectName == subjName && a.SchoolId == schoolId select a).FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -70,45 +74,46 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                if (op.Equals("ADD"))
+                using (SmacEntities context = new SmacEntities())
                 {
-                    if (GetClass(schoolId, subjName, className) != null)
+                    if (op.Equals("ADD"))
                     {
-                        throw new Exception("Class was not created.  Class name already exists for this school/subject.");
-                    }
-                    else
-                    {
-                        Class Class = new Class()
+                        if (GetClass(schoolId, subjName, className) != null)
                         {
-                            ClassName = className,
-                            Subject = SubjectEntity.GetSubject(schoolId, subjName),
-                            Description = description
-                        };
+                            throw new Exception("Class was not created.  Class name already exists for this school/subject.");
+                        }
+                        else
+                        {
+                            Class Class = new Class()
+                            {
+                                ClassName = className,
+                                Subject = SubjectEntity.GetSubject(schoolId, subjName),
+                                Description = description
+                            };
 
-                        context.Classes.Add(Class);
-                        context.SaveChanges();
+                            context.Classes.Add(Class);
+                            context.SaveChanges();
+                        }
                     }
-                }
-                else if (op.Equals("EDIT"))
-                {
-                    if (GetClass(schoolId, subjName, className) == null)
+                    else if (op.Equals("EDIT"))
                     {
-                        throw new Exception("Class was not updated.  Class name not found.");
-                    }
-                    else if (GetClass(schoolId, subjName, newClassName) != null)
-                    {
-                        throw new Exception("Class was not updated.  Class name already exists in system.");
-                    }
-                    else
-                    {
-                        var mClass = GetClass(schoolId, subjName, className);
+                        if (GetClass(schoolId, subjName, className) == null)
+                        {
+                            throw new Exception("Class was not updated.  Class name not found.");
+                        }
+                        else if (GetClass(schoolId, subjName, newClassName) != null)
+                        {
+                            throw new Exception("Class was not updated.  Class name already exists in system.");
+                        }
+                        else
+                        {
+                            var mClass = GetClass(schoolId, subjName, className);
 
-                        mClass.ClassName = newClassName;
-                        mClass.Description = description;
-
-                        context.SaveChanges();
+                            mClass.ClassName = newClassName;
+                            mClass.Description = description;
+                            context.Entry(mClass).State = System.Data.Entity.EntityState.Modified;
+                            context.SaveChanges();
+                        }
                     }
                 }
             }
@@ -122,11 +127,12 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                var Class = GetClass(schoolId, subjName, className);
-                context.Classes.Remove(Class);
-                context.SaveChanges();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    var Class = GetClass(schoolId, subjName, className);
+                    context.Classes.Remove(Class);
+                    context.SaveChanges();
+                }
             }
             catch (Exception ex)
             {

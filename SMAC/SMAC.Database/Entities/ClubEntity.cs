@@ -6,8 +6,6 @@ namespace SMAC.Database
 {
     public class ClubEntity
     {
-        private static SmacEntities context;
-
         public static void CreateClub(int schoolId, string clubName)
         {
             CreateEditClub("ADD", schoolId, clubName, null);
@@ -22,8 +20,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return (from a in context.Clubs where a.ClubName == clubName select a).FirstOrDefault() != null;
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Clubs where a.ClubName == clubName select a).FirstOrDefault() != null;
+                }
             }
             catch (Exception ex)
             {
@@ -35,8 +35,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return (from a in context.Clubs where a.ClubName == clubName && a.SchoolId == schoolId select a).FirstOrDefault();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Clubs where a.ClubName == clubName && a.SchoolId == schoolId select a).FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -48,8 +50,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return SchoolEntity.GetSchool(schoolId).Clubs.ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return SchoolEntity.GetSchool(schoolId).Clubs.ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -61,11 +65,12 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                var Club = GetClub(clubName, schoolId);
-                context.Clubs.Remove(Club);
-                context.SaveChanges();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    var Club = GetClub(clubName, schoolId);
+                    context.Clubs.Remove(Club);
+                    context.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
@@ -77,43 +82,44 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                if (op.Equals("ADD"))
+                using (SmacEntities context = new SmacEntities())
                 {
-                    if (ClubExists(clubName))
+                    if (op.Equals("ADD"))
                     {
-                        throw new Exception("Club was not created.  Club name already exists for this school.");
-                    }
-                    else
-                    {
-                        Club Club = new Club()
+                        if (ClubExists(clubName))
                         {
-                            School = SchoolEntity.GetSchool(schoolId),
-                            ClubName = clubName
-                        };
+                            throw new Exception("Club was not created.  Club name already exists for this school.");
+                        }
+                        else
+                        {
+                            Club Club = new Club()
+                            {
+                                School = SchoolEntity.GetSchool(schoolId),
+                                ClubName = clubName
+                            };
 
-                        context.Clubs.Add(Club);
-                        context.SaveChanges();
+                            context.Clubs.Add(Club);
+                            context.SaveChanges();
+                        }
                     }
-                }
-                else if (op.Equals("EDIT"))
-                {
-                    if (!ClubExists(clubName))
+                    else if (op.Equals("EDIT"))
                     {
-                        throw new Exception("Club was not updated.  Club name not found.");
-                    }
-                    else if (ClubExists(newClubName))
-                    {
-                        throw new Exception("Club was not updated.  New club name already exists in database.");
-                    }
-                    else
-                    {
-                        var Club = GetClub(clubName, schoolId);
+                        if (!ClubExists(clubName))
+                        {
+                            throw new Exception("Club was not updated.  Club name not found.");
+                        }
+                        else if (ClubExists(newClubName))
+                        {
+                            throw new Exception("Club was not updated.  New club name already exists in database.");
+                        }
+                        else
+                        {
+                            var Club = GetClub(clubName, schoolId);
 
-                        Club.ClubName = newClubName;
-
-                        context.SaveChanges();
+                            Club.ClubName = newClubName;
+                            context.Entry(Club).State = System.Data.Entity.EntityState.Modified;
+                            context.SaveChanges();
+                        }
                     }
                 }
             }

@@ -6,8 +6,6 @@ namespace SMAC.Database
 {
     public class SchoolEntity
     {
-        public static SmacEntities context;
-
         public static void CreateSchool(string schName, string addr, string city, string state, string zip, string phone)
         {
             CreateEditSchool("ADD", schName, addr, city, state, zip, phone, null);
@@ -22,8 +20,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return (from a in context.Users where a.UserId == userId select a).FirstOrDefault().Schools.ToList().OrderBy(t=>t.SchoolName).ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Users where a.UserId == userId select a).FirstOrDefault().Schools.ToList().OrderBy(t => t.SchoolName).ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -35,8 +35,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return (from a in context.Schools select a).ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Schools select a).ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -48,8 +50,10 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return (from a in context.Schools where a.SchoolId == schoolId select a).FirstOrDefault();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Schools where a.SchoolId == schoolId select a).FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -61,35 +65,37 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                if (op.Equals("ADD"))
+                using (SmacEntities context = new SmacEntities())
                 {
-                    School school = new School()
+
+                    if (op.Equals("ADD"))
                     {
-                        SchoolName = schName,
-                        StreetAddress = addr,
-                        City = city,
-                        State = state,
-                        ZipCode = zip,
-                        PhoneNumber = phone
-                    };
+                        School school = new School()
+                        {
+                            SchoolName = schName,
+                            StreetAddress = addr,
+                            City = city,
+                            State = state,
+                            ZipCode = zip,
+                            PhoneNumber = phone
+                        };
 
-                    context.Schools.Add(school);
-                    context.SaveChanges();
-                }
-                else if (op.Equals("EDIT"))
-                {
-                    var school = GetSchool(schoolId.Value);
+                        context.Schools.Add(school);
+                        context.SaveChanges();
+                    }
+                    else if (op.Equals("EDIT"))
+                    {
+                        var school = GetSchool(schoolId.Value);
 
-                    school.SchoolName = schName;
-                    school.StreetAddress = addr;
-                    school.City = city;
-                    school.State = state;
-                    school.ZipCode = zip;
-                    school.PhoneNumber = phone;
-
-                    context.SaveChanges();
+                        school.SchoolName = schName;
+                        school.StreetAddress = addr;
+                        school.City = city;
+                        school.State = state;
+                        school.ZipCode = zip;
+                        school.PhoneNumber = phone;
+                        context.Entry(school).State = System.Data.Entity.EntityState.Modified;
+                        context.SaveChanges();
+                    }
                 }
             }
             catch (Exception ex)
@@ -102,11 +108,12 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                var school = GetSchool(schoolId);
-                context.Schools.Remove(school);
-                context.SaveChanges();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    var school = GetSchool(schoolId);
+                    context.Schools.Remove(school);
+                    context.SaveChanges();
+                }
             }
             catch (Exception ex)
             {

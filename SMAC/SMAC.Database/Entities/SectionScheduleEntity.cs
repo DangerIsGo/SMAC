@@ -6,23 +6,22 @@ namespace SMAC.Database
 {
     public class SectionScheduleEntity
     {
-        private static SmacEntities context;
-
         public static void CreateSchedule(string secName, string className, string subjName, int schoolId, int tsId, string day)
         {
             try
             {
-                context = new SmacEntities();
-
-                SectionSchedule sch = new SectionSchedule()
+                using (SmacEntities context = new SmacEntities())
                 {
-                    Section = SectionEntity.GetSection(schoolId, subjName, className, secName),
-                    DayValue = day,
-                    TimeSlot = TimeSlotEntity.GetTimeSlot(tsId)
-                };
+                    SectionSchedule sch = new SectionSchedule()
+                    {
+                        Section = SectionEntity.GetSection(schoolId, subjName, className, secName),
+                        DayValue = day,
+                        TimeSlot = TimeSlotEntity.GetTimeSlot(tsId)
+                    };
 
-                context.SectionSchedules.Add(sch);
-                context.SaveChanges();
+                    context.SectionSchedules.Add(sch);
+                    context.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
@@ -34,19 +33,19 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                var sch = (from a in context.SectionSchedules
-                           where a.SectionName == secName && a.ClassName == className 
-                           && a.SubjectName == subjName && a.SchoolId == schoolId && a.TimeSlotId == tsId && a.DayValue == day
-                           select a).FirstOrDefault();
-
-                if (sch != null)
+                using (SmacEntities context = new SmacEntities())
                 {
-                    context.SectionSchedules.Remove(sch);
-                    context.SaveChanges();
-                }
+                    var sch = (from a in context.SectionSchedules
+                               where a.SectionName == secName && a.ClassName == className
+                               && a.SubjectName == subjName && a.SchoolId == schoolId && a.TimeSlotId == tsId && a.DayValue == day
+                               select a).FirstOrDefault();
 
+                    if (sch != null)
+                    {
+                        context.SectionSchedules.Remove(sch);
+                        context.SaveChanges();
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -58,10 +57,13 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                return (from a in context.SectionSchedules where a.SectionName == secName && a.ClassName == className 
-                            && a.SubjectName == subjName && a.SchoolId == schoolId select a).ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.SectionSchedules
+                            where a.SectionName == secName && a.ClassName == className
+                                && a.SubjectName == subjName && a.SchoolId == schoolId
+                            select a).ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -73,12 +75,13 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                return (from a in context.SectionSchedules
-                        where a.SectionName == secName && a.ClassName == className
-                            && a.SubjectName == subjName && a.SchoolId == schoolId && a.DayValue == day
-                        select a).ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.SectionSchedules
+                            where a.SectionName == secName && a.ClassName == className
+                                && a.SubjectName == subjName && a.SchoolId == schoolId && a.DayValue == day
+                            select a).ToList();
+                }
             }
             catch (Exception ex)
             {

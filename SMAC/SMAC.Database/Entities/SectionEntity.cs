@@ -7,8 +7,6 @@ namespace SMAC.Database
 {
     public class SectionEntity
     {
-        public static SmacEntities context;
-
         public static void CreateSection(int schoolId, string subjName, string className, string sectionName, string description)
         {
             CreateEditSection("ADD", schoolId, subjName, className, sectionName, description, null);
@@ -23,16 +21,18 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                var sch = SchoolEntity.GetSchool(schoolId);
-                if (sch != null)
+                using (SmacEntities context = new SmacEntities())
                 {
-                    List<Section> sections = new List<Section>();
-                    sch.Subjects.ToList().ForEach(t => t.Classes.ToList().ForEach(m => m.Sections.ToList().ForEach(g => sections.Add(g))));
-                    return sections;
+                    var sch = SchoolEntity.GetSchool(schoolId);
+                    if (sch != null)
+                    {
+                        List<Section> sections = new List<Section>();
+                        sch.Subjects.ToList().ForEach(t => t.Classes.ToList().ForEach(m => m.Sections.ToList().ForEach(g => sections.Add(g))));
+                        return sections;
+                    }
+                    else
+                        throw new Exception("School does not exist.  Aborting.");
                 }
-                else
-                    throw new Exception("School does not exist.  Aborting.");
             }
             catch (Exception ex)
             {
@@ -44,14 +44,16 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                var mClass = ClassEntity.GetClass(schoolId, subjName, className);
-                if (mClass != null)
+                using (SmacEntities context = new SmacEntities())
                 {
-                    return mClass.Sections.ToList();
+                    var mClass = ClassEntity.GetClass(schoolId, subjName, className);
+                    if (mClass != null)
+                    {
+                        return mClass.Sections.ToList();
+                    }
+                    else
+                        throw new Exception("Class/Subject/School does not exist.  Aborting.");
                 }
-                else
-                    throw new Exception("Class/Subject/School does not exist.  Aborting.");
             }
             catch (Exception ex)
             {
@@ -63,11 +65,13 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                return (from a in context.Sections
-                        where a.SchoolId == schoolId && a.SubjectName == subjName
-                            && a.ClassName == className && a.SectionName == secName
-                        select a).FirstOrDefault();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Sections
+                            where a.SchoolId == schoolId && a.SubjectName == subjName
+                                && a.ClassName == className && a.SectionName == secName
+                            select a).FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -79,45 +83,46 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-
-                if (op.Equals("ADD"))
+                using (SmacEntities context = new SmacEntities())
                 {
-                    if (GetSection(schoolId, subjName, className, secName) != null)
+                    if (op.Equals("ADD"))
                     {
-                        throw new Exception("Section was not created.  Section name already exists for this school/subject/class.");
-                    }
-                    else
-                    {
-                        Section section = new Section()
+                        if (GetSection(schoolId, subjName, className, secName) != null)
                         {
-                            SectionName = secName,
-                            Class = ClassEntity.GetClass(schoolId, subjName, className),
-                            Description = description
-                        };
+                            throw new Exception("Section was not created.  Section name already exists for this school/subject/class.");
+                        }
+                        else
+                        {
+                            Section section = new Section()
+                            {
+                                SectionName = secName,
+                                Class = ClassEntity.GetClass(schoolId, subjName, className),
+                                Description = description
+                            };
 
-                        context.Sections.Add(section);
-                        context.SaveChanges();
+                            context.Sections.Add(section);
+                            context.SaveChanges();
+                        }
                     }
-                }
-                else if (op.Equals("EDIT"))
-                {
-                    if (GetSection(schoolId, subjName, className, secName) == null)
+                    else if (op.Equals("EDIT"))
                     {
-                        throw new Exception("Section was not updated.  Section name not found.");
-                    }
-                    else if (GetSection(schoolId, subjName, className, newSectionName) != null)
-                    {
-                        throw new Exception("Section was not updated.  New section name already exists in system.");
-                    }
-                    else
-                    {
-                        var mSection = GetSection(schoolId, subjName, className, secName);
+                        if (GetSection(schoolId, subjName, className, secName) == null)
+                        {
+                            throw new Exception("Section was not updated.  Section name not found.");
+                        }
+                        else if (GetSection(schoolId, subjName, className, newSectionName) != null)
+                        {
+                            throw new Exception("Section was not updated.  New section name already exists in system.");
+                        }
+                        else
+                        {
+                            var mSection = GetSection(schoolId, subjName, className, secName);
 
-                        mSection.SectionName = newSectionName;
-                        mSection.Description = description;
-
-                        context.SaveChanges();
+                            mSection.SectionName = newSectionName;
+                            mSection.Description = description;
+                            context.Entry(mSection).State = System.Data.Entity.EntityState.Modified;
+                            context.SaveChanges();
+                        }
                     }
                 }
             }
@@ -131,10 +136,12 @@ namespace SMAC.Database
         {
             try
             {
-                context = new SmacEntities();
-                var section = GetSection(schoolId, subjName, className, secName);
-                context.Sections.Remove(section);
-                context.SaveChanges();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    var section = GetSection(schoolId, subjName, className, secName);
+                    context.Sections.Remove(section);
+                    context.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
