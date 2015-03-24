@@ -6,6 +6,6 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="messageBody">
-
+         
     </div>
 </asp:Content>
