@@ -23,7 +23,7 @@
             </div>
             <div class="ctrlLblRow">
                 <span class="triCol">First Name:</span><span class="triCol">Middle Name:</span><span class="triCol">Last Name:</span>
-            </div>
+            </div> 
             <div class="ctrlValRow">
                 <span class="triCol"><input type="text" id="fName" /></span>
                 <span class="triCol"><input type="text" id="mName" /></span>
