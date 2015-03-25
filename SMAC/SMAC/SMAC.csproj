@@ -157,6 +157,7 @@
     <Content Include="Global.asax" />
     <Content Include="Grades.aspx" />
     <Content Include="Home.aspx" />
+    <Content Include="Images\ajax-loader-white.gif" />
     <Content Include="Images\ajax-loader.gif" />
     <Content Include="Messages.aspx" />
     <Content Include="packages.config" />

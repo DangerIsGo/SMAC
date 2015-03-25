@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data.Entity;
 
 namespace SMAC.Database
 {
@@ -75,6 +76,7 @@ namespace SMAC.Database
                 using (SmacEntities context = new SmacEntities())
                 {
                     var toList = (from a in context.PrivateMessages where a.ToUser == userId select a)
+                        .Include(a => a.UserSentFrom)
                         .GroupBy(t => t.FromUser)
                         .Select(t => t.Last()).ToList();
                     var fromList = (from a in context.PrivateMessages where a.FromUser == userId select a)

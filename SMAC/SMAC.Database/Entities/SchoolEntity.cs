@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 
 namespace SMAC.Database
 {
@@ -52,7 +53,7 @@ namespace SMAC.Database
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    return (from a in context.Schools where a.SchoolId == schoolId select a).FirstOrDefault();
+                    return (from a in context.Schools where a.SchoolId == schoolId select a).Include(a => a.SchoolYears).Include(a => a.MarkingPeriods).FirstOrDefault();
                 }
             }
             catch (Exception ex)

@@ -36,10 +36,7 @@ namespace SMAC.Database
         {
             try
             {
-                using (SmacEntities context = new SmacEntities())
-                {
-                    return SchoolEntity.GetSchool(schoolId).SchoolYears.ToList();
-                }
+                return SchoolEntity.GetSchool(schoolId).SchoolYears.ToList();
             }
             catch (Exception ex)
             {

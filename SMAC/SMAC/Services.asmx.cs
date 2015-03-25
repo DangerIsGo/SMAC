@@ -42,6 +42,37 @@ namespace SMAC
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string GetUserMessages(string userId, string pageIndex)
+        {
+            try
+            {
+                var msgs = PrivateMessageEntity.GetLatestPrivateMessages(userId, int.Parse(pageIndex), 20);
+
+                var rtnObj = new object[msgs.Count];
+
+                for (int i = 0; i < msgs.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        content = msgs[i].Content.Substring(0, 50),
+                        date = msgs[i].DateSent,
+                        from = msgs[i].UserSentFrom.FirstName + " " + msgs[i].UserSentFrom.LastLoggedIn
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return null;
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string GetSchoolsYears(string schoolId)
         {
             try

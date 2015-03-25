@@ -54,10 +54,7 @@ namespace SMAC.Database
         {
             try
             {
-                using (SmacEntities context = new SmacEntities())
-                {
-                    return SchoolEntity.GetSchool(schoolId).MarkingPeriods.ToList();
-                }
+                return SchoolEntity.GetSchool(schoolId).MarkingPeriods.ToList();
             }
             catch (Exception ex)
             {
