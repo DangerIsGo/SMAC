@@ -75,14 +75,14 @@ namespace SMAC.Database
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    var toList = (from a in context.PrivateMessages where a.ToUser == userId select a)
-                        .Include(a => a.UserSentFrom)
-                        .GroupBy(t => t.FromUser)
-                        .Select(t => t.Last()).ToList();
-                    var fromList = (from a in context.PrivateMessages where a.FromUser == userId select a)
-                        .GroupBy(t => t.ToUser)
-                        .Select(t => t.Last()).ToList();
-                    return toList.Union(fromList).OrderByDescending(t => t.DateSent).ToList();
+                    var msgs = context.usp_GetLatestPrivateMessages(userId).ToList();
+
+                    foreach (object msg in msgs)
+                    {
+
+                    }
+
+                    return new List<PrivateMessage>();
                 }
             }
             catch (Exception ex)

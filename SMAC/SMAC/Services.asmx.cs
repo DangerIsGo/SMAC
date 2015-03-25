@@ -8,6 +8,7 @@ using SMAC.Database;
 using Newtonsoft.Json;
 using System.Web.SessionState;
 using System.Text;
+using System.Web.Security;
 
 namespace SMAC
 {
@@ -25,15 +26,7 @@ namespace SMAC
         {
             try
             {
-                Session["UserId"] = null;
-                Session["FirstName"] = null;
-                Session["MiddleName"] = null;
-                Session["LastName"] = null;
-                Session["PhoneNumber"] = null;
-                Session["Email"] = null;
-                Session["UserName"] = null;
-                Session["Gender"] = null;
-                Session["Genders"] = null;
+                FormsAuthentication.SignOut();
             }
             catch (Exception)
             {
@@ -257,6 +250,7 @@ namespace SMAC
                 Session["Email"] = email;
                 Session["UserName"] = uName;
                 Session["Gender"] = gender;
+                Session["UpdateCookie"] = "yes";
 
                 return JsonConvert.SerializeObject("Success!  All data was updated.");
             }

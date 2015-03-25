@@ -288,7 +288,7 @@
           <Property Name="LastLoggedIn" Type="datetime" />
           <Property Name="LastLoggedOut" Type="datetime" />
         </EntityType>
-        <Association Name="FK__Admins__UserId__4ACEC037">
+        <Association Name="FK__Admins__UserId__6BFAA9D8">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -302,7 +302,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Classes__62A649C8">
+        <Association Name="FK__Classes__03D23369">
           <End Role="Subjects" Type="Self.Subjects" Multiplicity="1" />
           <End Role="Classes" Type="Self.Classes" Multiplicity="*" />
           <ReferentialConstraint>
@@ -316,7 +316,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ClubEnrol__UserI__1AEAA2EB">
+        <Association Name="FK__ClubEnrol__UserI__3C168C8C">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -330,7 +330,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ClubEnrollments__19F67EB2">
+        <Association Name="FK__ClubEnrollments__3B226853">
           <End Role="Clubs" Type="Self.Clubs" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -346,7 +346,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Clubs__SchoolId__6C2FB402">
+        <Association Name="FK__Clubs__SchoolId__0D5B9DA3">
           <End Role="Schools" Type="Self.Schools" Multiplicity="1" />
           <End Role="Clubs" Type="Self.Clubs" Multiplicity="*" />
           <ReferentialConstraint>
@@ -358,7 +358,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ClubSched__TimeS__143DA55C">
+        <Association Name="FK__ClubSched__TimeS__35698EFD">
           <End Role="TimeSlots" Type="Self.TimeSlots" Multiplicity="1" />
           <End Role="ClubSchedules" Type="Self.ClubSchedules" Multiplicity="*" />
           <ReferentialConstraint>
@@ -370,7 +370,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ClubSchedul__Day__1531C995">
+        <Association Name="FK__ClubSchedul__Day__365DB336">
           <End Role="Days" Type="Self.Days" Multiplicity="1" />
           <End Role="ClubSchedules" Type="Self.ClubSchedules" Multiplicity="*" />
           <ReferentialConstraint>
@@ -382,7 +382,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ClubSchedules__13498123">
+        <Association Name="FK__ClubSchedules__34756AC4">
           <End Role="Clubs" Type="Self.Clubs" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -398,7 +398,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Enrollmen__Grade__2A2CE67B">
+        <Association Name="FK__Enrollmen__Grade__4B58D01C">
           <End Role="Grades" Type="Self.Grades" Multiplicity="0..1" />
           <End Role="Enrollments" Type="Self.Enrollments" Multiplicity="*" />
           <ReferentialConstraint>
@@ -410,7 +410,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Enrollmen__Marki__28449E09">
+        <Association Name="FK__Enrollmen__Marki__497087AA">
           <End Role="MarkingPeriods" Type="Self.MarkingPeriods" Multiplicity="1" />
           <End Role="Enrollments" Type="Self.Enrollments" Multiplicity="*" />
           <ReferentialConstraint>
@@ -422,7 +422,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Enrollmen__Schoo__2938C242">
+        <Association Name="FK__Enrollmen__Schoo__4A64ABE3">
           <End Role="SchoolYears" Type="Self.SchoolYears" Multiplicity="1" />
           <End Role="Enrollments" Type="Self.Enrollments" Multiplicity="*" />
           <ReferentialConstraint>
@@ -434,7 +434,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Enrollmen__UserI__265C5597">
+        <Association Name="FK__Enrollmen__UserI__47883F38">
           <End Role="Students" Type="Self.Students" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -448,7 +448,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Enrollments__275079D0">
+        <Association Name="FK__Enrollments__487C6371">
           <End Role="Sections" Type="Self.Sections" Multiplicity="1" />
           <End Role="Enrollments" Type="Self.Enrollments" Multiplicity="*" />
           <ReferentialConstraint>
@@ -466,7 +466,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Grades__SchoolId__73D0D5CA">
+        <Association Name="FK__Grades__SchoolId__14FCBF6B">
           <End Role="Schools" Type="Self.Schools" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -480,7 +480,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__KhanShare__KhanS__47BD4962">
+        <Association Name="FK__KhanShare__KhanS__68E93303">
           <End Role="KhanShares" Type="Self.KhanShares" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -494,7 +494,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__KhanShare__Threa__46C92529">
+        <Association Name="FK__KhanShare__Threa__67F50ECA">
           <End Role="Threads" Type="Self.Threads" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -508,7 +508,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__LatestNew__Schoo__4C81FE7F">
+        <Association Name="FK__LatestNew__Schoo__6DADE820">
           <End Role="Schools" Type="Self.Schools" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -522,7 +522,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__LatestNew__UserI__4D7622B8">
+        <Association Name="FK__LatestNew__UserI__6EA20C59">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="LatestNews" Type="Self.LatestNews" Multiplicity="*" />
           <ReferentialConstraint>
@@ -534,7 +534,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__MarkingPe__Schoo__0E84CC06">
+        <Association Name="FK__MarkingPe__Schoo__2FB0B5A7">
           <End Role="Schools" Type="Self.Schools" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -548,7 +548,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PrivateMe__FromU__3786E199">
+        <Association Name="FK__PrivateMe__FromU__58B2CB3A">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="PrivateMessages" Type="Self.PrivateMessages" Multiplicity="*" />
           <ReferentialConstraint>
@@ -560,7 +560,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PrivateMe__ToUse__3692BD60">
+        <Association Name="FK__PrivateMe__ToUse__57BEA701">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="PrivateMessages" Type="Self.PrivateMessages" Multiplicity="*" />
           <ReferentialConstraint>
@@ -572,7 +572,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SchoolRos__Schoo__460A0B1A">
+        <Association Name="FK__SchoolRos__Schoo__6735F4BB">
           <End Role="Schools" Type="Self.Schools" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -586,7 +586,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SchoolRos__UserI__4515E6E1">
+        <Association Name="FK__SchoolRos__UserI__6641D082">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -600,7 +600,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SchoolYea__Schoo__06E3AA3E">
+        <Association Name="FK__SchoolYea__Schoo__280F93DF">
           <End Role="Schools" Type="Self.Schools" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -614,7 +614,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Sections__676AFEE5">
+        <Association Name="FK__Sections__0896E886">
           <End Role="Classes" Type="Self.Classes" Multiplicity="1" />
           <End Role="Sections" Type="Self.Sections" Multiplicity="*" />
           <ReferentialConstraint>
@@ -630,7 +630,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SectionSc__TimeS__20A37C41">
+        <Association Name="FK__SectionSc__TimeS__41CF65E2">
           <End Role="TimeSlots" Type="Self.TimeSlots" Multiplicity="1" />
           <End Role="SectionSchedules" Type="Self.SectionSchedules" Multiplicity="*" />
           <ReferentialConstraint>
@@ -642,7 +642,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SectionSche__Day__2197A07A">
+        <Association Name="FK__SectionSche__Day__42C38A1B">
           <End Role="Days" Type="Self.Days" Multiplicity="1" />
           <End Role="SectionSchedules" Type="Self.SectionSchedules" Multiplicity="*" />
           <ReferentialConstraint>
@@ -654,7 +654,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SectionSchedules__1FAF5808">
+        <Association Name="FK__SectionSchedules__40DB41A9">
           <End Role="Sections" Type="Self.Sections" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -674,7 +674,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Staff__UserId__4F937554">
+        <Association Name="FK__Staff__UserId__70BF5EF5">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -688,7 +688,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Students__UserId__591CDF8E">
+        <Association Name="FK__Students__UserId__7A48C92F">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -702,7 +702,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Subjects__School__5DE194AB">
+        <Association Name="FK__Subjects__School__7F0D7E4C">
           <End Role="Schools" Type="Self.Schools" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -716,7 +716,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Teachers__UserId__54582A71">
+        <Association Name="FK__Teachers__UserId__75841412">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -730,7 +730,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TeacherSc__Marki__30D9E40A">
+        <Association Name="FK__TeacherSc__Marki__5205CDAB">
           <End Role="MarkingPeriods" Type="Self.MarkingPeriods" Multiplicity="1" />
           <End Role="TeacherSchedules" Type="Self.TeacherSchedules" Multiplicity="*" />
           <ReferentialConstraint>
@@ -742,7 +742,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TeacherSc__Schoo__31CE0843">
+        <Association Name="FK__TeacherSc__Schoo__52F9F1E4">
           <End Role="SchoolYears" Type="Self.SchoolYears" Multiplicity="1" />
           <End Role="TeacherSchedules" Type="Self.TeacherSchedules" Multiplicity="*" />
           <ReferentialConstraint>
@@ -754,7 +754,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TeacherSc__UserI__2EF19B98">
+        <Association Name="FK__TeacherSc__UserI__501D8539">
           <End Role="Teachers" Type="Self.Teachers" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -768,7 +768,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TeacherSchedules__2FE5BFD1">
+        <Association Name="FK__TeacherSchedules__5111A972">
           <End Role="Sections" Type="Self.Sections" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -788,7 +788,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Threads__4204700C">
+        <Association Name="FK__Threads__633059AD">
           <End Role="Sections" Type="Self.Sections" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -808,7 +808,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Threads__Replied__41104BD3">
+        <Association Name="FK__Threads__Replied__623C3574">
           <End Role="Threads" Type="Self.Threads" Multiplicity="0..1" />
           <End Role="Threads1" Type="Self.Threads" Multiplicity="*" />
           <ReferentialConstraint>
@@ -820,7 +820,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Threads__UserId__401C279A">
+        <Association Name="FK__Threads__UserId__6148113B">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="Threads" Type="Self.Threads" Multiplicity="*" />
           <ReferentialConstraint>
@@ -832,7 +832,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TimeSlots__Schoo__7F428876">
+        <Association Name="FK__TimeSlots__Schoo__206E7217">
           <End Role="Schools" Type="Self.Schools" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -846,7 +846,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__UserCrede__UserI__405131C4">
+        <Association Name="FK__UserCrede__UserI__617D1B65">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -860,7 +860,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Users__Gender__38B00FFC">
+        <Association Name="FK__Users__Gender__59DBF99D">
           <End Role="Genders" Type="Self.Genders" Multiplicity="1" />
           <End Role="Users" Type="Self.Users" Multiplicity="*" />
           <ReferentialConstraint>
@@ -872,6 +872,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="usp_GetLatestPrivateMessages" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="varchar" Mode="In" />
+        </Function>
         <EntityContainer Name="SmacModelStoreContainer">
           <EntitySet Name="Admins" EntityType="Self.Admins" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Classes" EntityType="Self.Classes" Schema="dbo" store:Type="Tables" />
@@ -901,171 +904,171 @@
           <EntitySet Name="TimeSlots" EntityType="Self.TimeSlots" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserCredentials" EntityType="Self.UserCredentials" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Admins__UserId__4ACEC037" Association="Self.FK__Admins__UserId__4ACEC037">
+          <AssociationSet Name="FK__Admins__UserId__6BFAA9D8" Association="Self.FK__Admins__UserId__6BFAA9D8">
             <End Role="Users" EntitySet="Users" />
             <End Role="Admins" EntitySet="Admins" />
           </AssociationSet>
-          <AssociationSet Name="FK__Classes__62A649C8" Association="Self.FK__Classes__62A649C8">
+          <AssociationSet Name="FK__Classes__03D23369" Association="Self.FK__Classes__03D23369">
             <End Role="Subjects" EntitySet="Subjects" />
             <End Role="Classes" EntitySet="Classes" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClubEnrol__UserI__1AEAA2EB" Association="Self.FK__ClubEnrol__UserI__1AEAA2EB">
+          <AssociationSet Name="FK__ClubEnrol__UserI__3C168C8C" Association="Self.FK__ClubEnrol__UserI__3C168C8C">
             <End Role="Users" EntitySet="Users" />
             <End Role="ClubEnrollments" EntitySet="ClubEnrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClubEnrollments__19F67EB2" Association="Self.FK__ClubEnrollments__19F67EB2">
+          <AssociationSet Name="FK__ClubEnrollments__3B226853" Association="Self.FK__ClubEnrollments__3B226853">
             <End Role="Clubs" EntitySet="Clubs" />
             <End Role="ClubEnrollments" EntitySet="ClubEnrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Clubs__SchoolId__6C2FB402" Association="Self.FK__Clubs__SchoolId__6C2FB402">
+          <AssociationSet Name="FK__Clubs__SchoolId__0D5B9DA3" Association="Self.FK__Clubs__SchoolId__0D5B9DA3">
             <End Role="Schools" EntitySet="Schools" />
             <End Role="Clubs" EntitySet="Clubs" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClubSched__TimeS__143DA55C" Association="Self.FK__ClubSched__TimeS__143DA55C">
+          <AssociationSet Name="FK__ClubSched__TimeS__35698EFD" Association="Self.FK__ClubSched__TimeS__35698EFD">
             <End Role="TimeSlots" EntitySet="TimeSlots" />
             <End Role="ClubSchedules" EntitySet="ClubSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClubSchedul__Day__1531C995" Association="Self.FK__ClubSchedul__Day__1531C995">
+          <AssociationSet Name="FK__ClubSchedul__Day__365DB336" Association="Self.FK__ClubSchedul__Day__365DB336">
             <End Role="Days" EntitySet="Days" />
             <End Role="ClubSchedules" EntitySet="ClubSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClubSchedules__13498123" Association="Self.FK__ClubSchedules__13498123">
+          <AssociationSet Name="FK__ClubSchedules__34756AC4" Association="Self.FK__ClubSchedules__34756AC4">
             <End Role="Clubs" EntitySet="Clubs" />
             <End Role="ClubSchedules" EntitySet="ClubSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__Enrollmen__Grade__2A2CE67B" Association="Self.FK__Enrollmen__Grade__2A2CE67B">
+          <AssociationSet Name="FK__Enrollmen__Grade__4B58D01C" Association="Self.FK__Enrollmen__Grade__4B58D01C">
             <End Role="Grades" EntitySet="Grades" />
             <End Role="Enrollments" EntitySet="Enrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Enrollmen__Marki__28449E09" Association="Self.FK__Enrollmen__Marki__28449E09">
+          <AssociationSet Name="FK__Enrollmen__Marki__497087AA" Association="Self.FK__Enrollmen__Marki__497087AA">
             <End Role="MarkingPeriods" EntitySet="MarkingPeriods" />
             <End Role="Enrollments" EntitySet="Enrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Enrollmen__Schoo__2938C242" Association="Self.FK__Enrollmen__Schoo__2938C242">
+          <AssociationSet Name="FK__Enrollmen__Schoo__4A64ABE3" Association="Self.FK__Enrollmen__Schoo__4A64ABE3">
             <End Role="SchoolYears" EntitySet="SchoolYears" />
             <End Role="Enrollments" EntitySet="Enrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Enrollmen__UserI__265C5597" Association="Self.FK__Enrollmen__UserI__265C5597">
+          <AssociationSet Name="FK__Enrollmen__UserI__47883F38" Association="Self.FK__Enrollmen__UserI__47883F38">
             <End Role="Students" EntitySet="Students" />
             <End Role="Enrollments" EntitySet="Enrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Enrollments__275079D0" Association="Self.FK__Enrollments__275079D0">
+          <AssociationSet Name="FK__Enrollments__487C6371" Association="Self.FK__Enrollments__487C6371">
             <End Role="Sections" EntitySet="Sections" />
             <End Role="Enrollments" EntitySet="Enrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Grades__SchoolId__73D0D5CA" Association="Self.FK__Grades__SchoolId__73D0D5CA">
+          <AssociationSet Name="FK__Grades__SchoolId__14FCBF6B" Association="Self.FK__Grades__SchoolId__14FCBF6B">
             <End Role="Schools" EntitySet="Schools" />
             <End Role="Grades" EntitySet="Grades" />
           </AssociationSet>
-          <AssociationSet Name="FK__KhanShare__KhanS__47BD4962" Association="Self.FK__KhanShare__KhanS__47BD4962">
+          <AssociationSet Name="FK__KhanShare__KhanS__68E93303" Association="Self.FK__KhanShare__KhanS__68E93303">
             <End Role="KhanShares" EntitySet="KhanShares" />
             <End Role="KhanShareThreadMaps" EntitySet="KhanShareThreadMaps" />
           </AssociationSet>
-          <AssociationSet Name="FK__KhanShare__Threa__46C92529" Association="Self.FK__KhanShare__Threa__46C92529">
+          <AssociationSet Name="FK__KhanShare__Threa__67F50ECA" Association="Self.FK__KhanShare__Threa__67F50ECA">
             <End Role="Threads" EntitySet="Threads" />
             <End Role="KhanShareThreadMaps" EntitySet="KhanShareThreadMaps" />
           </AssociationSet>
-          <AssociationSet Name="FK__LatestNew__Schoo__4C81FE7F" Association="Self.FK__LatestNew__Schoo__4C81FE7F">
+          <AssociationSet Name="FK__LatestNew__Schoo__6DADE820" Association="Self.FK__LatestNew__Schoo__6DADE820">
             <End Role="Schools" EntitySet="Schools" />
             <End Role="LatestNews" EntitySet="LatestNews" />
           </AssociationSet>
-          <AssociationSet Name="FK__LatestNew__UserI__4D7622B8" Association="Self.FK__LatestNew__UserI__4D7622B8">
+          <AssociationSet Name="FK__LatestNew__UserI__6EA20C59" Association="Self.FK__LatestNew__UserI__6EA20C59">
             <End Role="Users" EntitySet="Users" />
             <End Role="LatestNews" EntitySet="LatestNews" />
           </AssociationSet>
-          <AssociationSet Name="FK__MarkingPe__Schoo__0E84CC06" Association="Self.FK__MarkingPe__Schoo__0E84CC06">
+          <AssociationSet Name="FK__MarkingPe__Schoo__2FB0B5A7" Association="Self.FK__MarkingPe__Schoo__2FB0B5A7">
             <End Role="Schools" EntitySet="Schools" />
             <End Role="MarkingPeriods" EntitySet="MarkingPeriods" />
           </AssociationSet>
-          <AssociationSet Name="FK__PrivateMe__FromU__3786E199" Association="Self.FK__PrivateMe__FromU__3786E199">
+          <AssociationSet Name="FK__PrivateMe__FromU__58B2CB3A" Association="Self.FK__PrivateMe__FromU__58B2CB3A">
             <End Role="Users" EntitySet="Users" />
             <End Role="PrivateMessages" EntitySet="PrivateMessages" />
           </AssociationSet>
-          <AssociationSet Name="FK__PrivateMe__ToUse__3692BD60" Association="Self.FK__PrivateMe__ToUse__3692BD60">
+          <AssociationSet Name="FK__PrivateMe__ToUse__57BEA701" Association="Self.FK__PrivateMe__ToUse__57BEA701">
             <End Role="Users" EntitySet="Users" />
             <End Role="PrivateMessages" EntitySet="PrivateMessages" />
           </AssociationSet>
-          <AssociationSet Name="FK__SchoolRos__Schoo__460A0B1A" Association="Self.FK__SchoolRos__Schoo__460A0B1A">
+          <AssociationSet Name="FK__SchoolRos__Schoo__6735F4BB" Association="Self.FK__SchoolRos__Schoo__6735F4BB">
             <End Role="Schools" EntitySet="Schools" />
             <End Role="SchoolRoster" EntitySet="SchoolRoster" />
           </AssociationSet>
-          <AssociationSet Name="FK__SchoolRos__UserI__4515E6E1" Association="Self.FK__SchoolRos__UserI__4515E6E1">
+          <AssociationSet Name="FK__SchoolRos__UserI__6641D082" Association="Self.FK__SchoolRos__UserI__6641D082">
             <End Role="Users" EntitySet="Users" />
             <End Role="SchoolRoster" EntitySet="SchoolRoster" />
           </AssociationSet>
-          <AssociationSet Name="FK__SchoolYea__Schoo__06E3AA3E" Association="Self.FK__SchoolYea__Schoo__06E3AA3E">
+          <AssociationSet Name="FK__SchoolYea__Schoo__280F93DF" Association="Self.FK__SchoolYea__Schoo__280F93DF">
             <End Role="Schools" EntitySet="Schools" />
             <End Role="SchoolYears" EntitySet="SchoolYears" />
           </AssociationSet>
-          <AssociationSet Name="FK__Sections__676AFEE5" Association="Self.FK__Sections__676AFEE5">
+          <AssociationSet Name="FK__Sections__0896E886" Association="Self.FK__Sections__0896E886">
             <End Role="Classes" EntitySet="Classes" />
             <End Role="Sections" EntitySet="Sections" />
           </AssociationSet>
-          <AssociationSet Name="FK__SectionSc__TimeS__20A37C41" Association="Self.FK__SectionSc__TimeS__20A37C41">
+          <AssociationSet Name="FK__SectionSc__TimeS__41CF65E2" Association="Self.FK__SectionSc__TimeS__41CF65E2">
             <End Role="TimeSlots" EntitySet="TimeSlots" />
             <End Role="SectionSchedules" EntitySet="SectionSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__SectionSche__Day__2197A07A" Association="Self.FK__SectionSche__Day__2197A07A">
+          <AssociationSet Name="FK__SectionSche__Day__42C38A1B" Association="Self.FK__SectionSche__Day__42C38A1B">
             <End Role="Days" EntitySet="Days" />
             <End Role="SectionSchedules" EntitySet="SectionSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__SectionSchedules__1FAF5808" Association="Self.FK__SectionSchedules__1FAF5808">
+          <AssociationSet Name="FK__SectionSchedules__40DB41A9" Association="Self.FK__SectionSchedules__40DB41A9">
             <End Role="Sections" EntitySet="Sections" />
             <End Role="SectionSchedules" EntitySet="SectionSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__Staff__UserId__4F937554" Association="Self.FK__Staff__UserId__4F937554">
+          <AssociationSet Name="FK__Staff__UserId__70BF5EF5" Association="Self.FK__Staff__UserId__70BF5EF5">
             <End Role="Users" EntitySet="Users" />
             <End Role="Staff" EntitySet="Staff" />
           </AssociationSet>
-          <AssociationSet Name="FK__Students__UserId__591CDF8E" Association="Self.FK__Students__UserId__591CDF8E">
+          <AssociationSet Name="FK__Students__UserId__7A48C92F" Association="Self.FK__Students__UserId__7A48C92F">
             <End Role="Users" EntitySet="Users" />
             <End Role="Students" EntitySet="Students" />
           </AssociationSet>
-          <AssociationSet Name="FK__Subjects__School__5DE194AB" Association="Self.FK__Subjects__School__5DE194AB">
+          <AssociationSet Name="FK__Subjects__School__7F0D7E4C" Association="Self.FK__Subjects__School__7F0D7E4C">
             <End Role="Schools" EntitySet="Schools" />
             <End Role="Subjects" EntitySet="Subjects" />
           </AssociationSet>
-          <AssociationSet Name="FK__Teachers__UserId__54582A71" Association="Self.FK__Teachers__UserId__54582A71">
+          <AssociationSet Name="FK__Teachers__UserId__75841412" Association="Self.FK__Teachers__UserId__75841412">
             <End Role="Users" EntitySet="Users" />
             <End Role="Teachers" EntitySet="Teachers" />
           </AssociationSet>
-          <AssociationSet Name="FK__TeacherSc__Marki__30D9E40A" Association="Self.FK__TeacherSc__Marki__30D9E40A">
+          <AssociationSet Name="FK__TeacherSc__Marki__5205CDAB" Association="Self.FK__TeacherSc__Marki__5205CDAB">
             <End Role="MarkingPeriods" EntitySet="MarkingPeriods" />
             <End Role="TeacherSchedules" EntitySet="TeacherSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__TeacherSc__Schoo__31CE0843" Association="Self.FK__TeacherSc__Schoo__31CE0843">
+          <AssociationSet Name="FK__TeacherSc__Schoo__52F9F1E4" Association="Self.FK__TeacherSc__Schoo__52F9F1E4">
             <End Role="SchoolYears" EntitySet="SchoolYears" />
             <End Role="TeacherSchedules" EntitySet="TeacherSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__TeacherSc__UserI__2EF19B98" Association="Self.FK__TeacherSc__UserI__2EF19B98">
+          <AssociationSet Name="FK__TeacherSc__UserI__501D8539" Association="Self.FK__TeacherSc__UserI__501D8539">
             <End Role="Teachers" EntitySet="Teachers" />
             <End Role="TeacherSchedules" EntitySet="TeacherSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__TeacherSchedules__2FE5BFD1" Association="Self.FK__TeacherSchedules__2FE5BFD1">
+          <AssociationSet Name="FK__TeacherSchedules__5111A972" Association="Self.FK__TeacherSchedules__5111A972">
             <End Role="Sections" EntitySet="Sections" />
             <End Role="TeacherSchedules" EntitySet="TeacherSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__Threads__4204700C" Association="Self.FK__Threads__4204700C">
+          <AssociationSet Name="FK__Threads__633059AD" Association="Self.FK__Threads__633059AD">
             <End Role="Sections" EntitySet="Sections" />
             <End Role="Threads" EntitySet="Threads" />
           </AssociationSet>
-          <AssociationSet Name="FK__Threads__Replied__41104BD3" Association="Self.FK__Threads__Replied__41104BD3">
+          <AssociationSet Name="FK__Threads__Replied__623C3574" Association="Self.FK__Threads__Replied__623C3574">
             <End Role="Threads" EntitySet="Threads" />
             <End Role="Threads1" EntitySet="Threads" />
           </AssociationSet>
-          <AssociationSet Name="FK__Threads__UserId__401C279A" Association="Self.FK__Threads__UserId__401C279A">
+          <AssociationSet Name="FK__Threads__UserId__6148113B" Association="Self.FK__Threads__UserId__6148113B">
             <End Role="Users" EntitySet="Users" />
             <End Role="Threads" EntitySet="Threads" />
           </AssociationSet>
-          <AssociationSet Name="FK__TimeSlots__Schoo__7F428876" Association="Self.FK__TimeSlots__Schoo__7F428876">
+          <AssociationSet Name="FK__TimeSlots__Schoo__206E7217" Association="Self.FK__TimeSlots__Schoo__206E7217">
             <End Role="Schools" EntitySet="Schools" />
             <End Role="TimeSlots" EntitySet="TimeSlots" />
           </AssociationSet>
-          <AssociationSet Name="FK__UserCrede__UserI__405131C4" Association="Self.FK__UserCrede__UserI__405131C4">
+          <AssociationSet Name="FK__UserCrede__UserI__617D1B65" Association="Self.FK__UserCrede__UserI__617D1B65">
             <End Role="Users" EntitySet="Users" />
             <End Role="UserCredentials" EntitySet="UserCredentials" />
           </AssociationSet>
-          <AssociationSet Name="FK__Users__Gender__38B00FFC" Association="Self.FK__Users__Gender__38B00FFC">
+          <AssociationSet Name="FK__Users__Gender__59DBF99D" Association="Self.FK__Users__Gender__59DBF99D">
             <End Role="Genders" EntitySet="Genders" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
@@ -1261,6 +1264,9 @@
             <End Role="User" EntitySet="Users" />
             <End Role="LatestNew" EntitySet="LatestNewsSet" />
           </AssociationSet>
+          <FunctionImport Name="usp_GetLatestPrivateMessages" ReturnType="Collection(SmacModel.usp_GetLatestPrivateMessages_Result)">
+            <Parameter Name="UserID" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="Admin">
           <Key>
@@ -2145,6 +2151,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="usp_GetLatestPrivateMessages_Result">
+          <Property Type="Int32" Name="PrivateMessageId" Nullable="false" />
+          <Property Type="String" Name="ToUser" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="FromUser" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Content" Nullable="false" MaxLength="Max" />
+          <Property Type="DateTime" Name="DateSent" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="DateRead" Nullable="true" Precision="23" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2431,6 +2445,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetLatestPrivateMessages" FunctionName="SmacModel.Store.usp_GetLatestPrivateMessages">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SmacModel.usp_GetLatestPrivateMessages_Result">
+                <ScalarProperty Name="PrivateMessageId" ColumnName="PrivateMessageId" />
+                <ScalarProperty Name="ToUser" ColumnName="ToUser" />
+                <ScalarProperty Name="FromUser" ColumnName="FromUser" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="DateSent" ColumnName="DateSent" />
+                <ScalarProperty Name="DateRead" ColumnName="DateRead" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

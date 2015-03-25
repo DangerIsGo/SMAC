@@ -1,6 +1,8 @@
-﻿using System;
+﻿using SMAC.Database;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
@@ -67,9 +69,52 @@ namespace SMAC
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["UserId"] == null)
+            if (!HttpContext.Current.User.Identity.IsAuthenticated)
             {
-                Response.Redirect("/");
+                FormsAuthentication.RedirectToLoginPage();
+            }
+
+            if (Session["UpdateCookie"] != null && Session["UpdateCookie"].ToString() == "yes")
+            {
+                FormsAuthenticationTicket tkt;
+                string cookiestr;
+                HttpCookie ck;
+                tkt = new FormsAuthenticationTicket(1, Session["UserName"].ToString(), DateTime.Now, DateTime.Now.AddMinutes(60), false, "");
+                cookiestr = FormsAuthentication.Encrypt(tkt);
+                ck = new HttpCookie(FormsAuthentication.FormsCookieName, cookiestr);
+
+
+                StringBuilder sb = new StringBuilder();
+
+                var genders = GenderEntity.GetGenders();
+
+                genders.ForEach(t => sb.Append(t.GenderType.ToString() + ":"));
+                sb.Remove(sb.Length - 1, 1);
+
+                ck.Values.Add("UserId", Session["UserId"].ToString());
+                ck.Values.Add("FirstName", Session["FirstName"].ToString());
+                ck.Values.Add("MiddleName", Session["MiddleName"].ToString());
+                ck.Values.Add("LastName", Session["LastName"].ToString());
+                ck.Values.Add("PhoneNumber", Session["PhoneNumber"].ToString());
+                ck.Values.Add("Email", Session["Email"].ToString());
+                ck.Values.Add("UserName", Session["UserName"].ToString());
+                ck.Values.Add("Gender", Session["Gender"].ToString());
+                ck.Values.Add("Genders", sb.ToString());
+
+                Response.Cookies.Add(ck);
+                Session["UpdateCookie"] = "no";
+            }
+            else
+            {
+                Session["UserId"] = Request.Cookies["SmacCookie"]["UserId"];
+                Session["FirstName"] = Request.Cookies["SmacCookie"]["FirstName"];
+                Session["MiddleName"] = Request.Cookies["SmacCookie"]["MiddleName"];
+                Session["LastName"] = Request.Cookies["SmacCookie"]["LastName"];
+                Session["PhoneNumber"] = Request.Cookies["SmacCookie"]["PhoneNumber"];
+                Session["Email"] = Request.Cookies["SmacCookie"]["Email"];
+                Session["UserName"] = Request.Cookies["SmacCookie"]["UserName"];
+                Session["Gender"] = Request.Cookies["SmacCookie"]["Gender"];
+                Session["Genders"] = Request.Cookies["SmacCookie"]["Genders"];
             }
         }
     }

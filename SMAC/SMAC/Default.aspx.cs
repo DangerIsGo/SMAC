@@ -2,6 +2,8 @@
 using System;
 using System.Text;
 using System.Web.UI;
+using System.Web.Security;
+using System.Web;
 
 namespace SMAC
 {
@@ -18,6 +20,14 @@ namespace SMAC
             {
                 var usr = UserCredentialEntity.Authenticate(Request.Form["username"].Trim(), Request.Form["password"]);
 
+                FormsAuthenticationTicket tkt;
+                string cookiestr;
+                HttpCookie ck;
+                tkt = new FormsAuthenticationTicket(1, Request.Form["username"].Trim(), DateTime.Now, DateTime.Now.AddMinutes(60), false, "");
+                cookiestr = FormsAuthentication.Encrypt(tkt);
+                ck = new HttpCookie("SmacCookie", cookiestr);
+                
+
                 StringBuilder sb = new StringBuilder();
 
                 var genders = GenderEntity.GetGenders();
@@ -25,17 +35,19 @@ namespace SMAC
                 genders.ForEach(t => sb.Append(t.GenderType.ToString() + ":"));
                 sb.Remove(sb.Length-1, 1);
 
-                Session["UserId"] = usr.UserId;
-                Session["FirstName"] = usr.FirstName;
-                Session["LastName"] = usr.LastName;
-                Session["PhoneNumber"] = usr.PhoneNumber;
-                Session["Email"] = usr.EmailAddress;
-                Session["MiddleName"] = usr.MiddleName;
-                Session["UserName"] = usr.UserCredential.UserName;
-                Session["Gender"] = usr.GenderType;
-                Session["Genders"] = sb.ToString();
+                ck.Values.Add("UserId", usr.UserId);
+                ck.Values.Add("FirstName", usr.FirstName);
+                ck.Values.Add("LastName", usr.LastName);
+                ck.Values.Add("PhoneNumber", usr.PhoneNumber);
+                ck.Values.Add("Email", usr.EmailAddress);
+                ck.Values.Add("MiddleName", usr.MiddleName);
+                ck.Values.Add("UserName", usr.UserCredential.UserName);
+                ck.Values.Add("Gender", usr.GenderType);
+                ck.Values.Add("Genders", sb.ToString());
 
-                Response.Redirect("/Home.aspx");
+                Response.Cookies.Add(ck);
+
+                FormsAuthentication.RedirectFromLoginPage(Request.Form["username"].Trim(), false);
             }
             catch (Exception ex)
             {

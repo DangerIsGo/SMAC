@@ -12,6 +12,8 @@ namespace SMAC.Database
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class SmacEntities : DbContext
     {
@@ -51,5 +53,14 @@ namespace SMAC.Database
         public virtual DbSet<UserCredential> UserCredentials { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<LatestNews> LatestNewsSet { get; set; }
+    
+        public virtual ObjectResult<usp_GetLatestPrivateMessages_Result> usp_GetLatestPrivateMessages(string userID)
+        {
+            var userIDParameter = userID != null ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetLatestPrivateMessages_Result>("usp_GetLatestPrivateMessages", userIDParameter);
+        }
     }
 }
