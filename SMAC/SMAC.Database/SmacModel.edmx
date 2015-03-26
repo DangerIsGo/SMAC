@@ -872,6 +872,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="usp_GetClubSchedule" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="schoolId" Type="int" Mode="In" />
+          <Parameter Name="clubName" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="usp_GetLatestPrivateMessages" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="varchar" Mode="In" />
         </Function>
@@ -1266,6 +1270,10 @@
           </AssociationSet>
           <FunctionImport Name="usp_GetLatestPrivateMessages" ReturnType="Collection(SmacModel.usp_GetLatestPrivateMessages_Result)">
           <Parameter Name="UserID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetClubSchedule" ReturnType="Collection(SmacModel.usp_GetClubSchedule_Result)">
+            <Parameter Name="schoolId" Mode="In" Type="Int32" />
+            <Parameter Name="clubName" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="Admin">
@@ -2165,6 +2173,10 @@
           <Property Type="String" Name="ReceiverMN" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="ReceiverLN" Nullable="false" MaxLength="50" />
           </ComplexType>
+        <ComplexType Name="usp_GetClubSchedule_Result">
+          <Property Type="String" Name="Day" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="TimeSpans" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2466,6 +2478,14 @@
                 <ScalarProperty Name="ReceiverFN" ColumnName="ReceiverFN" />
                 <ScalarProperty Name="ReceiverMN" ColumnName="ReceiverMN" />
                 <ScalarProperty Name="ReceiverLN" ColumnName="ReceiverLN" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetClubSchedule" FunctionName="SmacModel.Store.usp_GetClubSchedule">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SmacModel.usp_GetClubSchedule_Result">
+                <ScalarProperty Name="Day" ColumnName="Day" />
+                <ScalarProperty Name="TimeSpans" ColumnName="TimeSpans" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

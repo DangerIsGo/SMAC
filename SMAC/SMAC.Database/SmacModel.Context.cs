@@ -62,5 +62,18 @@ namespace SMAC.Database
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetLatestPrivateMessages_Result>("usp_GetLatestPrivateMessages", userIDParameter);
         }
+    
+        public virtual ObjectResult<usp_GetClubSchedule_Result> usp_GetClubSchedule(Nullable<int> schoolId, string clubName)
+        {
+            var schoolIdParameter = schoolId.HasValue ?
+                new ObjectParameter("schoolId", schoolId) :
+                new ObjectParameter("schoolId", typeof(int));
+    
+            var clubNameParameter = clubName != null ?
+                new ObjectParameter("clubName", clubName) :
+                new ObjectParameter("clubName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetClubSchedule_Result>("usp_GetClubSchedule", schoolIdParameter, clubNameParameter);
+        }
     }
 }

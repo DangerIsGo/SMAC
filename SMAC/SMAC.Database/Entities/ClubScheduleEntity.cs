@@ -54,13 +54,13 @@ namespace SMAC.Database
             }
         }
 
-        public static List<ClubSchedule> GetClubSchedule(string clubName, int schoolId)
+        public static List<usp_GetClubSchedule_Result> GetClubSchedule(string clubName, int schoolId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    return (from a in context.ClubSchedules where a.ClubName == clubName && a.SchoolId == schoolId select a).Include(a => a.TimeSlot).ToList();
+                    return context.usp_GetClubSchedule(schoolId, clubName).ToList();
                 }
             }
             catch (Exception ex)

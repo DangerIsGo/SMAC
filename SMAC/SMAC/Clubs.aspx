@@ -2,33 +2,84 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ScriptContent" runat="server">
     <script>
         var localStore = undefined;
+        var selectedClub = undefined;
 
         function OnSchoolSelectorChange() {
             if ($('#schoolSelect option:selected').val() != '') {
                 $('#clubList').empty();
-                $('#clubSchedule').empty();
+                $('#clubScheduleSub').hide();
+                $('#clubScheduleSub').empty();
+                selectedClub = undefined;
 
                 LoadClubs($('#schoolSelect option:selected').val());
             }
         }
 
         function LoadClubs(schoolId) {
+            $('#clubList').empty();
+            $('#clubScheduleSub').empty();
+
             $.each(localStore, function (i, el) {
                 if (el.id == schoolId) {
                     $.each(el.clubs, function (j, elm) {
+                        var blk = $('<div>').addClass('clubBlock');
+                        var name = $('<div>').addClass('clubName').text(elm.name);
+                        var desc = $('<div>').addClass('clubDesc').text(elm.desc);
+                        blk.attr('data-name', elm.name);
+                        blk.on('click', function () {
+                            LoadClubSchedule($(this).attr('data-name'));
+                            $('#clubScheduleSub').show();
+
+                            $('.clubBlock').removeClass('selected');
+                            $(this).addClass('selected');
+                        });
+
+                        name.appendTo(blk);
+                        desc.appendTo(blk);
+
+                        blk.appendTo($('#clubList'));
+                    });
+                }
+            });
+        }
+
+        function LoadClubSchedule(clubName) {
+            var schoolId = $('#schoolSelect option:selected').val();
+
+            $('#clubScheduleSub').empty();
+
+            $.each(localStore, function (i, el) {
+                if (el.id == schoolId) {
+                    $.each(el.clubs, function (j, elm) {
+                        if (elm.name == clubName) {
+                            $.each(elm.schedule, function (k, sch) {
+                                var dayBlock = $('<div>').addClass('dayBlock');
+                                var day = $('<div>').addClass('day').text(sch.day)
+                                
+                                day.appendTo(dayBlock);
+
+                                var times = sch.times.split(',');
+
+                                $.each(times, function (l, ts) {
+                                    var timeslot = $('<div>').addClass('timeSlot').text('- ' + ts);
+                                    timeslot.appendTo(dayBlock);
+                                });
+
+                                $('#clubScheduleSub').append(dayBlock);
+                            });
+                        }
                     });
                 }
             });
         }
 
         $(document).ready(function () {
-            //Load school List
-            //If one school, just load club list
-            //If multiple, load school selector
 
             var userid = '<%= Session["UserId"] %>'
 
             $('#schoolSelect').on('change', OnSchoolSelectorChange);
+            $('#clubScheduleSub').hide();
+            $('#clubScheduleSub').empty();
 
             $.ajax({
                 type: "POST",
@@ -38,18 +89,11 @@
                 success: function (data) {
                     var res = JSON.parse(data.d);
 
-                    localStore = res;
-
                     console.log(res);
 
-                    if (res.length == 1) {
-                        // Just load
-                        $.each(res, function (i, el) {
-                            $('#schoolSelect').append('<option value="' + el.id + '">' + el.name + '</option>');
-                            LoadClubs(el.id);
-                        });
-                    }
-                    else if (res.length > 1) {
+                    localStore = res;
+
+                    if (res.length > 0) {
                         $('#schoolSelect').append('<option>Select a School</option>');
                         $('#schoolSelect').append('<option>---------------</option>');
                         $.each(res, function (i, el) {
@@ -71,6 +115,6 @@
     </div>
 
     <div id="clubSchedule">
-
+        <div id="clubScheduleSub"></div>
     </div>
 </asp:Content>

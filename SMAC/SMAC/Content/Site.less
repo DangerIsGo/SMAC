@@ -36,14 +36,65 @@ body {
             margin-top: 20px;
         }
 
+        #clubScheduleSub {
+            width: 200px;
+            text-align: left;
+            margin: 20px auto 0 auto;
+            border: 1px solid lightslategrey;
+            padding: 10px 0 10px 10px;
+            .border-radius-mixin(5px);
+
+            .dayBlock {
+                &:not(:nth-child(1)) {
+                    margin-top: 30px;
+                }
+
+                .day {
+                    font-size: 20px;
+                }
+
+                .timeSlot {
+                    margin-left: 10px;
+                }
+            }
+        }
+
         #clubList {
             display: inline-block;
             width: 50%;
+            float: left;
+
+            .clubBlock {
+                border: 1px solid lightslategrey;
+                display: block;
+                width: 300px;
+                margin: 20px auto 0 auto;
+                cursor: pointer;
+                .border-radius-mixin(5px);
+
+                &.selected {
+                    background-color: lightyellow;
+                }
+
+                .clubName {
+                    font-size: 20px;
+                }
+
+                .clubDesc {
+                    word-wrap: break-word;
+                    margin-top: 5px;
+                    font-size: 12px;
+                    text-align: left;
+                    padding-left: 8px;
+                    padding-bottom: 2px;
+                }
+            }
         }
 
         #clubSchedule {
             display: inline-block;
             width: 50%;
+            float: left;
         }
 
         #errMsg {

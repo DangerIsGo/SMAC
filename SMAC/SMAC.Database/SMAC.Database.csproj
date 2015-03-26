@@ -167,6 +167,9 @@
     <Compile Include="UserCredential.cs">
       <DependentUpon>SmacModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="usp_GetClubSchedule_Result.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="usp_GetLatestPrivateMessages_Result.cs">
       <DependentUpon>SmacModel.tt</DependentUpon>
     </Compile>
