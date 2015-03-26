@@ -29,6 +29,130 @@ body {
         margin-right: auto;
         padding-top: 20px;
 
+        #schSel {
+            width: 100%;
+            text-align: left;
+            margin-left: 50px;
+            margin-top: 20px;
+        }
+
+        #clubList {
+            display: inline-block;
+            width: 50%;
+        }
+
+        #clubSchedule {
+            display: inline-block;
+            width: 50%;
+        }
+
+        #errMsg {
+            color: red;
+            font-size: 12px;
+        }
+
+        #pmBreadCrumbs {
+            text-align: left;
+            margin-left: 100px;
+            margin-top: 10px;
+        }
+
+        .convoBlock {
+            width: 800px;
+            text-align: left;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid lightslategrey;
+            margin-top: 3px;
+            cursor: default;
+
+            &:nth-child(1) {
+                margin-top: 20px;
+            }
+
+            &.input {
+                border: 0;
+                margin-top: 3px;
+            }
+
+            textarea {
+                height: 50px;
+                display: inline-block;
+                width: 695px;
+                vertical-align: top;
+            }
+
+            .msgSend {
+                height: 50px;
+                display: inline-block;
+                width:100px;
+                vertical-align: top;
+                margin-left: 5px;
+            }
+
+            .convoInfo {
+                width: 200px;
+                display: inline-block;
+                border-right: 1px solid lightslategrey;
+                font-size: 12px;
+                background-color: lightgrey;
+
+                .convoSender {
+                    display: block;
+                    padding-left: 10px;
+                }
+
+                .convoDate {
+                    display: block;
+                    padding-left: 10px;
+                }
+            }
+
+            .convoContent {
+                width: 600px;
+                vertical-align: top;
+                padding-left: 5px;
+                padding-top: 2px;
+            }
+        }
+
+        .privMsgBlock {
+            margin-top: 20px;
+            border: 1px solid lightslategrey;
+            text-align: left;
+            width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            .border-radius-mixin(5px);
+            padding-left: 5px;
+            cursor: pointer;
+            background-color: white;
+
+            &.unread {
+                background-color: lightyellow;
+            }        
+            
+
+            .privMsgBlkUsr {
+                .privMsgUsr {
+                    font-size: 22px;
+                }
+
+                .privMsgSent {
+                    font-size: 10px;
+                    float: right;
+                    margin-right: 20px;
+                    margin-top: 5px;
+                }
+
+            }
+            .privMsgBlkSnip {
+                font-size: 10px;
+                margin-top: 5px;
+                padding-left: 10px;
+            }
+        }
+
         .contentContainer {
 
             border: 1px solid grey;

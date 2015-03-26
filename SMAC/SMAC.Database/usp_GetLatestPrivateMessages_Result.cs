@@ -19,5 +19,11 @@ namespace SMAC.Database
         public string Content { get; set; }
         public System.DateTime DateSent { get; set; }
         public Nullable<System.DateTime> DateRead { get; set; }
+        public string SenderFN { get; set; }
+        public string SenderMN { get; set; }
+        public string SenderLN { get; set; }
+        public string ReceiverFN { get; set; }
+        public string ReceiverMN { get; set; }
+        public string ReceiverLN { get; set; }
     }
 }

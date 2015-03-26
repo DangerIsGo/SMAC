@@ -35,6 +35,72 @@ namespace SMAC
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string LoadClubList(string userId, string schoolId)
+        {
+            try
+            {
+                var clubList = ClubEntity.GetAllClubs(int.Parse(schoolId), userId);
+
+                return JsonConvert.SerializeObject("");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string SendPrivateMessage(string userId, string toUserId, string content)
+        {
+            try
+            {
+                PrivateMessageEntity.SendPrivateMessage(toUserId, userId, content);
+
+                return JsonConvert.SerializeObject(new { data = "success", date = DateTime.Now.ToString("M/d/yyyy h:mm:ss tt") });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string GetConversation(string userId, string msgId)
+        {
+            try
+            {
+                var msgs = PrivateMessageEntity.GetPrivateMessageThread(userId, msgId);
+
+                // Mark all in conversation as read
+                PrivateMessageEntity.MarkAllConvosAsRead(userId, msgId);
+
+                var rtnObj = new object[msgs.Count];
+
+                for (int i = 0; i < msgs.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        content = msgs[i].Content,
+                        date = msgs[i].DateSent.ToString("M/d/yyyy h:m:ss tt"),
+                        read = msgs[i].DateRead, 
+                        sender = msgs[i].FromUser != userId ? msgs[i].UserSentFrom.FirstName + " " + msgs[i].UserSentFrom.LastName : "You"
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string GetUserMessages(string userId, string pageIndex)
         {
             try
@@ -47,9 +113,11 @@ namespace SMAC
                 {
                     var obj = new
                     {
-                        content = msgs[i].Content.Substring(0, 50),
-                        date = msgs[i].DateSent,
-                        from = msgs[i].UserSentFrom.FirstName + " " + msgs[i].UserSentFrom.LastLoggedIn
+                        content = msgs[i].Content,
+                        date = msgs[i].DateSent.ToShortDateString(),
+                        read = msgs[i].DateRead == null && msgs[i].ToUser == userId ? "false" : "true",
+                        from = msgs[i].FromUser == userId ? msgs[i].ReceiverFN + " " + msgs[i].ReceiverLN : msgs[i].SenderFN + " " + msgs[i].SenderLN,
+                        id = msgs[i].FromUser == userId ? msgs[i].ToUser : msgs[i].FromUser
                     };
 
                     rtnObj[i] = obj;
@@ -61,7 +129,6 @@ namespace SMAC
             {
                 throw ex;
             }
-            return null;
         }
 
         [WebMethod]
@@ -133,6 +200,68 @@ namespace SMAC
             catch (Exception)
             {
                 return null;
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string GetUserSchoolsAndClubs(string userId)
+        {
+            try
+            {
+                var schools = SchoolEntity.GetUsersSchools(userId);
+
+                var schObj = new object[schools.Count];
+
+                for (int i = 0; i < schools.Count; ++i)
+                {
+                    var clubs = ClubEntity.GetAllClubs(schools[i].SchoolId, userId);
+
+                    var clubObj = new object[clubs.Count];
+
+                    for (int j = 0; j < clubs.Count; ++j)
+                    {
+                        var scheds = ClubScheduleEntity.GetClubSchedule(clubs[j].ClubName, schools[i].SchoolId);
+
+                        var schdObj = new object[scheds.Count];
+
+                        for (int k = 0; k < scheds.Count; ++k)
+                        {
+                            var scheduleObj = new
+                            {
+                                day = scheds[k].DayValue,
+                                start = scheds[k].TimeSlot.StartTime.ToShortTimeString(),
+                                end = scheds[k].TimeSlot.EndTime.ToShortTimeString()
+                            };
+
+                            schdObj[k] = scheduleObj;
+                        }
+
+                        var Cobj = new
+                        {
+                            name = clubs[j].ClubName,
+                            desc = clubs[j].Description,
+                            schedule = schdObj
+                        };
+
+                        clubObj[j] = Cobj;
+                    }
+
+                    var Sobj = new
+                    {
+                        name = schools[i].SchoolName,
+                        id = schools[i].SchoolId,
+                        clubs = clubObj
+                    };
+
+                    schObj[i] = Sobj;
+                }
+
+                return JsonConvert.SerializeObject(schObj);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

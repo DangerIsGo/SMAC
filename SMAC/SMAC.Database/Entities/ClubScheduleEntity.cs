@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data.Entity;
 
 namespace SMAC.Database
 {
@@ -59,7 +60,7 @@ namespace SMAC.Database
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    return (from a in context.ClubSchedules where a.ClubName == clubName && a.SchoolId == schoolId select a).ToList();
+                    return (from a in context.ClubSchedules where a.ClubName == clubName && a.SchoolId == schoolId select a).Include(a => a.TimeSlot).ToList();
                 }
             }
             catch (Exception ex)

@@ -19,8 +19,10 @@ namespace SMAC.Database
                         Content = content,
                         DateSent = DateTime.Now,
                         DateRead = null,
-                        UserSentFrom = UserEntity.GetUser(fromUserId),
-                        UserSentTo = UserEntity.GetUser(toUserId)
+                        UserSentFrom = UserEntity.GetUser(fromUserId, context),
+                        UserSentTo = UserEntity.GetUser(toUserId, context),
+                        ToUser = toUserId,
+                        FromUser = fromUserId
                     };
 
                     context.PrivateMessages.Add(pm);
@@ -40,6 +42,34 @@ namespace SMAC.Database
                 using (SmacEntities context = new SmacEntities())
                 {
                     return (from a in context.PrivateMessages where a.PrivateMessageId == id select a).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static void MarkAllConvosAsRead(string userId1, string userId2)
+        {
+            try
+            {
+                using (SmacEntities context = new SmacEntities())
+                {
+                    var msgs = (from a in context.PrivateMessages
+                                where (a.FromUser == userId1 && a.ToUser == userId2) || (a.FromUser == userId2 && a.ToUser == userId1)
+                                select a).Include(a => a.UserSentFrom).Include(a => a.UserSentTo).ToList();
+
+                    foreach (var pm in msgs)
+                    {
+                        if (pm.DateRead != null)
+                        {
+                            pm.DateRead = DateTime.Now;
+                            context.Entry(pm).State = EntityState.Modified;
+                        }
+                    }
+
+                    context.SaveChanges();
                 }
             }
             catch (Exception ex)
@@ -69,7 +99,7 @@ namespace SMAC.Database
             }
         }
 
-        public static List<PrivateMessage> GetLatestPrivateMessages(string userId, int pageIndex, int pageCount)
+        public static List<usp_GetLatestPrivateMessages_Result> GetLatestPrivateMessages(string userId, int pageIndex, int pageCount)
         {
             try
             {
@@ -77,12 +107,7 @@ namespace SMAC.Database
                 {
                     var msgs = context.usp_GetLatestPrivateMessages(userId).ToList();
 
-                    foreach (object msg in msgs)
-                    {
-
-                    }
-
-                    return new List<PrivateMessage>();
+                    return msgs;
                 }
             }
             catch (Exception ex)
@@ -99,7 +124,7 @@ namespace SMAC.Database
                 {
                     return (from a in context.PrivateMessages
                             where (a.FromUser == userId1 && a.ToUser == userId2) || (a.FromUser == userId2 && a.ToUser == userId1)
-                            select a).ToList();
+                            select a).Include(a => a.UserSentFrom).Include(a => a.UserSentTo).ToList();
                 }
             }
             catch (Exception ex)

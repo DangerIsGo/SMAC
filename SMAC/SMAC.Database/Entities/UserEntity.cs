@@ -91,6 +91,11 @@ namespace SMAC.Database
             }
         }
 
+        public static User GetUser(string Id, SmacEntities context)
+        {
+            return (from a in context.Users where a.UserId == Id select a).FirstOrDefault();
+        }
+
         public static List<User> GetAllUsersInSchool(int schoolId)
         {
             using (SmacEntities context = new SmacEntities())

@@ -1265,7 +1265,7 @@
             <End Role="LatestNew" EntitySet="LatestNewsSet" />
           </AssociationSet>
           <FunctionImport Name="usp_GetLatestPrivateMessages" ReturnType="Collection(SmacModel.usp_GetLatestPrivateMessages_Result)">
-            <Parameter Name="UserID" Mode="In" Type="String" />
+          <Parameter Name="UserID" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="Admin">
@@ -2158,7 +2158,13 @@
           <Property Type="String" Name="Content" Nullable="false" MaxLength="Max" />
           <Property Type="DateTime" Name="DateSent" Nullable="false" Precision="23" />
           <Property Type="DateTime" Name="DateRead" Nullable="true" Precision="23" />
-        </ComplexType>
+          <Property Type="String" Name="SenderFN" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="SenderMN" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="SenderLN" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ReceiverFN" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ReceiverMN" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ReceiverLN" Nullable="false" MaxLength="50" />
+          </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2454,6 +2460,12 @@
                 <ScalarProperty Name="Content" ColumnName="Content" />
                 <ScalarProperty Name="DateSent" ColumnName="DateSent" />
                 <ScalarProperty Name="DateRead" ColumnName="DateRead" />
+                <ScalarProperty Name="SenderFN" ColumnName="SenderFN" />
+                <ScalarProperty Name="SenderMN" ColumnName="SenderMN" />
+                <ScalarProperty Name="SenderLN" ColumnName="SenderLN" />
+                <ScalarProperty Name="ReceiverFN" ColumnName="ReceiverFN" />
+                <ScalarProperty Name="ReceiverMN" ColumnName="ReceiverMN" />
+                <ScalarProperty Name="ReceiverLN" ColumnName="ReceiverLN" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

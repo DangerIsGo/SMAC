@@ -80,21 +80,21 @@
             var leftI = $('<i>').addClass('fa').addClass('fa-arrow-circle-left');
             var rightI = $('<i>').addClass('fa').addClass('fa-arrow-circle-right');
 
-            if (schoolIdx == 1 && schoolIds.length > 1) {
-                rightI.addClass('active');
-                rightI.on('click', GetNextSchool);
-            }
-            else if (schoolIdx < schoolIds.length && schoolIds.length > 1)
-            {
-                rightI.addClass('active');
-                rightI.on('click', GetNextSchool);
-                leftI.addClass('active');
-                leftI.on('click', GetPrevSchool);
-            }
-            else if (schoolIdx == schoolIds.length)
-            {
-                leftI.addClass('active');
-                leftI.on('click', GetPrevSchool);
+            if (schoolIds.length > 1) {
+                if (schoolIdx == 1 && schoolIds.length > 1) {
+                    rightI.addClass('active');
+                    rightI.on('click', GetNextSchool);
+                }
+                else if (schoolIdx < schoolIds.length && schoolIds.length > 1) {
+                    rightI.addClass('active');
+                    rightI.on('click', GetNextSchool);
+                    leftI.addClass('active');
+                    leftI.on('click', GetPrevSchool);
+                }
+                else if (schoolIdx == schoolIds.length) {
+                    leftI.addClass('active');
+                    leftI.on('click', GetPrevSchool);
+                }
             }
 
             left.append(leftI);
