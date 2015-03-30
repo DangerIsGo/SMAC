@@ -8,17 +8,34 @@
 
             if (msgId != '') {
                 $('#pmBreadCrumbs').show();
+                $('#messageList').hide();
+                $('#convoList').show();
+                $('#messageInput').show();
+                $('#errMsg').show();
+                $('#newMessage').hide();
             }
             else {
+                $('#convoList').hide();
+                $('#messageList').show();
                 $('#pmBreadCrumbs').hide();
                 $('#messageInput').hide();
                 $('#errMsg').hide();
+                $('#newMessage').show();
             }
 
             $('.privMsgBlock').on('click', function () {
 
                 var baseUrl = window.location.href.substring(0, window.location.href.indexOf('?'));
                 window.location.href = baseUrl + "?msgId=" + $(this).attr('data-msgid');
+            });
+
+            $('.msgSend').on('click', function () {
+                //Send message!
+                SendMessage();
+            });
+
+            $('#newMessage').on('click', function () {
+                window.location.href = '/NewMessage.aspx'
             });
         });
 
@@ -28,92 +45,6 @@
                 results = regex.exec(location.search);
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
-
-        <%--$(document).ready(function () {
-
-            var userid = '<%= Session["UserId"] %>'
-
-            var idx = getParameterByName('idx');
-            idx = idx == '' ? '1' : idx;
-
-            var msgId = getParameterByName('msgId');
-
-            $('#pmBreadCrumbs').hide();
-
-            if (msgId != '') {
-
-                $.ajax({
-                    type: "POST",
-                    url: "Services.asmx/GetConversation",
-                    contentType: 'application/json; charset=utf-8',
-                    data: "{'userId': '" + userid + "', 'msgId': '" + msgId + "'}",
-                    success: function (data) {
-                        var res = JSON.parse(data.d);
-
-                        $('#loading img').hide();
-                        $('#loading .pleaseWait').hide();
-
-                        $.each(res, function (i, el) {
-                            CreateMessageBlock(el.sender, el.date, el.content);
-                        });
-
-                        var convBlk = $('<div>').addClass('convoBlock').addClass('input');
-
-                        // Append on input 
-                        var txtInput = $('<textarea>').addClass('convoInput').attr('id', 'text-input');
-
-                        convBlk.append(txtInput);
-
-                        var txtInputSend = $('<input type="button">').addClass('msgSend').val('Send');
-                        txtInputSend.on('click', function () {
-                            //Send message!
-                            SendMessage();
-                        });
-                        convBlk.append(txtInputSend)
-
-                        $('#messageInput').append(convBlk);
-                        $('#pmBreadCrumbs').show();
-                    }
-                });
-            }
-            else {
-
-                $.ajax({
-                    type: "POST",
-                    url: "Services.asmx/GetUserMessages",
-                    contentType: 'application/json; charset=utf-8',
-                    data: "{'userId': '" + userid + "', 'pageIndex': '" + idx + "'}",
-                    success: function (data) {
-                        var res = JSON.parse(data.d);
-
-                        $('#loading img').hide();
-                        $('#loading .pleaseWait').hide();
-
-                        $.each(res, function (i, el) {
-                            var msgBlk = $('<div>').addClass('privMsgBlock');
-
-                            // Unread?  Highlight them!
-                            if (el.read == 'false')
-                                msgBlk.addClass('unread');
-
-                            var fromUsr = $('<div>').addClass('privMsgBlkUsr');
-                            var usr = $('<span>').addClass('privMsgUsr').text(el.from);
-                            var when = $('<span>').addClass('privMsgSent').text(el.date);
-                            usr.appendTo(fromUsr);
-                            when.appendTo(fromUsr);
-                            var snippet = $('<div>').addClass('privMsgBlkSnip').text(getMsgSubStr(el.content));
-
-                            msgBlk.on('click', function () {
-                                var baseUrl = window.location.href.substring(0, window.location.href.indexOf('?'));
-                                window.location.href = baseUrl + "?msgId=" + el.id;
-                            });
-
-                            msgBlk.append(fromUsr).append(snippet).appendTo($('#messageList'));
-                        });
-                    }
-                });
-            }
-        });
 
         function CreateMessageBlock(sender, date, content) {
             var convBlk = $('<div>').addClass('convoBlock');
@@ -130,7 +61,9 @@
 
             convBlk.append(contentBlk);
 
-            $('#messageList').append(convBlk);
+            console.log(convBlk);
+
+            $('#convoList').append(convBlk);
         }
 
         function getMsgSubStr(line) {
@@ -142,12 +75,10 @@
             }
         }
 
-        
-
         function SendMessage() {
             var msgId = getParameterByName('msgId');
             var message = $('#text-input').val();
-            var userid = '<%= Session["UserId"] %>'
+            var userid = '<%= Session["UserId"] %>';
 
             //Disable button
             //Disable inputbox
@@ -161,7 +92,7 @@
                     type: "POST",
                     url: "Services.asmx/SendPrivateMessage",
                     contentType: 'application/json; charset=utf-8',
-                    data: "{'userId': '" + userid + "', 'toUserId': '" + msgId + "', 'content': '" + message + "'}",
+                    data: "{'userId': '" + userid + "', 'msgId': '" + msgId + "', 'content': '" + message + "'}",
                     success: function (data) {
                         var res = JSON.parse(data.d);
 
@@ -188,13 +119,20 @@
             else {
                 console.log('empty message');
             }
-        }--%>
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <div id="pmBreadCrumbs"><i class="fa fa-arrow-circle-left"></i><a href="Messages.aspx" class="bread"> Back to messages</a></div>
     <div id="messageList">
+        <div class="privMsgBlock" id="newMessage">
+            <div class="privMsgBlkUsr newMsg">
+                <i class="fa fa-plus-circle"></i>
+                <span>New Message</span>
+            </div>
+            <div class="privMsgBlkSnip"><%#Eval("LastMessage")%></div>
+        </div>
         <asp:ListView ID="messageListView" runat="server">
             <ItemTemplate>
                 <div class="privMsgBlock" data-msgId="<%#Eval("Id")%>" data-unread="<%#Eval("UnRead")%>">
@@ -210,6 +148,27 @@
             </LayoutTemplate>
         </asp:ListView>
     </div>
-    <div id="messageInput"></div>
+    <div id="convoList">
+        <asp:ListView ID="convoListView" runat="server">
+            <ItemTemplate>
+                <div class="convoBlock">
+                    <span class="convoInfo">
+                        <span class="convoDate">On <%#Eval("Date")%>,</span>
+                        <span class="convoSender"><%#Eval("Author")%> said:</span>
+                    </span>
+                    <span class="convoContent"><%#Eval("Content")%></span>
+                </div>
+            </ItemTemplate>
+            <LayoutTemplate>
+                <asp:PlaceHolder runat="server" ID="itemPlaceHolder"></asp:PlaceHolder>
+            </LayoutTemplate>
+        </asp:ListView>
+    </div>
+    <div id="messageInput">
+        <div class="convoBlock input">
+            <textarea class="convoInput" id="text-input"></textarea>
+            <input type="button" class="msgSend" value="Send">
+        </div>
+    </div>
     <div><span id="errMsg"></span></div>
 </asp:Content>

@@ -38,10 +38,30 @@ namespace SMAC
             }
             else
             {
-                var msg = PrivateMessageEntity.GetPrivateMessage(int.Parse(Request.QueryString["msgId"]));
-                var msgs = PrivateMessageEntity.GetPrivateMessageThread(msg.ToUser, msg.FromUser);
+                var origMsg = PrivateMessageEntity.GetPrivateMessage(int.Parse(Request.QueryString["msgId"]));
+                var msgs = PrivateMessageEntity.GetPrivateMessageThread(origMsg.ToUser, origMsg.FromUser);
 
+                PrivateMessageEntity.MarkAllConvosAsRead(origMsg.ToUser, origMsg.FromUser);
 
+                var list = new List<string> { "Date", "Author", "Content" };
+
+                DataTable table = new DataTable();
+
+                foreach (var item in list)
+                    table.Columns.Add(item, typeof(string));
+
+                //Now add some rows(which will be repeated in the ItemTemplate)
+                foreach (var msg in msgs)
+                {
+                    table.Rows.Add(
+                        msg.DateSent,
+                        msg.FromUser == userId ? "You" : msg.UserSentFrom.FirstName + " " + msg.UserSentFrom.LastName,
+                        msg.Content
+                        );
+                }
+
+                convoListView.DataSource = table;
+                convoListView.DataBind();                
             }
         }
     }

@@ -62,7 +62,7 @@ namespace SMAC.Database
 
                     foreach (var pm in msgs)
                     {
-                        if (pm.DateRead != null)
+                        if (pm.DateRead == null)
                         {
                             pm.DateRead = DateTime.Now;
                             context.Entry(pm).State = EntityState.Modified;

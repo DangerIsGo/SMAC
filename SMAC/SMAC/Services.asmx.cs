@@ -51,11 +51,13 @@ namespace SMAC
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public string SendPrivateMessage(string userId, string toUserId, string content)
+        public string SendPrivateMessage(string userId, string msgId, string content)
         {
             try
             {
-                PrivateMessageEntity.SendPrivateMessage(toUserId, userId, content);
+                var pm = PrivateMessageEntity.GetPrivateMessage(int.Parse(msgId));
+
+                PrivateMessageEntity.SendPrivateMessage(pm.ToUser == userId ? pm.FromUser : pm.ToUser, userId, content);
 
                 return JsonConvert.SerializeObject(new { data = "success", date = DateTime.Now.ToString("M/d/yyyy h:mm:ss tt") });
             }

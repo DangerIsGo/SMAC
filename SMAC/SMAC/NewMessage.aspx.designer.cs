@@ -10,24 +10,33 @@
 namespace SMAC {
     
     
-    public partial class Messages {
+    public partial class NewMessage {
         
         /// <summary>
-        /// messageListView control.
+        /// ddl_AllUsers control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ListView messageListView;
+        protected global::System.Web.UI.WebControls.DropDownList ddl_AllUsers;
         
         /// <summary>
-        /// convoListView control.
+        /// textInput control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ListView convoListView;
+        protected global::System.Web.UI.WebControls.TextBox textInput;
+        
+        /// <summary>
+        /// textSubmit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button textSubmit;
     }
 }

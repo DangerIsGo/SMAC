@@ -100,7 +100,8 @@
             else if (window.location.href.indexOf("Clubs") > -1) {
                 $('#clubs').addClass('active');
             }
-            else if (window.location.href.indexOf("Messages") > -1) {
+            else if ((window.location.href.indexOf("Messages") > -1) ||
+                (window.location.href.indexOf("NewMessage") > -1)){
                 $('#messages').addClass('active');
             }
             else if (window.location.href.indexOf("Classes") > -1) {

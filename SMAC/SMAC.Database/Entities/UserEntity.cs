@@ -100,7 +100,7 @@ namespace SMAC.Database
         {
             using (SmacEntities context = new SmacEntities())
             {
-                return (from a in context.Schools where a.SchoolId == schoolId select a).First().Users.ToList();
+                return (from a in context.Schools where a.SchoolId == schoolId select a).First().Users.OrderBy(t=>t.LastName).ThenBy(t=>t.FirstName).ThenBy(t=>t.MiddleName).ToList();
             }
         }
 
