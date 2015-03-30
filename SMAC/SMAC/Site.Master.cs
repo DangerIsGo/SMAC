@@ -1,12 +1,9 @@
 ﻿using SMAC.Database;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace SMAC
 {
@@ -81,7 +78,7 @@ namespace SMAC
                 HttpCookie ck;
                 tkt = new FormsAuthenticationTicket(1, Session["UserName"].ToString(), DateTime.Now, DateTime.Now.AddMinutes(60), false, "");
                 cookiestr = FormsAuthentication.Encrypt(tkt);
-                ck = new HttpCookie(FormsAuthentication.FormsCookieName, cookiestr);
+                ck = new HttpCookie("SmacCookie", cookiestr);
 
 
                 StringBuilder sb = new StringBuilder();
@@ -99,6 +96,8 @@ namespace SMAC
                 ck.Values.Add("Email", Session["Email"].ToString());
                 ck.Values.Add("UserName", Session["UserName"].ToString());
                 ck.Values.Add("Gender", Session["Gender"].ToString());
+                ck.Values.Add("SchoolName", Session["SchoolName"].ToString());
+                ck.Values.Add("SchoolId", Session["SchoolId"].ToString());
                 ck.Values.Add("Genders", sb.ToString());
 
                 Response.Cookies.Add(ck);
@@ -114,7 +113,15 @@ namespace SMAC
                 Session["Email"] = Request.Cookies["SmacCookie"]["Email"];
                 Session["UserName"] = Request.Cookies["SmacCookie"]["UserName"];
                 Session["Gender"] = Request.Cookies["SmacCookie"]["Gender"];
+                Session["SchoolName"] = Request.Cookies["SmacCookie"]["SchoolName"];
+                Session["SchoolId"] = Request.Cookies["SmacCookie"]["SchoolId"];
                 Session["Genders"] = Request.Cookies["SmacCookie"]["Genders"];
+
+                if (Session["SchoolName"] != null)
+                {
+                    schoolBanner.Visible = true;
+                    schoolBanner.InnerHtml = Request.Cookies["SmacCookie"]["SchoolName"];
+                }
             }
         }
     }

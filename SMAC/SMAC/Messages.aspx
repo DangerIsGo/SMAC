@@ -2,6 +2,34 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ScriptContent" runat="server">
     <script>
         $(document).ready(function () {
+            $('[data-unread="true"]').addClass('unread');
+
+            var msgId = getParameterByName('msgId');
+
+            if (msgId != '') {
+                $('#pmBreadCrumbs').show();
+            }
+            else {
+                $('#pmBreadCrumbs').hide();
+                $('#messageInput').hide();
+                $('#errMsg').hide();
+            }
+
+            $('.privMsgBlock').on('click', function () {
+
+                var baseUrl = window.location.href.substring(0, window.location.href.indexOf('?'));
+                window.location.href = baseUrl + "?msgId=" + $(this).attr('data-msgid');
+            });
+        });
+
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        <%--$(document).ready(function () {
 
             var userid = '<%= Session["UserId"] %>'
 
@@ -114,12 +142,7 @@
             }
         }
 
-        function getParameterByName(name) {
-            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-                results = regex.exec(location.search);
-            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-        }
+        
 
         function SendMessage() {
             var msgId = getParameterByName('msgId');
@@ -165,16 +188,28 @@
             else {
                 console.log('empty message');
             }
-        }
+        }--%>
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div id="loading">
-        <div class="pleaseWait">Please wait while your messages are loading</div>
-        <img src="Images/ajax-loader-white.gif" />
-    </div>
+
     <div id="pmBreadCrumbs"><i class="fa fa-arrow-circle-left"></i><a href="Messages.aspx" class="bread"> Back to messages</a></div>
-    <div id="messageList"></div>
+    <div id="messageList">
+        <asp:ListView ID="messageListView" runat="server">
+            <ItemTemplate>
+                <div class="privMsgBlock" data-msgId="<%#Eval("Id")%>" data-unread="<%#Eval("UnRead")%>">
+                    <div class="privMsgBlkUsr">
+                        <span class="privMsgUsr"><%#Eval("Name")%></span>
+                        <span class="privMsgSent"><%#Eval("Date")%></span>
+                    </div>
+                    <div class="privMsgBlkSnip"><%#Eval("LastMessage")%></div>
+                </div>
+            </ItemTemplate>
+            <LayoutTemplate>
+                <asp:PlaceHolder runat="server" ID="itemPlaceHolder"></asp:PlaceHolder>
+            </LayoutTemplate>
+        </asp:ListView>
+    </div>
     <div id="messageInput"></div>
     <div><span id="errMsg"></span></div>
 </asp:Content>

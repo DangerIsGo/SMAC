@@ -10,33 +10,24 @@
 namespace SMAC {
     
     
-    public partial class SiteMaster {
+    public partial class SchoolSelection {
         
         /// <summary>
-        /// ScriptContent control.
+        /// ddList_SchoolSelect control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder ScriptContent;
+        protected global::System.Web.UI.WebControls.DropDownList ddList_SchoolSelect;
         
         /// <summary>
-        /// schoolBanner control.
+        /// SchoolSelectSubmit control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl schoolBanner;
-        
-        /// <summary>
-        /// MainContent control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.WebControls.Button SchoolSelectSubmit;
     }
 }

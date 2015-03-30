@@ -1,9 +1,9 @@
 ﻿using SMAC.Database;
 using System;
 using System.Text;
-using System.Web.UI;
-using System.Web.Security;
 using System.Web;
+using System.Web.Security;
+using System.Web.UI;
 
 namespace SMAC
 {
@@ -46,7 +46,7 @@ namespace SMAC
                 ck.Values.Add("Genders", sb.ToString());
 
                 Response.Cookies.Add(ck);
-
+                
                 FormsAuthentication.RedirectFromLoginPage(Request.Form["username"].Trim(), false);
             }
             catch (Exception ex)

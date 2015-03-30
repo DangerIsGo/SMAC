@@ -1,9 +1,7 @@
-﻿using System;
+﻿using SMAC.Database;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using System.Data;
 
 namespace SMAC
 {
@@ -11,7 +9,33 @@ namespace SMAC
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            var schoolId = int.Parse(Request.Cookies["SmacCookie"]["SchoolId"]);
+
+            var school = SchoolEntity.GetSchool(schoolId);
+            var latestNews = LatestNewsEntity.GetLatestNews(schoolId, null);
+
+            this.SchoolNameDiv.InnerText = school.SchoolName;
+            this.SchoolAddrDiv.InnerText = school.StreetAddress;
+            this.SchoolCityDiv.InnerText = school.City;
+            this.SchoolStateDiv.InnerText = school.State;
+            this.SchoolZipDiv.InnerText = school.ZipCode;
+            this.SchoolPhoneDiv.InnerText = school.PhoneNumber;
+
+            var list = new List<string> { "News", "Author" };
+
+            var table = new DataTable();
+
+            foreach (var item in list)
+                table.Columns.Add(item, typeof(string));
+
+            //Now add some rows(which will be repeated in the ItemTemplate)
+            foreach (var news in latestNews)
+            {
+                table.Rows.Add(news.Content, string.Concat("Posted by ", news.User.FirstName, " ", news.User.LastName, " at ", news.PostedAt.ToString()));
+            }
+
+            latestNewsListView.DataSource = table;
+            latestNewsListView.DataBind();
         }
     }
 }

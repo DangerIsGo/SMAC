@@ -63,7 +63,7 @@
     <asp:ContentPlaceHolder ID="ScriptContent" runat="server" />
     <div class="mainContent">
         <div class="contentContainer">
-            <div class="banner master"><span>SMAC - Student Management And Collaboration</span></div>
+            <div id="schoolBanner" runat="server" visible="false" class="banner master"></div>
             <div class="mainHeader">
                 <div class="headerRow">
                     <div class="headerOption welcome"><span id="greeting"></span></div>

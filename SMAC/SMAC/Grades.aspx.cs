@@ -8,8 +8,6 @@ namespace SMAC
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (System.Web.HttpContext.Current.Session.Keys.Count == 0)
-                return;
             var userId = Session["UserId"].ToString();
 
             var schools = SchoolEntity.GetUsersSchools(userId);

@@ -46,7 +46,22 @@ namespace SMAC.Database
             }
         }
 
-        public static List<Club> GetAllClubs(int schoolId, string userId)
+        public static List<Club> GetAllClubs(int schoolId)
+        {
+            try
+            {
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Clubs where a.SchoolId == schoolId select a).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static List<Club> GetMyClubs(int schoolId, string userId)
         {
             try
             {
