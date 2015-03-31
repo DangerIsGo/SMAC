@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
+
 
 namespace SMAC.Database
 {
@@ -96,11 +98,11 @@ namespace SMAC.Database
             return (from a in context.Users where a.UserId == Id select a).FirstOrDefault();
         }
 
-        public static List<User> GetAllUsersInSchool(int schoolId)
+        public static List<usp_GetUsersInSchool_Result> GetAllUsersInSchool(int schoolId, string userIdToFilter)
         {
             using (SmacEntities context = new SmacEntities())
             {
-                return (from a in context.Schools where a.SchoolId == schoolId select a).First().Users.OrderBy(t=>t.LastName).ThenBy(t=>t.FirstName).ThenBy(t=>t.MiddleName).ToList();
+                return context.usp_GetUsersInSchool(schoolId, userIdToFilter).ToList();
             }
         }
 

@@ -50,6 +50,20 @@ body {
             padding-bottom: 8px;
             margin-top: 10px;
 
+            .filters {
+                text-align: center;
+                margin-bottom: 5px;
+
+                .userFilter {
+                    margin-left: 10px;
+                }
+
+                .filterLabel {
+                    font-weight: normal;
+                    margin-left: 3px;
+                }
+            }
+
             select {
                 width: 300px;
                 .border-radius-mixin(5px);
@@ -408,6 +422,11 @@ body {
 
                     .gradeSelect {
                         margin-top: 5px;
+                        display: inline-block;
+
+                        &:nth-child(2) {
+                            margin-left: 30px;
+                        }
 
                         select {
                             .border-radius-mixin(5px);

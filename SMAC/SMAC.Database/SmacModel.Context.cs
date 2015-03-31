@@ -75,5 +75,18 @@ namespace SMAC.Database
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetClubSchedule_Result>("usp_GetClubSchedule", schoolIdParameter, clubNameParameter);
         }
+    
+        public virtual ObjectResult<usp_GetUsersInSchool_Result> usp_GetUsersInSchool(Nullable<int> schoolId, string userId)
+        {
+            var schoolIdParameter = schoolId.HasValue ?
+                new ObjectParameter("SchoolId", schoolId) :
+                new ObjectParameter("SchoolId", typeof(int));
+    
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetUsersInSchool_Result>("usp_GetUsersInSchool", schoolIdParameter, userIdParameter);
+        }
     }
 }

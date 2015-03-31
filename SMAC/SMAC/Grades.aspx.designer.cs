@@ -13,12 +13,21 @@ namespace SMAC {
     public partial class Grades {
         
         /// <summary>
-        /// schoolList control.
+        /// yearList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList schoolList;
+        protected global::System.Web.UI.WebControls.DropDownList yearList;
+        
+        /// <summary>
+        /// periodList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList periodList;
     }
 }

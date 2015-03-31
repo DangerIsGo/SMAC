@@ -173,6 +173,9 @@
     <Compile Include="usp_GetLatestPrivateMessages_Result.cs">
       <DependentUpon>SmacModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="usp_GetUsersInSchool_Result.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="SmacModel.edmx">

@@ -1,10 +1,7 @@
 ﻿using SMAC.Database;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using System.Data;
 
 namespace SMAC
 {
@@ -15,15 +12,70 @@ namespace SMAC
             var schoolId = Request.Cookies["SmacCookie"]["SchoolId"];
             var userId = Request.Cookies["SmacCookie"]["UserId"];
 
-            var usrList = UserEntity.GetAllUsersInSchool(int.Parse(schoolId));
-
-            usrList = usrList.Where(t=>t.UserId != userId).ToList();
-
-            ddl_AllUsers.Items.Add(new ListItem("----------------------------------------------------------"));
-
-            foreach(var user in usrList)
+            if (!IsPostBack)
             {
-                ddl_AllUsers.Items.Add(new ListItem(user.LastName + "," + user.FirstName, user.UserId));
+                var usrList = UserEntity.GetAllUsersInSchool(int.Parse(schoolId), userId);
+
+                List<string> items = new List<string>() { "Id", "Role", "Name" };
+
+                DataTable table = new DataTable();
+                foreach (var item in items)
+                    table.Columns.Add(item, typeof(string));
+
+                table.Rows.Add("-", "-", "----------------------------------------------------------");
+
+                foreach(var user in usrList)
+                {
+                    table.Rows.Add(
+                        user.UserId,
+                        DetermineRole(user),
+                        user.LastName + " " + user.FirstName
+                        );
+                }
+
+                receiverListView.DataSource = table;
+                receiverListView.DataBind();
+            }
+        }
+
+        private string DetermineRole(usp_GetUsersInSchool_Result user)
+        {
+            if (user.Student.HasValue && user.Student.Value)
+                return "student";
+
+            if (user.Teacher.HasValue && user.Teacher.Value)
+                return "teacher";
+
+            if (user.Admin.HasValue && user.Admin.Value)
+                return "admin";
+
+            if (user.Staff.HasValue && user.Staff.Value)
+                return "staff";
+
+            return string.Empty;
+        }
+
+        protected void textSubmit_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //var userId = Request.Cookies["SmacCookie"]["UserId"];
+                //var toUserId = this.ddl_AllUsers.SelectedValue;
+                //var content = this.textInput.Text.Trim();
+
+                //PrivateMessageEntity.SendPrivateMessage(toUserId, userId, content);
+
+                //this.textInput.Text = string.Empty;
+                //this.ddl_AllUsers.SelectedIndex = 0;
+                //this.textSubmit.Enabled = false;
+
+                //this.sendStatus.Text = "Message was sent successfully!";
+                //this.sendStatus.ForeColor = System.Drawing.Color.Green;
+            }
+            catch
+            {
+                this.sendStatus.Text = "An internal error has occurred.  Please notify your administrator.";
+                this.sendStatus.ForeColor = System.Drawing.Color.Red;
             }
         }
     }

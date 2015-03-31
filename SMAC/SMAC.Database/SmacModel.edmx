@@ -879,6 +879,10 @@
         <Function Name="usp_GetLatestPrivateMessages" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="usp_GetUsersInSchool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SchoolId" Type="int" Mode="In" />
+          <Parameter Name="UserId" Type="varchar" Mode="In" />
+        </Function>
         <EntityContainer Name="SmacModelStoreContainer">
           <EntitySet Name="Admins" EntityType="Self.Admins" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Classes" EntityType="Self.Classes" Schema="dbo" store:Type="Tables" />
@@ -1274,6 +1278,10 @@
           <FunctionImport Name="usp_GetClubSchedule" ReturnType="Collection(SmacModel.usp_GetClubSchedule_Result)">
             <Parameter Name="schoolId" Mode="In" Type="Int32" />
             <Parameter Name="clubName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetUsersInSchool" ReturnType="Collection(SmacModel.usp_GetUsersInSchool_Result)">
+            <Parameter Name="SchoolId" Mode="In" Type="Int32" />
+            <Parameter Name="UserId" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="Admin">
@@ -2177,6 +2185,25 @@
           <Property Type="String" Name="Day" Nullable="true" MaxLength="15" />
           <Property Type="String" Name="TimeSpans" Nullable="true" />
         </ComplexType>
+        <ComplexType Name="usp_GetUsersInSchool_Result">
+          <Property Type="String" Name="UserId" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="FirstName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="MiddleName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="LastName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="EmailAddress" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="PhoneNumber" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Gender" Nullable="false" MaxLength="7" />
+          <Property Type="DateTime" Name="StartDate" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="EndDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <Property Type="DateTime" Name="LastLoggedIn" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="LastLoggedOut" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="Admin" Nullable="true" />
+          <Property Type="Boolean" Name="Staff" Nullable="true" />
+          <Property Type="Boolean" Name="Student" Nullable="true" />
+          <Property Type="Boolean" Name="Teacher" Nullable="true" />
+          <Property Type="String" Name="SchoolName" Nullable="false" MaxLength="125" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2486,6 +2513,29 @@
               <ComplexTypeMapping TypeName="SmacModel.usp_GetClubSchedule_Result">
                 <ScalarProperty Name="Day" ColumnName="Day" />
                 <ScalarProperty Name="TimeSpans" ColumnName="TimeSpans" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetUsersInSchool" FunctionName="SmacModel.Store.usp_GetUsersInSchool">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SmacModel.usp_GetUsersInSchool_Result">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="LastLoggedIn" ColumnName="LastLoggedIn" />
+                <ScalarProperty Name="LastLoggedOut" ColumnName="LastLoggedOut" />
+                <ScalarProperty Name="Admin" ColumnName="Admin" />
+                <ScalarProperty Name="Staff" ColumnName="Staff" />
+                <ScalarProperty Name="Student" ColumnName="Student" />
+                <ScalarProperty Name="Teacher" ColumnName="Teacher" />
+                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

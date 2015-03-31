@@ -8,15 +8,27 @@ namespace SMAC
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            var userId = Session["UserId"].ToString();
+            var schoolId = int.Parse(Request.Cookies["SmacCookie"]["SchoolId"]);
 
-            var schools = SchoolEntity.GetUsersSchools(userId);
-
-            this.schoolList.Items.Add(new ListItem("-----------------"));
-
-            foreach (var school in schools)
+            if (!IsPostBack)
             {
-                this.schoolList.Items.Add(new ListItem(school.SchoolName, school.SchoolId.ToString()));
+                var years = SchoolYearEntity.GetSchoolYears(schoolId);
+                var periods = MarkingPeriodEntity.GetMarkingPeriods(schoolId);
+
+                this.periodList.Items.Add("-----------------------------");
+
+                foreach (var mp in periods)
+                {
+                    this.periodList.Items.Add(new ListItem(mp.FullYear ? "All Year" : mp.Period, mp.MarkingPeriodId.ToString()));
+                }
+
+
+                this.yearList.Items.Add("-----------------------------");
+
+                foreach (var year in years)
+                {
+                    this.yearList.Items.Add(new ListItem(year.Year, year.Year));
+                }
             }
         }
     }
