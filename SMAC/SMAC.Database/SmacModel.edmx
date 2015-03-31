@@ -879,6 +879,12 @@
         <Function Name="usp_GetLatestPrivateMessages" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="usp_GetSectionThreads" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="sectionName" Type="varchar" Mode="In" />
+          <Parameter Name="className" Type="varchar" Mode="In" />
+          <Parameter Name="subjectName" Type="varchar" Mode="In" />
+          <Parameter Name="schoolId" Type="int" Mode="In" />
+        </Function>
         <Function Name="usp_GetUsersInSchool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SchoolId" Type="int" Mode="In" />
           <Parameter Name="UserId" Type="varchar" Mode="In" />
@@ -1282,6 +1288,12 @@
           <FunctionImport Name="usp_GetUsersInSchool" ReturnType="Collection(SmacModel.usp_GetUsersInSchool_Result)">
             <Parameter Name="SchoolId" Mode="In" Type="Int32" />
             <Parameter Name="UserId" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetSectionThreads" ReturnType="Collection(SmacModel.usp_GetSectionThreads_Result)">
+            <Parameter Name="sectionName" Mode="In" Type="String" />
+            <Parameter Name="className" Mode="In" Type="String" />
+            <Parameter Name="subjectName" Mode="In" Type="String" />
+            <Parameter Name="schoolId" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="Admin">
@@ -2204,6 +2216,14 @@
           <Property Type="Boolean" Name="Teacher" Nullable="true" />
           <Property Type="String" Name="SchoolName" Nullable="false" MaxLength="125" />
         </ComplexType>
+        <ComplexType Name="usp_GetSectionThreads_Result">
+          <Property Type="Int32" Name="id" Nullable="true" />
+          <Property Type="String" Name="title" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="author" Nullable="true" MaxLength="101" />
+          <Property Type="DateTime" Name="lastPostAt" Nullable="true" Precision="23" />
+          <Property Type="String" Name="lastPostBy" Nullable="true" MaxLength="101" />
+          <Property Type="Int32" Name="replies" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2536,6 +2556,18 @@
                 <ScalarProperty Name="Student" ColumnName="Student" />
                 <ScalarProperty Name="Teacher" ColumnName="Teacher" />
                 <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetSectionThreads" FunctionName="SmacModel.Store.usp_GetSectionThreads">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SmacModel.usp_GetSectionThreads_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="author" ColumnName="author" />
+                <ScalarProperty Name="lastPostAt" ColumnName="lastPostAt" />
+                <ScalarProperty Name="lastPostBy" ColumnName="lastPostBy" />
+                <ScalarProperty Name="replies" ColumnName="replies" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

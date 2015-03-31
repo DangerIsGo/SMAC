@@ -29,7 +29,7 @@ namespace SMAC
                     table.Rows.Add(
                         user.UserId,
                         DetermineRole(user),
-                        user.LastName + " " + user.FirstName
+                        user.LastName + ", " + user.FirstName + (string.IsNullOrWhiteSpace(user.MiddleName) ? string.Empty : user.MiddleName)
                         );
                 }
 

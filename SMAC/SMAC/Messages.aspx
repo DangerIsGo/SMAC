@@ -78,7 +78,6 @@
         function SendMessage() {
             var msgId = getParameterByName('msgId');
             var message = $('#text-input').val();
-            var userid = '<%= Session["UserId"] %>';
 
             //Disable button
             //Disable inputbox
@@ -92,7 +91,7 @@
                     type: "POST",
                     url: "Services.asmx/SendPrivateMessage",
                     contentType: 'application/json; charset=utf-8',
-                    data: "{'userId': '" + userid + "', 'msgId': '" + msgId + "', 'content': '" + message + "'}",
+                    data: "{'msgId': '" + msgId + "', 'content': '" + message + "'}",
                     success: function (data) {
                         var res = JSON.parse(data.d);
 

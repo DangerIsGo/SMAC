@@ -11,7 +11,7 @@ namespace SMAC
         {
             var schoolId = int.Parse(Request.Cookies["SmacCookie"]["SchoolId"]);
 
-            if (IsPostBack)
+            if (!IsPostBack)
             {
                 var school = SchoolEntity.GetSchool(schoolId);
                 var latestNews = LatestNewsEntity.GetLatestNews(schoolId, null);

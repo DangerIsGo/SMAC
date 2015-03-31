@@ -151,7 +151,7 @@ namespace SMAC.Database
                     else
                         throw new Exception("Username or password could not be found.");
 
-                    if (cred.User.Student == null && cred.User.Teacher == null && cred.User.Admin == null && cred.User.Staff == null)
+                    if (Helpers.GetUserRole(cred.UserId, context) == Helpers.Roles.None)
                     {
                         throw new Exception("User has not been placed into a role.  Please contact your lazy administrator.");
                     }

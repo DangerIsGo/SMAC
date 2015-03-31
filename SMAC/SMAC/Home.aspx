@@ -4,6 +4,7 @@
 </asp:Content>
 
 <asp:Content ID="MainContent" ContentPlaceHolderID="MainContent" runat="server">
+
     <div class="blockRow">
         <div class="block" id="schoolBlock">
             <div>

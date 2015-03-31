@@ -1,33 +1,47 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="NewMessage.aspx.cs" Inherits="SMAC.NewMessage" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ScriptContent" runat="server">
     <script>
+
+        var localList = "";
+
         $(document).ready(function () {
             $('#MainContent_textInput').keyup(EnableSendButton);
             $('#ddl_AllUsers').change(EnableSendButton);
             $('.userFilter').on('click', FilterDropDown);
             $('#allusersFilter').attr('checked', 'checked');
+
+            SaveAllUsersList();
         });
 
+        function SaveAllUsersList() {
+            var options = $('#ddl_AllUsers option');
+
+            var json = '[';
+
+            $.each(options, function (i, el) {
+                json += '{"role":"' + $(el).attr('data-role') + '","name":"' +
+                            $(el).text() + '","id":"' + $(el).val() + '"},';
+            });
+
+            json = json.substr(0, json.length - 1);
+            json += ']';
+            localList = json;
+        }
+
         function FilterDropDown() {
-            var selected = $('.userFilter:checked').attr('data-type');
-            
-            
-            $('#ddl_AllUsers option').show();
+            if (localList != undefined) {
+                var selected = $('.userFilter:checked').attr('data-type');
+                var json = JSON.parse(localList);
 
-            if (selected == 'student') {
-                $('#ddl_AllUsers :not(option[data-role=student])').hide();
-            }
-            else if (selected == 'teacher') {
-                $('#ddl_AllUsers :not(option[data-role=teacher])').hide();
-            }
-            else if (selected == 'staff') {
-                $('#ddl_AllUsers :not(option[data-role=staff])').hide();
-            }
-            else if (selected == 'admin') {
-                $('#ddl_AllUsers :not(option[data-role=admin])').hide();
-            }
+                var ddl = $('#ddl_AllUsers');
+                ddl.empty();
 
-            $('#ddl_AllUsers option[data-role=-]').show();
+                $.each(json, function (i, el) {
+                    if (el.role == '-' || el.role == selected || selected == 'all') {
+                        ddl.append('<option value="'+el.id+'" data-role="'+el.role+'">'+el.name+'</option>')
+                    }
+                });
+            }
         }
 
         function EnableSendButton() {
@@ -41,7 +55,6 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div id="pmBreadCrumbs"><i class="fa fa-arrow-circle-left"></i><a href="Messages.aspx" class="bread"> Back to messages</a></div>
     <form runat="server">
         <div class="newMsgBlock">
             <div>1. Who would you like to send this message to?</div>

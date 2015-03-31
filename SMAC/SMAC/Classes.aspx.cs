@@ -29,5 +29,10 @@ namespace SMAC
                 this.yearList.Items.Add(new ListItem(year.Year, year.Year));
             }
         }
+
+        protected void searchButton_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

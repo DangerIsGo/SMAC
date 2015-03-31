@@ -11,6 +11,15 @@
   -ms-user-select: @val;
 }
 
+.gradient-mixin(@color1, @color2) {
+	background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, @color1), color-stop(1, @color2) );
+	background: -moz-linear-gradient( center top, @color2 5%, @color1 100% );
+    background-image: -ms-linear-gradient(top, @color1 0%, @color2 100%);
+    background-image: linear-gradient(to bottom, @color1 0%, @color2 100%);
+
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=@color2, endColorstr=@color1);
+}
+
 #Submit {
     .border-radius-mixin(5px);
     border: 1px solid lightslategrey;
@@ -28,6 +37,87 @@ body {
         margin-left: auto;
         margin-right: auto;
         padding-top: 20px;
+
+        #threadTable {
+            border: 1px solid black;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 20px;
+            background-color: lightyellow;
+
+            tr {
+                th {
+                    background-color: skyblue;
+                    font-weight: normal;
+                    font-size: 12px;
+                    padding-top: 1px;
+                    padding-bottom: 1px;
+                }
+                th, td {
+                    border: 1px solid black;
+                    text-align: center;
+
+                    &:nth-child(1) {
+                        width: 600px;
+                        text-align: left;
+                        padding-left: 8px;
+                    }
+                    &:nth-child(2) {
+                        width: 130px;
+                    }
+                    &:nth-child(3) {
+                        width: 120px;
+                    }
+                    &:nth-child(4) {
+                        width: 60px;
+                    }
+                }
+
+                td {
+                    height: 40px;
+
+                    &:nth-child(1) {
+                        font-size:16px;
+                    }
+                    &:nth-child(2) {
+                        word-wrap: break-word;
+                    }
+                    &:nth-child(3) {
+                        font-size: 10px;
+                    }
+                    &:nth-child(4) {
+                    }
+
+                    a {
+                        text-decoration: underline;
+                        color: #193C6F;
+                    }
+                }
+            }
+        }
+
+        .classBlock {
+            border: 1px solid lightslategrey;
+            .border-radius-mixin(5px);
+            width: 534px;
+            margin-top: 20px;
+            padding: 3px;
+            cursor: pointer;
+            .gradient-mixin(lightgrey, white);
+
+            .classHeader {
+                font-size: 10px;
+                font-style: italic;
+            }
+
+            .classBody {
+                font-size: 18px;
+            }
+        }
+
+        .schoolSelectDdl {
+            margin-bottom: 15px;
+        }
 
         .clubRadioSelect {
            padding-left: 100px;
@@ -430,6 +520,7 @@ body {
 
                         select {
                             .border-radius-mixin(5px);
+                            height: 30px;
                         }
                     }
 
@@ -617,11 +708,11 @@ body {
 }
 
 .saveBtn {
-    background-color:  forestgreen;
+    background-color:  forestgreen + #222;
     color: white;
 
     &:hover {
-        background-color:  forestgreen + #222222;
+        background-color:  forestgreen + #222 + #222;
         color: white;
     }
 }
@@ -637,20 +728,39 @@ body {
 }
 
 .sendButton {
-    background-color: forestgreen;
+    .gradient-mixin(forestgreen + #222 + #222, forestgreen);
     color: white;
     .border-radius-mixin(5px);
     width: 90px;
     height: 30px;
     cursor: pointer;
+    outline: 0;
+
+    &.inline {
+        margin-left: 30px;
+        width: 100px;
+        line-height: 30px;
+        display: inline-block;
+        vertical-align: middle;
+        box-sizing: border-box;
+        font-size: 14px;
+        text-align: center;
+        border: 1px solid grey;
+        bottom: 2px;
+    }
 
     &:hover {
-        background-color:  forestgreen + #222222;
+    .gradient-mixin(forestgreen + #222 + #222 + #222, forestgreen + #222);
         color: white;
     }
 
+    &:active {
+        top: 1px;
+        position: relative;
+    }
+
     &:disabled {
-        background-color: #D2D2D2;
+        .gradient-mixin(#D2D2D2, #D2D2D2);
         color: white;
         cursor: default;
     }

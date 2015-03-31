@@ -31,12 +31,21 @@ namespace SMAC {
         protected global::System.Web.UI.WebControls.DropDownList periodList;
         
         /// <summary>
-        /// classListView control.
+        /// searchButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ListView classListView;
+        protected global::System.Web.UI.WebControls.Button searchButton;
+        
+        /// <summary>
+        /// spinner control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image spinner;
     }
 }

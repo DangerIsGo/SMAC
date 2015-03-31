@@ -100,6 +100,7 @@
     <Compile Include="Grade.cs">
       <DependentUpon>SmacModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Helpers.cs" />
     <Compile Include="KhanShare.cs">
       <DependentUpon>SmacModel.tt</DependentUpon>
     </Compile>
@@ -171,6 +172,9 @@
       <DependentUpon>SmacModel.tt</DependentUpon>
     </Compile>
     <Compile Include="usp_GetLatestPrivateMessages_Result.cs">
+      <DependentUpon>SmacModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetSectionThreads_Result.cs">
       <DependentUpon>SmacModel.tt</DependentUpon>
     </Compile>
     <Compile Include="usp_GetUsersInSchool_Result.cs">

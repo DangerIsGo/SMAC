@@ -7,7 +7,7 @@ namespace SMAC.Database
 {
     public class ThreadEntity
     {
-        private static void CreateThread(string userId, string title, string secName, string className, 
+        public static void CreateThread(string userId, string title, string secName, string className, 
             string subjName, int schoolId, string content, int? repliedTo)
         {
             try
@@ -34,7 +34,7 @@ namespace SMAC.Database
             }
         }
 
-        private static void UpdateThread(int threadId, string content)
+        public static void UpdateThread(int threadId, string content)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace SMAC.Database
             }
         }
 
-        private static Thread GetThread(int threadId)
+        public static Thread GetThread(int threadId)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace SMAC.Database
             }
         }
 
-        private static List<Thread> GetAllPostsByUser(string userId)
+        public static List<Thread> GetAllPostsByUser(string userId)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace SMAC.Database
             }
         }
 
-        private static List<Thread> GetAllOriginalPostsByUser(string userId)
+        public static List<Thread> GetAllOriginalPostsByUser(string userId)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace SMAC.Database
             }
         }
 
-        private static List<Thread> GetAllPostsOfThread(int threadId)
+        public static List<Thread> GetAllPostsOfThread(int threadId)
         {
             try
             {
@@ -113,17 +113,13 @@ namespace SMAC.Database
             }
         }
 
-        private static List<Thread> GetSectionPosts(string secName, string className, string subjName, int schoolId)
+        public static List<usp_GetSectionThreads_Result> GetSectionPosts(string secName, string className, string subjName, int schoolId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    return (from a in context.Threads
-                            where a.ClassName == className && a.SubjectName == subjName
-                            && a.SectionName == secName && a.SchoolId == schoolId
-                            && a.RepliedTo == null
-                            select a).OrderByDescending(t => t.DateTimePosted).ToList();
+                    return context.usp_GetSectionThreads(secName, className, subjName, schoolId).ToList();
                 }
             }
             catch (Exception ex)
@@ -132,7 +128,7 @@ namespace SMAC.Database
             }
         }
 
-        private static List<Thread> GetNewPosts(string secName, string className, string subjName, int schoolId, DateTime lastLoggedOut)
+        public static List<Thread> GetNewPosts(string secName, string className, string subjName, int schoolId, DateTime lastLoggedOut)
         {
             try
             {
@@ -151,7 +147,7 @@ namespace SMAC.Database
             }
         }
 
-        private static void DeleteThread(int threadId)
+        public static void DeleteThread(int threadId)
         {
             try
             {

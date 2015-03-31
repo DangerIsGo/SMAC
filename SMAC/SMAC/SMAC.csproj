@@ -166,6 +166,7 @@
     <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\jquery.maskedinput.min.js" />
     <Content Include="Services.asmx" />
+    <Content Include="Threads.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -252,6 +253,13 @@
     </Compile>
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Threads.aspx.cs">
+      <DependentUpon>Threads.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Threads.aspx.designer.cs">
+      <DependentUpon>Threads.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>

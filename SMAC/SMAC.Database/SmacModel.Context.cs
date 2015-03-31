@@ -88,5 +88,26 @@ namespace SMAC.Database
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetUsersInSchool_Result>("usp_GetUsersInSchool", schoolIdParameter, userIdParameter);
         }
+    
+        public virtual ObjectResult<usp_GetSectionThreads_Result> usp_GetSectionThreads(string sectionName, string className, string subjectName, Nullable<int> schoolId)
+        {
+            var sectionNameParameter = sectionName != null ?
+                new ObjectParameter("sectionName", sectionName) :
+                new ObjectParameter("sectionName", typeof(string));
+    
+            var classNameParameter = className != null ?
+                new ObjectParameter("className", className) :
+                new ObjectParameter("className", typeof(string));
+    
+            var subjectNameParameter = subjectName != null ?
+                new ObjectParameter("subjectName", subjectName) :
+                new ObjectParameter("subjectName", typeof(string));
+    
+            var schoolIdParameter = schoolId.HasValue ?
+                new ObjectParameter("schoolId", schoolId) :
+                new ObjectParameter("schoolId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetSectionThreads_Result>("usp_GetSectionThreads", sectionNameParameter, classNameParameter, subjectNameParameter, schoolIdParameter);
+        }
     }
 }

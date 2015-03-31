@@ -34,21 +34,68 @@ namespace SMAC
             }
         }
 
-        [WebMethod]
+        [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public string SendPrivateMessage(string userId, string msgId, string content)
+        public void StoreSectionInClass(string sectionname, string classname, string subject, string mp, string year)
+        {
+            Session["SectionName"] = sectionname;
+            Session["ClassName"] = classname;
+            Session["SubjectName"] = subject;
+            Session["MarkingPeriod"] = mp;
+            Session["SchoolYear"] = year;
+            Session["UpdateCookie"] = "yes";
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string PopulateClassTable(string mp, string year)
         {
             try
             {
+                var schoolId = Session["SchoolId"].ToString();
+                var userId = Session["UserId"].ToString();
+
+                var enrollments = EnrollmentEntity.GetStudentEnrollments(userId, int.Parse(schoolId), int.Parse(mp), year);
+
+                var rtnObj = new object[enrollments.Count];
+
+                for (int i=0; i<enrollments.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        sectionname = enrollments[i].SectionName,
+                        classname = enrollments[i].ClassName,
+                        subjectname = enrollments[i].SubjectName
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string SendPrivateMessage(string msgId, string content)
+        {
+            try
+            {
+                var userId = Session["UserId"].ToString();
+
                 var pm = PrivateMessageEntity.GetPrivateMessage(int.Parse(msgId));
 
                 PrivateMessageEntity.SendPrivateMessage(pm.ToUser == userId ? pm.FromUser : pm.ToUser, userId, content);
 
                 return JsonConvert.SerializeObject(new { data = "success", date = DateTime.Now.ToString("M/d/yyyy h:mm:ss tt") });
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
             }
         }
 
@@ -119,7 +166,7 @@ namespace SMAC
             }
             catch(Exception)
             {
-                return JsonConvert.SerializeObject("An error has occurred.  Please try again later or contact an administrator.");
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
             }
         }
     }
