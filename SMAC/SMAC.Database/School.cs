@@ -18,12 +18,11 @@ namespace SMAC.Database
         {
             this.Clubs = new HashSet<Club>();
             this.Grades = new HashSet<Grade>();
-            this.MarkingPeriods = new HashSet<MarkingPeriod>();
+            this.LatestNews = new HashSet<LatestNews>();
             this.SchoolYears = new HashSet<SchoolYear>();
             this.Subjects = new HashSet<Subject>();
             this.TimeSlots = new HashSet<TimeSlot>();
             this.Users = new HashSet<User>();
-            this.LatestNews = new HashSet<LatestNews>();
         }
     
         public int SchoolId { get; set; }
@@ -36,11 +35,10 @@ namespace SMAC.Database
     
         public virtual ICollection<Club> Clubs { get; set; }
         public virtual ICollection<Grade> Grades { get; set; }
-        public virtual ICollection<MarkingPeriod> MarkingPeriods { get; set; }
+        public virtual ICollection<LatestNews> LatestNews { get; set; }
         public virtual ICollection<SchoolYear> SchoolYears { get; set; }
         public virtual ICollection<Subject> Subjects { get; set; }
         public virtual ICollection<TimeSlot> TimeSlots { get; set; }
         public virtual ICollection<User> Users { get; set; }
-        public virtual ICollection<LatestNews> LatestNews { get; set; }
     }
 }

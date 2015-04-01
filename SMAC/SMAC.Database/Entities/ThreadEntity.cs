@@ -7,8 +7,7 @@ namespace SMAC.Database
 {
     public class ThreadEntity
     {
-        public static void CreateThread(string userId, string title, string secName, string className, 
-            string subjName, int schoolId, string content, int? repliedTo)
+        public static void CreateThread(string userId, string title, int sectionId, string content, int? repliedTo)
         {
             try
             {
@@ -16,7 +15,7 @@ namespace SMAC.Database
                 {
                     var thread = new Thread()
                     {
-                        Section = SectionEntity.GetSection(schoolId, subjName, className, secName),
+                        Section = SectionEntity.GetSection(sectionId),
                         RepliedTo = repliedTo,
                         DateTimePosted = DateTime.Now,
                         Content = content,
@@ -113,13 +112,13 @@ namespace SMAC.Database
             }
         }
 
-        public static List<usp_GetSectionThreads_Result> GetSectionPosts(string secName, string className, string subjName, int schoolId)
+        public static List<usp_GetSectionThreads_Result> GetSectionPosts(int sectionId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    return context.usp_GetSectionThreads(secName, className, subjName, schoolId).ToList();
+                    return context.usp_GetSectionThreads(sectionId).ToList();
                 }
             }
             catch (Exception ex)
@@ -128,24 +127,24 @@ namespace SMAC.Database
             }
         }
 
-        public static List<Thread> GetNewPosts(string secName, string className, string subjName, int schoolId, DateTime lastLoggedOut)
-        {
-            try
-            {
-                using (SmacEntities context = new SmacEntities())
-                {
-                    return (from a in context.Threads
-                            where a.ClassName == className && a.SubjectName == subjName
-                            && a.SectionName == secName && a.SchoolId == schoolId
-                            && a.DateTimePosted > lastLoggedOut
-                            select a).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //public static List<Thread> GetNewPosts(string secName, string className, string subjName, int schoolId, DateTime lastLoggedOut)
+        //{
+        //    try
+        //    {
+        //        using (SmacEntities context = new SmacEntities())
+        //        {
+        //            return (from a in context.Threads
+        //                    where a.ClassName == className && a.SubjectName == subjName
+        //                    && a.SectionName == secName && a.SchoolId == schoolId
+        //                    && a.DateTimePosted > lastLoggedOut
+        //                    select a).ToList();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
         public static void DeleteThread(int threadId)
         {

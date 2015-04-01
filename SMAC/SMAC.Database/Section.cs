@@ -22,9 +22,10 @@ namespace SMAC.Database
             this.Threads = new HashSet<Thread>();
         }
     
+        public int SectionId { get; set; }
         public string SectionName { get; set; }
-        public string ClassName { get; set; }
-        public string SubjectName { get; set; }
+        public int ClassId { get; set; }
+        public int SubjectId { get; set; }
         public int SchoolId { get; set; }
         public string Description { get; set; }
     

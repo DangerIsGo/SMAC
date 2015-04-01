@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data.Entity;
 
 namespace SMAC.Database
 {
@@ -9,12 +10,12 @@ namespace SMAC.Database
     {
         public static void CreateSection(int schoolId, string subjName, string className, string sectionName, string description)
         {
-            CreateEditSection("ADD", schoolId, subjName, className, sectionName, description, null);
+            //CreateEditSection("ADD", schoolId, subjName, className, sectionName, description, null);
         }
 
         public static void UpdateSection(int schoolId, string subjName, string className, string sectionName, string description, string newSectionName)
         {
-            CreateEditSection("EDIT", schoolId, subjName, className, sectionName, description, newSectionName);
+            //CreateEditSection("EDIT", schoolId, subjName, className, sectionName, description, newSectionName);
         }
 
         public static List<Section> GetAllSchoolSections(int schoolId)
@@ -40,13 +41,13 @@ namespace SMAC.Database
             }
         }
 
-        public static List<Section> GetSections(int schoolId, string subjName, string className)
+        public static List<Section> GetSections(int schoolId, int subjectId, int classId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    var mClass = ClassEntity.GetClass(schoolId, subjName, className);
+                    var mClass = ClassEntity.GetClass(schoolId, subjectId, classId);
                     if (mClass != null)
                     {
                         return mClass.Sections.ToList();
@@ -61,15 +62,32 @@ namespace SMAC.Database
             }
         }
 
-        public static Section GetSection(int schoolId, string subjName, string className, string secName)
+        public static Section GetSection(int sectionId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
                     return (from a in context.Sections
-                            where a.SchoolId == schoolId && a.SubjectName == subjName
-                                && a.ClassName == className && a.SectionName == secName
+                            where a.SectionId == sectionId
+                            select a).Include(t=>t.Enrollments).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static Section GetSection(int schoolId, int subjectId, int classId, string sectionName)
+        {
+            try
+            {
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Sections
+                            where a.SchoolId == schoolId && a.SubjectId == subjectId
+                                && a.ClassId == classId && a.SectionName == sectionName
                             select a).FirstOrDefault();
                 }
             }
@@ -79,7 +97,7 @@ namespace SMAC.Database
             }
         }
 
-        private static void CreateEditSection(string op, int schoolId, string subjName, string className, string secName, string description, string newSectionName)
+        private static void CreateEditSection(string op, int schoolId, int subjectId, int classId, int? sectionId, string sectionName, string description)
         {
             try
             {
@@ -87,7 +105,7 @@ namespace SMAC.Database
                 {
                     if (op.Equals("ADD"))
                     {
-                        if (GetSection(schoolId, subjName, className, secName) != null)
+                        if (GetSection(schoolId, subjectId, classId, sectionName) != null)
                         {
                             throw new Exception("Section was not created.  Section name already exists for this school/subject/class.");
                         }
@@ -95,8 +113,8 @@ namespace SMAC.Database
                         {
                             Section section = new Section()
                             {
-                                SectionName = secName,
-                                Class = ClassEntity.GetClass(schoolId, subjName, className),
+                                SectionName = sectionName,
+                                Class = ClassEntity.GetClass(schoolId, subjectId, classId),
                                 Description = description
                             };
 
@@ -106,19 +124,15 @@ namespace SMAC.Database
                     }
                     else if (op.Equals("EDIT"))
                     {
-                        if (GetSection(schoolId, subjName, className, secName) == null)
+                        if (GetSection(sectionId.Value) == null)
                         {
                             throw new Exception("Section was not updated.  Section name not found.");
                         }
-                        else if (GetSection(schoolId, subjName, className, newSectionName) != null)
-                        {
-                            throw new Exception("Section was not updated.  New section name already exists in system.");
-                        }
                         else
                         {
-                            var mSection = GetSection(schoolId, subjName, className, secName);
+                            var mSection = GetSection(sectionId.Value);
 
-                            mSection.SectionName = newSectionName;
+                            mSection.SectionName = sectionName;
                             mSection.Description = description;
                             context.Entry(mSection).State = System.Data.Entity.EntityState.Modified;
                             context.SaveChanges();
@@ -132,13 +146,13 @@ namespace SMAC.Database
             }
         }
 
-        public static void DeleteSection(int schoolId, string subjName, string className, string secName)
+        public static void DeleteSection(int sectionId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    var section = GetSection(schoolId, subjName, className, secName);
+                    var section = GetSection(sectionId);
                     context.Sections.Remove(section);
                     context.SaveChanges();
                 }

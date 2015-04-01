@@ -12,27 +12,21 @@ namespace SMAC
             var userId = Request.Cookies["SmacCookie"]["UserId"];
 
             var years = SchoolYearEntity.GetSchoolYears(schoolId);
-            var periods = MarkingPeriodEntity.GetMarkingPeriods(schoolId);
 
-            this.periodList.Items.Add("-----------------------------");
+            //this.periodList.Items.Add("-----------------------------");
 
-            foreach (var mp in periods)
-            {
-                this.periodList.Items.Add(new ListItem(mp.FullYear ? "All Year" : mp.Period, mp.MarkingPeriodId.ToString()));
-            }
+            //foreach (var mp in periods)
+            //{
+            //    this.periodList.Items.Add(new ListItem(mp.FullYear ? "All Year" : mp.Period, mp.MarkingPeriodId.ToString()));
+            //}
 
 
-            this.yearList.Items.Add("-----------------------------");
+            this.yearList.Items.Add(new ListItem("-----------------------------", "-"));
 
             foreach (var year in years)
             {
-                this.yearList.Items.Add(new ListItem(year.Year, year.Year));
+                this.yearList.Items.Add(new ListItem(year.Year, year.SchoolYearId.ToString()));
             }
-        }
-
-        protected void searchButton_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

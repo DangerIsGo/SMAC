@@ -20,7 +20,7 @@ namespace SMAC.Database
             this.SectionSchedules = new HashSet<SectionSchedule>();
         }
     
-        public string Day1 { get; set; }
+        public string DayValue { get; set; }
     
         public virtual ICollection<ClubSchedule> ClubSchedules { get; set; }
         public virtual ICollection<SectionSchedule> SectionSchedules { get; set; }

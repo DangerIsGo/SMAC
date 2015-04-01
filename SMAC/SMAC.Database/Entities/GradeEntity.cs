@@ -12,11 +12,11 @@ namespace SMAC.Database.Entities
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    var gr = (from a in context.Grades where a.GradeVal == grade && a.SchoolId == schoolId select a).FirstOrDefault();
+                    var gr = (from a in context.Grades where a.GradeValue == grade && a.SchoolId == schoolId select a).FirstOrDefault();
 
                     if (gr != null)
                     {
-                        gr.GradeVal = newGrade;
+                        gr.GradeValue = newGrade;
                         context.Entry(gr).State = System.Data.Entity.EntityState.Modified;
                         context.SaveChanges();
                     }
@@ -36,7 +36,7 @@ namespace SMAC.Database.Entities
                 {
                     Grade grade = new Grade()
                     {
-                        GradeVal = val,
+                        GradeValue = val,
                         School = SchoolEntity.GetSchool(schoolId)
                     };
 
@@ -71,7 +71,7 @@ namespace SMAC.Database.Entities
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    var gr = (from a in context.Grades where a.GradeVal == grade && a.SchoolId == schoolId select a).FirstOrDefault();
+                    var gr = (from a in context.Grades where a.GradeValue == grade && a.SchoolId == schoolId select a).FirstOrDefault();
 
                     context.Grades.Remove(gr);
                     context.SaveChanges();

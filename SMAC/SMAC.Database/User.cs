@@ -17,11 +17,11 @@ namespace SMAC.Database
         public User()
         {
             this.ClubEnrollments = new HashSet<ClubEnrollment>();
+            this.LatestNews = new HashSet<LatestNews>();
             this.PrivateMessages = new HashSet<PrivateMessage>();
             this.PrivateMessages1 = new HashSet<PrivateMessage>();
             this.Threads = new HashSet<Thread>();
             this.Schools = new HashSet<School>();
-            this.LatestNews = new HashSet<LatestNews>();
         }
     
         public string UserId { get; set; }
@@ -40,6 +40,7 @@ namespace SMAC.Database
         public virtual Admin Admin { get; set; }
         public virtual ICollection<ClubEnrollment> ClubEnrollments { get; set; }
         public virtual Gender Gender { get; set; }
+        public virtual ICollection<LatestNews> LatestNews { get; set; }
         public virtual ICollection<PrivateMessage> PrivateMessages { get; set; }
         public virtual ICollection<PrivateMessage> PrivateMessages1 { get; set; }
         public virtual Staff Staff { get; set; }
@@ -48,6 +49,5 @@ namespace SMAC.Database
         public virtual ICollection<Thread> Threads { get; set; }
         public virtual UserCredential UserCredential { get; set; }
         public virtual ICollection<School> Schools { get; set; }
-        public virtual ICollection<LatestNews> LatestNews { get; set; }
     }
 }

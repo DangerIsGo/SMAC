@@ -16,15 +16,20 @@ namespace SMAC.Database
     {
         public SchoolYear()
         {
-            this.Enrollments = new HashSet<Enrollment>();
-            this.TeacherSchedules = new HashSet<TeacherSchedule>();
+            this.ClubSchedules = new HashSet<ClubSchedule>();
+            this.MarkingPeriods = new HashSet<MarkingPeriod>();
+            this.SectionSchedules = new HashSet<SectionSchedule>();
         }
     
-        public string Year { get; set; }
+        public int SchoolYearId { get; set; }
         public int SchoolId { get; set; }
+        public string Year { get; set; }
+        public System.DateTime StartDate { get; set; }
+        public System.DateTime EndDate { get; set; }
     
-        public virtual ICollection<Enrollment> Enrollments { get; set; }
+        public virtual ICollection<ClubSchedule> ClubSchedules { get; set; }
+        public virtual ICollection<MarkingPeriod> MarkingPeriods { get; set; }
         public virtual School School { get; set; }
-        public virtual ICollection<TeacherSchedule> TeacherSchedules { get; set; }
+        public virtual ICollection<SectionSchedule> SectionSchedules { get; set; }
     }
 }

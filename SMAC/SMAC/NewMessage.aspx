@@ -5,10 +5,16 @@
         var localList = "";
 
         $(document).ready(function () {
-            $('#MainContent_textInput').keyup(EnableSendButton);
+            $('#spinner').hide();
+
+            $('#textSubmit').attr('disabled', 'disabled');
+            $('#allusersFilter').attr('checked', 'checked');
+            $('#textInput').val('');
+
             $('#ddl_AllUsers').change(EnableSendButton);
             $('.userFilter').on('click', FilterDropDown);
-            $('#allusersFilter').attr('checked', 'checked');
+            $('#textSubmit').on('click', SendMessage);
+            $('#textInput').keyup(EnableSendButton);
 
             SaveAllUsersList();
         });
@@ -44,17 +50,52 @@
             }
         }
 
+        function SendMessage() {
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/SendPrivateMessage",
+                data: "{'toUserId':'" + $('#ddl_AllUsers option:selected').val() + "', 'content':'" + $('#textInput').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                beforeSend: function () {
+                    $('#spinner').show();
+                },
+                success: function (data) {
+                    $('#spinner').hide();
+                    var json = JSON.parse(data.d);
+                    
+                    if (json.data == 'success') {
+                        $('#sendStatus').text('Message was sent successfully!');
+                        $('#sendStatus').css('color', 'green');
+                        $('#textInput').val('');
+                        $('#ddl_AllUsers').prop('selectedIndex', 0);
+                    }
+                    else {
+                        $('#sendStatus').text('An internal error has occurred.  Please notify your administrator.');
+                        $('#sendStatus').css('color', 'red');
+                    }
+                }
+            });
+        }
+
         function EnableSendButton() {
-            if ($('#ddl_AllUsers').prop('selectedIndex') > 0 && $('#MainContent_textInput').val() != '') {
-                $('#MainContent_textSubmit').removeAttr('disabled');
+
+            $('#toUserId').val($('#ddl_AllUsers option:selected').val());
+
+            if ($('#ddl_AllUsers').prop('selectedIndex') > 0 && $('#textInput').val() != '') {
+                $('#textSubmit').removeAttr('disabled');
             }
             else {
-                $('#MainContent_textSubmit').attr('disabled', 'disabled');
+                $('#textSubmit').attr('disabled', 'disabled');
             }
+        }
+
+        function ClearStatus() {
+            $('#sendStatus').val('');
         }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <div id="pmBreadCrumbs"><i class="fa fa-arrow-circle-left"></i><a href="Messages.aspx" class="bread"> Back to messages</a></div>
     <form runat="server">
         <div class="newMsgBlock">
             <div>1. Who would you like to send this message to?</div>
@@ -79,12 +120,14 @@
         </div>
         <div class="newMsgBlock">
             <div>2. Enter your message.</div>
-            <asp:TextBox runat="server" ID="textInput" TextMode="MultiLine"></asp:TextBox>
+            <textarea id="textInput"></textarea>
         </div>
         <div class="newMsgBlock">
             <div>3. Send your message!</div>
-            <asp:Button runat="server" ID="textSubmit" Text="Send" Enabled="false" CssClass="sendButton" OnClick="textSubmit_Click" EnableViewState="true" />
+            <input type="button" id="textSubmit" class="sendButton" value="Send" />
         </div>
-        <div><asp:Label ID="sendStatus" runat="server"></asp:Label></div>
+        <div><label id="sendStatus"></label></div>
+        <span><asp:Image ImageUrl="~/Images/ajax-loader-white.gif" runat="server" ID="spinner" ClientIDMode="Static" /></span>
+        <asp:HiddenField ID="toUserId" runat="server" ClientIDMode="Static" />
     </form>
 </asp:Content>

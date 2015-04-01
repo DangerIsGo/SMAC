@@ -4,73 +4,74 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="e814e643e0ff4451bb5bca6820baf109" Name="Diagram1" ZoomLevel="47">
-        <EntityTypeShape EntityType="SmacModel.Admin" Width="1.5" PointX="5.25" PointY="19" />
-        <EntityTypeShape EntityType="SmacModel.Class" Width="1.5" PointX="5.25" PointY="15.75" />
-        <EntityTypeShape EntityType="SmacModel.ClubEnrollment" Width="1.5" PointX="5.25" PointY="21.875" />
-        <EntityTypeShape EntityType="SmacModel.Club" Width="1.5" PointX="3" PointY="21.875" />
-        <EntityTypeShape EntityType="SmacModel.ClubSchedule" Width="1.5" PointX="5.25" PointY="33.5" />
-        <EntityTypeShape EntityType="SmacModel.Day" Width="1.5" PointX="7.5" PointY="30.75" />
-        <EntityTypeShape EntityType="SmacModel.Enrollment" Width="1.5" PointX="9.75" PointY="25.125" />
-        <EntityTypeShape EntityType="SmacModel.Gender" Width="1.5" PointX="0.75" PointY="27.375" />
-        <EntityTypeShape EntityType="SmacModel.Grade" Width="1.5" PointX="3" PointY="39.625" />
-        <EntityTypeShape EntityType="SmacModel.KhanShare" Width="1.5" PointX="7.5" PointY="11.75" />
-        <EntityTypeShape EntityType="SmacModel.MarkingPeriod" Width="1.5" PointX="3" PointY="42.125" />
-        <EntityTypeShape EntityType="SmacModel.PrivateMessage" Width="1.5" PointX="5.25" PointY="37" />
-        <EntityTypeShape EntityType="SmacModel.School" Width="1.5" PointX="0.75" PointY="22.25" />
-        <EntityTypeShape EntityType="SmacModel.SchoolYear" Width="1.5" PointX="3" PointY="19.125" />
-        <EntityTypeShape EntityType="SmacModel.Section" Width="1.5" PointX="7.5" PointY="15.375" />
-        <EntityTypeShape EntityType="SmacModel.SectionSchedule" Width="1.5" PointX="9.75" PointY="30.125" />
-        <EntityTypeShape EntityType="SmacModel.Staff" Width="1.5" PointX="5.25" PointY="29.875" />
-        <EntityTypeShape EntityType="SmacModel.Student" Width="1.5" PointX="5.25" PointY="27.5" />
-        <EntityTypeShape EntityType="SmacModel.Subject" Width="1.5" PointX="3" PointY="16" />
-        <EntityTypeShape EntityType="SmacModel.Teacher" Width="1.5" PointX="5.25" PointY="25.125" />
-        <EntityTypeShape EntityType="SmacModel.TeacherSchedule" Width="1.5" PointX="12.75" PointY="26.375" />
-        <EntityTypeShape EntityType="SmacModel.Thread" Width="1.5" PointX="9.75" PointY="14.875" />
-        <EntityTypeShape EntityType="SmacModel.TimeSlot" Width="1.5" PointX="3" PointY="45.25" />
-        <EntityTypeShape EntityType="SmacModel.UserCredential" Width="1.5" PointX="5.25" PointY="40.375" />
-        <EntityTypeShape EntityType="SmacModel.User" Width="1.5" PointX="3" PointY="25.375" />
-        <AssociationConnector Association="SmacModel.FK__Admins__UserId__7A67F969" />
-        <AssociationConnector Association="SmacModel.FK__Classes__123F82FA" />
-        <AssociationConnector Association="SmacModel.FK__Sections__17043817" />
-        <AssociationConnector Association="SmacModel.FK__ClubEnrol__UserI__4A83DC1D" />
-        <AssociationConnector Association="SmacModel.FK__ClubEnrollments__498FB7E4" />
-        <AssociationConnector Association="SmacModel.FK__Clubs__SchoolId__1BC8ED34" />
-        <AssociationConnector Association="SmacModel.FK__ClubSchedules__42E2BA55" />
-        <AssociationConnector Association="SmacModel.FK__ClubSched__TimeS__43D6DE8E" />
-        <AssociationConnector Association="SmacModel.FK__ClubSchedul__Day__44CB02C7" />
-        <AssociationConnector Association="SmacModel.FK__SectionSche__Day__5130D9AC" />
-        <AssociationConnector Association="SmacModel.FK__Enrollmen__Grade__59C61FAD" />
-        <AssociationConnector Association="SmacModel.FK__Enrollmen__Marki__57DDD73B" />
-        <AssociationConnector Association="SmacModel.FK__Enrollmen__Schoo__58D1FB74" />
-        <AssociationConnector Association="SmacModel.FK__Enrollmen__UserI__55F58EC9" />
-        <AssociationConnector Association="SmacModel.FK__Enrollments__56E9B302" />
-        <AssociationConnector Association="SmacModel.FK__Users__Gender__6849492E" />
-        <AssociationConnector Association="SmacModel.FK__Grades__SchoolId__236A0EFC" />
-        <AssociationConnector Association="SmacModel.FK__MarkingPe__Schoo__3E1E0538" />
-        <AssociationConnector Association="SmacModel.FK__TeacherSc__Marki__60731D3C" />
-        <AssociationConnector Association="SmacModel.FK__PrivateMe__FromU__67201ACB" />
-        <AssociationConnector Association="SmacModel.FK__PrivateMe__ToUse__662BF692" />
-        <AssociationConnector Association="SmacModel.FK__SchoolYea__Schoo__367CE370" />
-        <AssociationConnector Association="SmacModel.FK__Subjects__School__0D7ACDDD" />
-        <AssociationConnector Association="SmacModel.FK__TimeSlots__Schoo__2EDBC1A8" />
-        <AssociationConnector Association="SmacModel.FK__TeacherSc__Schoo__61674175" />
-        <AssociationConnector Association="SmacModel.FK__SectionSchedules__4F48913A" />
-        <AssociationConnector Association="SmacModel.FK__TeacherSchedules__5F7EF903" />
-        <AssociationConnector Association="SmacModel.FK__Threads__719DA93E" />
-        <AssociationConnector Association="SmacModel.FK__SectionSc__TimeS__503CB573" />
-        <AssociationConnector Association="SmacModel.FK__Staff__UserId__7F2CAE86" />
-        <AssociationConnector Association="SmacModel.FK__Students__UserId__08B618C0" />
-        <AssociationConnector Association="SmacModel.FK__Teachers__UserId__03F163A3" />
-        <AssociationConnector Association="SmacModel.FK__TeacherSc__UserI__5E8AD4CA" />
-        <AssociationConnector Association="SmacModel.FK__Threads__Replied__70A98505" />
-        <AssociationConnector Association="SmacModel.FK__Threads__UserId__6FB560CC" />
-        <AssociationConnector Association="SmacModel.FK__UserCrede__UserI__6FEA6AF6" />
+      <Diagram DiagramId="e814e643e0ff4451bb5bca6820baf109" Name="Diagram1" ZoomLevel="81">
+        <EntityTypeShape EntityType="SmacModel.Admin" Width="1.5" PointX="8.25" PointY="24.875" />
+        <EntityTypeShape EntityType="SmacModel.Class" Width="1.5" PointX="5.25" PointY="47.625" />
+        <EntityTypeShape EntityType="SmacModel.ClubEnrollment" Width="1.5" PointX="8.25" PointY="28.5" />
+        <EntityTypeShape EntityType="SmacModel.Club" Width="1.5" PointX="3" PointY="41.25" />
+        <EntityTypeShape EntityType="SmacModel.ClubSchedule" Width="1.5" PointX="5.25" PointY="41.625" />
+        <EntityTypeShape EntityType="SmacModel.Day" Width="1.5" PointX="7.5" PointY="43.125" />
+        <EntityTypeShape EntityType="SmacModel.Enrollment" Width="1.5" PointX="9.75" PointY="32.125" />
+        <EntityTypeShape EntityType="SmacModel.Gender" Width="1.5" PointX="3.75" PointY="21" />
+        <EntityTypeShape EntityType="SmacModel.Grade" Width="1.5" PointX="3" PointY="17" />
+        <EntityTypeShape EntityType="SmacModel.KhanShare" Width="1.5" PointX="7.5" PointY="37.125" />
+        <EntityTypeShape EntityType="SmacModel.LatestNews" Width="1.5" PointX="3" PointY="23.5" />
+        <EntityTypeShape EntityType="SmacModel.MarkingPeriod" Width="1.5" PointX="5.25" PointY="37.5" />
+        <EntityTypeShape EntityType="SmacModel.PrivateMessage" Width="1.5" PointX="8.25" PointY="11.25" />
+        <EntityTypeShape EntityType="SmacModel.School" Width="1.5" PointX="0.75" PointY="22.875" />
+        <EntityTypeShape EntityType="SmacModel.SchoolYear" Width="1.5" PointX="3" PointY="37.5" />
+        <EntityTypeShape EntityType="SmacModel.Section" Width="1.5" PointX="7.5" PointY="47.25" />
+        <EntityTypeShape EntityType="SmacModel.SectionSchedule" Width="1.5" PointX="9.75" PointY="42.125" />
+        <EntityTypeShape EntityType="SmacModel.Staff" Width="1.5" PointX="8.25" PointY="15" />
+        <EntityTypeShape EntityType="SmacModel.Student" Width="1.5" PointX="8.25" PointY="22.5" />
+        <EntityTypeShape EntityType="SmacModel.Subject" Width="1.5" PointX="3" PointY="47.875" />
+        <EntityTypeShape EntityType="SmacModel.Teacher" Width="1.5" PointX="8.25" PointY="17.625" />
+        <EntityTypeShape EntityType="SmacModel.TeacherSchedule" Width="1.5" PointX="12.75" PointY="41.375" />
+        <EntityTypeShape EntityType="SmacModel.Thread" Width="1.5" PointX="9.75" PointY="36.125" />
+        <EntityTypeShape EntityType="SmacModel.TimeSlot" Width="1.5" PointX="3" PointY="44.125" />
+        <EntityTypeShape EntityType="SmacModel.UserCredential" Width="1.5" PointX="8.25" PointY="20" />
+        <EntityTypeShape EntityType="SmacModel.User" Width="1.5" PointX="6" PointY="21.875" />
+        <AssociationConnector Association="SmacModel.FK__Admins__UserId__5ECB9743" />
+        <AssociationConnector Association="SmacModel.FK__Classes__76A320D4" />
+        <AssociationConnector Association="SmacModel.FK__Sections__7B67D5F1" />
+        <AssociationConnector Association="SmacModel.FK__ClubEnrol__UserI__2FDB9E30" />
+        <AssociationConnector Association="SmacModel.FK__ClubEnrollments__2EE779F7" />
+        <AssociationConnector Association="SmacModel.FK__Clubs__SchoolId__002C8B0E" />
+        <AssociationConnector Association="SmacModel.FK__ClubSchedules__2746582F" />
+        <AssociationConnector Association="SmacModel.FK__ClubSched__Schoo__2A22C4DA" />
+        <AssociationConnector Association="SmacModel.FK__ClubSched__TimeS__283A7C68" />
+        <AssociationConnector Association="SmacModel.FK__ClubSchedul__Day__292EA0A1" />
+        <AssociationConnector Association="SmacModel.FK__SectionSche__Day__36889BBF" />
+        <AssociationConnector Association="SmacModel.FK__Enrollmen__Grade__401205F9" />
+        <AssociationConnector Association="SmacModel.FK__Enrollmen__Marki__3F1DE1C0" />
+        <AssociationConnector Association="SmacModel.FK__Enrollmen__UserI__3D35994E" />
+        <AssociationConnector Association="SmacModel.FK__Enrollments__3E29BD87" />
+        <AssociationConnector Association="SmacModel.FK__Users__Gender__4CACE708" />
+        <AssociationConnector Association="SmacModel.FK__Grades__SchoolId__07CDACD6" />
+        <AssociationConnector Association="SmacModel.FK__LatestNew__Schoo__62671DFD" />
+        <AssociationConnector Association="SmacModel.FK__LatestNew__UserI__635B4236" />
+        <AssociationConnector Association="SmacModel.FK__MarkingPe__Schoo__2281A312" />
+        <AssociationConnector Association="SmacModel.FK__SectionSc__Marki__377CBFF8" />
+        <AssociationConnector Association="SmacModel.FK__TeacherSc__Marki__46BF0388" />
+        <AssociationConnector Association="SmacModel.FK__PrivateMe__FromU__4D6C0117" />
+        <AssociationConnector Association="SmacModel.FK__PrivateMe__ToUse__4C77DCDE" />
+        <AssociationConnector Association="SmacModel.FK__SchoolYea__Schoo__1AE0814A" />
+        <AssociationConnector Association="SmacModel.FK__Subjects__School__71DE6BB7" />
+        <AssociationConnector Association="SmacModel.FK__TimeSlots__Schoo__133F5F82" />
+        <AssociationConnector Association="SmacModel.FK__SectionSc__Schoo__3870E431" />
+        <AssociationConnector Association="SmacModel.FK__SectionSchedules__34A0534D" />
+        <AssociationConnector Association="SmacModel.FK__TeacherSchedules__45CADF4F" />
+        <AssociationConnector Association="SmacModel.FK__Threads__57E98F8A" />
+        <AssociationConnector Association="SmacModel.FK__SectionSc__TimeS__35947786" />
+        <AssociationConnector Association="SmacModel.FK__Staff__UserId__63904C60" />
+        <AssociationConnector Association="SmacModel.FK__Students__UserId__6D19B69A" />
+        <AssociationConnector Association="SmacModel.FK__Teachers__UserId__6855017D" />
+        <AssociationConnector Association="SmacModel.FK__TeacherSc__UserI__44D6BB16" />
+        <AssociationConnector Association="SmacModel.FK__Threads__Replied__56F56B51" />
+        <AssociationConnector Association="SmacModel.FK__Threads__UserId__56014718" />
+        <AssociationConnector Association="SmacModel.FK__UserCrede__UserI__544E08D0" />
         <AssociationConnector Association="SmacModel.KhanShareThreadMaps" />
         <AssociationConnector Association="SmacModel.SchoolRoster" />
-        <EntityTypeShape EntityType="SmacModel.LatestNews" Width="1.5" PointX="3" PointY="32.25" />
-        <AssociationConnector Association="SmacModel.FK__LatestNew__Schoo__7C1B37B1" />
-        <AssociationConnector Association="SmacModel.FK__LatestNew__UserI__3E730AF3" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -13,6 +13,16 @@
                 $('#messageInput').show();
                 $('#errMsg').show();
                 $('#newMessage').hide();
+
+                $('.msgSend').attr('disabled', 'disabled');
+                $('#text-input').keyup(function () {
+                    if ($('#text-input').val() != '') {
+                        $('.msgSend').removeAttr('disabled');
+                    }
+                    else {
+                        $('.msgSend').attr('disabled', 'disabled');
+                    }
+                });
             }
             else {
                 $('#convoList').hide();
@@ -91,7 +101,7 @@
                     type: "POST",
                     url: "Services.asmx/SendPrivateMessage",
                     contentType: 'application/json; charset=utf-8',
-                    data: "{'msgId': '" + msgId + "', 'content': '" + message + "'}",
+                    data: "{'toUserId': '" + $('#toUserId').val() + "', 'content': '" + message + "'}",
                     success: function (data) {
                         var res = JSON.parse(data.d);
 
@@ -170,4 +180,7 @@
         </div>
     </div>
     <div><span id="errMsg"></span></div>
+    <form runat="server">
+        <asp:HiddenField ID="toUserId" runat="server" ClientIDMode="Static" />
+    </form>
 </asp:Content>

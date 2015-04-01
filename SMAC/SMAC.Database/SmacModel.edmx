@@ -13,12 +13,13 @@
         </EntityType>
         <EntityType Name="Classes">
           <Key>
-            <PropertyRef Name="ClassName" />
-            <PropertyRef Name="SubjectName" />
+            <PropertyRef Name="ClassId" />
+            <PropertyRef Name="SubjectId" />
             <PropertyRef Name="SchoolId" />
           </Key>
+          <Property Name="ClassId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ClassName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="SubjectName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SubjectId" Type="int" Nullable="false" />
           <Property Name="SchoolId" Type="int" Nullable="false" />
           <Property Name="Description" Type="varchar" MaxLength="250" />
         </EntityType>
@@ -53,6 +54,7 @@
           <Property Name="SchoolId" Type="int" Nullable="false" />
           <Property Name="TimeSlotId" Type="int" Nullable="false" />
           <Property Name="Day" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="SchoolYearId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Days">
           <Key>
@@ -63,20 +65,18 @@
         <EntityType Name="Enrollments">
           <Key>
             <PropertyRef Name="UserId" />
-            <PropertyRef Name="SectionName" />
-            <PropertyRef Name="ClassName" />
-            <PropertyRef Name="SubjectName" />
+            <PropertyRef Name="SectionId" />
+            <PropertyRef Name="ClassId" />
+            <PropertyRef Name="SubjectId" />
             <PropertyRef Name="SchoolId" />
             <PropertyRef Name="MarkingPeriodId" />
-            <PropertyRef Name="SchoolYear" />
           </Key>
           <Property Name="UserId" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="SectionName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="ClassName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="SubjectName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SectionId" Type="int" Nullable="false" />
+          <Property Name="ClassId" Type="int" Nullable="false" />
+          <Property Name="SubjectId" Type="int" Nullable="false" />
           <Property Name="SchoolId" Type="int" Nullable="false" />
           <Property Name="MarkingPeriodId" Type="int" Nullable="false" />
-          <Property Name="SchoolYear" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Grade" Type="varchar" MaxLength="3" />
         </EntityType>
         <EntityType Name="Genders">
@@ -124,9 +124,11 @@
             <PropertyRef Name="MarkingPeriodId" />
           </Key>
           <Property Name="MarkingPeriodId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="SchoolId" Type="int" Nullable="false" />
+          <Property Name="SchoolYearId" Type="int" Nullable="false" />
           <Property Name="MarkingPeriod" Type="varchar" MaxLength="50" />
           <Property Name="FullYear" Type="bit" Nullable="false" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="EndDate" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="PrivateMessages">
           <Key>
@@ -161,39 +163,47 @@
         </EntityType>
         <EntityType Name="SchoolYears">
           <Key>
-            <PropertyRef Name="Year" />
+            <PropertyRef Name="SchoolYearId" />
           </Key>
-          <Property Name="Year" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="SchoolYearId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="SchoolId" Type="int" Nullable="false" />
+          <Property Name="Year" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="EndDate" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="Sections">
           <Key>
-            <PropertyRef Name="SectionName" />
-            <PropertyRef Name="ClassName" />
-            <PropertyRef Name="SubjectName" />
+            <PropertyRef Name="SectionId" />
+            <PropertyRef Name="ClassId" />
+            <PropertyRef Name="SubjectId" />
             <PropertyRef Name="SchoolId" />
           </Key>
+          <Property Name="SectionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="SectionName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="ClassName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="SubjectName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ClassId" Type="int" Nullable="false" />
+          <Property Name="SubjectId" Type="int" Nullable="false" />
           <Property Name="SchoolId" Type="int" Nullable="false" />
           <Property Name="Description" Type="varchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="SectionSchedules">
           <Key>
-            <PropertyRef Name="SectionName" />
-            <PropertyRef Name="ClassName" />
-            <PropertyRef Name="SubjectName" />
+            <PropertyRef Name="SectionId" />
+            <PropertyRef Name="ClassId" />
+            <PropertyRef Name="SubjectId" />
             <PropertyRef Name="SchoolId" />
             <PropertyRef Name="TimeSlotId" />
             <PropertyRef Name="Day" />
+            <PropertyRef Name="MarkingPeriodId" />
+            <PropertyRef Name="SchoolYearId" />
           </Key>
-          <Property Name="SectionName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="ClassName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="SubjectName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SectionId" Type="int" Nullable="false" />
+          <Property Name="ClassId" Type="int" Nullable="false" />
+          <Property Name="SubjectId" Type="int" Nullable="false" />
           <Property Name="SchoolId" Type="int" Nullable="false" />
           <Property Name="TimeSlotId" Type="int" Nullable="false" />
           <Property Name="Day" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="MarkingPeriodId" Type="int" Nullable="false" />
+          <Property Name="SchoolYearId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Staff">
           <Key>
@@ -209,9 +219,10 @@
         </EntityType>
         <EntityType Name="Subjects">
           <Key>
-            <PropertyRef Name="SubjectName" />
+            <PropertyRef Name="SubjectId" />
             <PropertyRef Name="SchoolId" />
           </Key>
+          <Property Name="SubjectId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="SubjectName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="SchoolId" Type="int" Nullable="false" />
         </EntityType>
@@ -224,20 +235,18 @@
         <EntityType Name="TeacherSchedules">
           <Key>
             <PropertyRef Name="UserId" />
-            <PropertyRef Name="SectionName" />
-            <PropertyRef Name="ClassName" />
-            <PropertyRef Name="SubjectName" />
+            <PropertyRef Name="SectionId" />
+            <PropertyRef Name="ClassId" />
+            <PropertyRef Name="SubjectId" />
             <PropertyRef Name="SchoolId" />
             <PropertyRef Name="MarkingPeriodId" />
-            <PropertyRef Name="SchoolYear" />
           </Key>
           <Property Name="UserId" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="SectionName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="ClassName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="SubjectName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SectionId" Type="int" Nullable="false" />
+          <Property Name="ClassId" Type="int" Nullable="false" />
+          <Property Name="SubjectId" Type="int" Nullable="false" />
           <Property Name="SchoolId" Type="int" Nullable="false" />
           <Property Name="MarkingPeriodId" Type="int" Nullable="false" />
-          <Property Name="SchoolYear" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="Threads">
           <Key>
@@ -245,9 +254,9 @@
           </Key>
           <Property Name="ThreadId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="varchar" MaxLength="20" />
-          <Property Name="SectionName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="ClassName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="SubjectName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SectionId" Type="int" Nullable="false" />
+          <Property Name="ClassId" Type="int" Nullable="false" />
+          <Property Name="SubjectId" Type="int" Nullable="false" />
           <Property Name="SchoolId" Type="int" Nullable="false" />
           <Property Name="ThreadTitle" Type="varchar" MaxLength="250" Nullable="false" />
           <Property Name="Content" Type="text" Nullable="false" />
@@ -259,8 +268,8 @@
             <PropertyRef Name="TimeSlotId" />
           </Key>
           <Property Name="TimeSlotId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="StartTime" Type="datetime" Nullable="false" />
-          <Property Name="EndTime" Type="datetime" Nullable="false" />
+          <Property Name="StartTime" Type="time" Precision="7" Nullable="false" />
+          <Property Name="EndTime" Type="time" Precision="7" Nullable="false" />
           <Property Name="SchoolId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="UserCredentials">
@@ -282,13 +291,13 @@
           <Property Name="EmailAddress" Type="varchar" MaxLength="100" />
           <Property Name="PhoneNumber" Type="varchar" MaxLength="20" />
           <Property Name="Gender" Type="varchar" MaxLength="7" Nullable="false" />
-          <Property Name="StartDate" Type="datetime" Nullable="false" />
-          <Property Name="EndDate" Type="datetime" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="EndDate" Type="date" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="LastLoggedIn" Type="datetime" />
           <Property Name="LastLoggedOut" Type="datetime" />
         </EntityType>
-        <Association Name="FK__Admins__UserId__6BFAA9D8">
+        <Association Name="FK__Admins__UserId__71E958AF">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -302,21 +311,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Classes__03D23369">
+        <Association Name="FK__Classes__0C9D4EEB">
           <End Role="Subjects" Type="Self.Subjects" Multiplicity="1" />
           <End Role="Classes" Type="Self.Classes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Subjects">
-              <PropertyRef Name="SubjectName" />
+              <PropertyRef Name="SubjectId" />
               <PropertyRef Name="SchoolId" />
             </Principal>
             <Dependent Role="Classes">
-              <PropertyRef Name="SubjectName" />
+              <PropertyRef Name="SubjectId" />
               <PropertyRef Name="SchoolId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ClubEnrol__UserI__3C168C8C">
+        <Association Name="FK__ClubEnrol__UserI__48B238F2">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -330,7 +339,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ClubEnrollments__3B226853">
+        <Association Name="FK__ClubEnrollments__47BE14B9">
           <End Role="Clubs" Type="Self.Clubs" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -346,7 +355,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Clubs__SchoolId__0D5B9DA3">
+        <Association Name="FK__Clubs__SchoolId__190325D0">
           <End Role="Schools" Type="Self.Schools" Multiplicity="1" />
           <End Role="Clubs" Type="Self.Clubs" Multiplicity="*" />
           <ReferentialConstraint>
@@ -358,7 +367,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ClubSched__TimeS__35698EFD">
+        <Association Name="FK__ClubSched__Schoo__42F95F9C">
+          <End Role="SchoolYears" Type="Self.SchoolYears" Multiplicity="1" />
+          <End Role="ClubSchedules" Type="Self.ClubSchedules" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SchoolYears">
+              <PropertyRef Name="SchoolYearId" />
+            </Principal>
+            <Dependent Role="ClubSchedules">
+              <PropertyRef Name="SchoolYearId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ClubSched__TimeS__4111172A">
           <End Role="TimeSlots" Type="Self.TimeSlots" Multiplicity="1" />
           <End Role="ClubSchedules" Type="Self.ClubSchedules" Multiplicity="*" />
           <ReferentialConstraint>
@@ -370,7 +391,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ClubSchedul__Day__365DB336">
+        <Association Name="FK__ClubSchedul__Day__42053B63">
           <End Role="Days" Type="Self.Days" Multiplicity="1" />
           <End Role="ClubSchedules" Type="Self.ClubSchedules" Multiplicity="*" />
           <ReferentialConstraint>
@@ -382,7 +403,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ClubSchedules__34756AC4">
+        <Association Name="FK__ClubSchedules__401CF2F1">
           <End Role="Clubs" Type="Self.Clubs" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -398,7 +419,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Enrollmen__Grade__4B58D01C">
+        <Association Name="FK__Enrollmen__Grade__58E8A0BB">
           <End Role="Grades" Type="Self.Grades" Multiplicity="0..1" />
           <End Role="Enrollments" Type="Self.Enrollments" Multiplicity="*" />
           <ReferentialConstraint>
@@ -410,7 +431,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Enrollmen__Marki__497087AA">
+        <Association Name="FK__Enrollmen__Marki__57F47C82">
           <End Role="MarkingPeriods" Type="Self.MarkingPeriods" Multiplicity="1" />
           <End Role="Enrollments" Type="Self.Enrollments" Multiplicity="*" />
           <ReferentialConstraint>
@@ -422,19 +443,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Enrollmen__Schoo__4A64ABE3">
-          <End Role="SchoolYears" Type="Self.SchoolYears" Multiplicity="1" />
-          <End Role="Enrollments" Type="Self.Enrollments" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SchoolYears">
-              <PropertyRef Name="Year" />
-            </Principal>
-            <Dependent Role="Enrollments">
-              <PropertyRef Name="SchoolYear" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Enrollmen__UserI__47883F38">
+        <Association Name="FK__Enrollmen__UserI__560C3410">
           <End Role="Students" Type="Self.Students" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -448,25 +457,25 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Enrollments__487C6371">
+        <Association Name="FK__Enrollments__57005849">
           <End Role="Sections" Type="Self.Sections" Multiplicity="1" />
           <End Role="Enrollments" Type="Self.Enrollments" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Sections">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
               <PropertyRef Name="SchoolId" />
             </Principal>
             <Dependent Role="Enrollments">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
               <PropertyRef Name="SchoolId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Grades__SchoolId__14FCBF6B">
+        <Association Name="FK__Grades__SchoolId__20A44798">
           <End Role="Schools" Type="Self.Schools" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -480,7 +489,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__KhanShare__KhanS__68E93303">
+        <Association Name="FK__KhanShare__KhanS__7584DF69">
           <End Role="KhanShares" Type="Self.KhanShares" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -494,7 +503,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__KhanShare__Threa__67F50ECA">
+        <Association Name="FK__KhanShare__Threa__7490BB30">
           <End Role="Threads" Type="Self.Threads" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -508,7 +517,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__LatestNew__Schoo__6DADE820">
+        <Association Name="FK__LatestNew__Schoo__7A499486">
           <End Role="Schools" Type="Self.Schools" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -522,7 +531,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__LatestNew__UserI__6EA20C59">
+        <Association Name="FK__LatestNew__UserI__7B3DB8BF">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="LatestNews" Type="Self.LatestNews" Multiplicity="*" />
           <ReferentialConstraint>
@@ -534,21 +543,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__MarkingPe__Schoo__2FB0B5A7">
-          <End Role="Schools" Type="Self.Schools" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+        <Association Name="FK__MarkingPe__Schoo__3B583DD4">
+          <End Role="SchoolYears" Type="Self.SchoolYears" Multiplicity="1" />
           <End Role="MarkingPeriods" Type="Self.MarkingPeriods" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Schools">
-              <PropertyRef Name="SchoolId" />
+            <Principal Role="SchoolYears">
+              <PropertyRef Name="SchoolYearId" />
             </Principal>
             <Dependent Role="MarkingPeriods">
-              <PropertyRef Name="SchoolId" />
+              <PropertyRef Name="SchoolYearId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PrivateMe__FromU__58B2CB3A">
+        <Association Name="FK__PrivateMe__FromU__654E77A0">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="PrivateMessages" Type="Self.PrivateMessages" Multiplicity="*" />
           <ReferentialConstraint>
@@ -560,7 +567,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PrivateMe__ToUse__57BEA701">
+        <Association Name="FK__PrivateMe__ToUse__645A5367">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="PrivateMessages" Type="Self.PrivateMessages" Multiplicity="*" />
           <ReferentialConstraint>
@@ -572,7 +579,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SchoolRos__Schoo__6735F4BB">
+        <Association Name="FK__SchoolRos__Schoo__6D24A392">
           <End Role="Schools" Type="Self.Schools" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -586,7 +593,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SchoolRos__UserI__6641D082">
+        <Association Name="FK__SchoolRos__UserI__6C307F59">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -600,7 +607,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SchoolYea__Schoo__280F93DF">
+        <Association Name="FK__SchoolYea__Schoo__33B71C0C">
           <End Role="Schools" Type="Self.Schools" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -614,23 +621,47 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Sections__0896E886">
+        <Association Name="FK__Sections__143E70B3">
           <End Role="Classes" Type="Self.Classes" Multiplicity="1" />
           <End Role="Sections" Type="Self.Sections" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Classes">
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
               <PropertyRef Name="SchoolId" />
             </Principal>
             <Dependent Role="Sections">
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
               <PropertyRef Name="SchoolId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SectionSc__TimeS__41CF65E2">
+        <Association Name="FK__SectionSc__Marki__50535ABA">
+          <End Role="MarkingPeriods" Type="Self.MarkingPeriods" Multiplicity="1" />
+          <End Role="SectionSchedules" Type="Self.SectionSchedules" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MarkingPeriods">
+              <PropertyRef Name="MarkingPeriodId" />
+            </Principal>
+            <Dependent Role="SectionSchedules">
+              <PropertyRef Name="MarkingPeriodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SectionSc__Schoo__51477EF3">
+          <End Role="SchoolYears" Type="Self.SchoolYears" Multiplicity="1" />
+          <End Role="SectionSchedules" Type="Self.SectionSchedules" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SchoolYears">
+              <PropertyRef Name="SchoolYearId" />
+            </Principal>
+            <Dependent Role="SectionSchedules">
+              <PropertyRef Name="SchoolYearId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SectionSc__TimeS__4E6B1248">
           <End Role="TimeSlots" Type="Self.TimeSlots" Multiplicity="1" />
           <End Role="SectionSchedules" Type="Self.SectionSchedules" Multiplicity="*" />
           <ReferentialConstraint>
@@ -642,7 +673,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SectionSche__Day__42C38A1B">
+        <Association Name="FK__SectionSche__Day__4F5F3681">
           <End Role="Days" Type="Self.Days" Multiplicity="1" />
           <End Role="SectionSchedules" Type="Self.SectionSchedules" Multiplicity="*" />
           <ReferentialConstraint>
@@ -654,27 +685,27 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SectionSchedules__40DB41A9">
+        <Association Name="FK__SectionSchedules__4D76EE0F">
           <End Role="Sections" Type="Self.Sections" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
           <End Role="SectionSchedules" Type="Self.SectionSchedules" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Sections">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
               <PropertyRef Name="SchoolId" />
             </Principal>
             <Dependent Role="SectionSchedules">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
               <PropertyRef Name="SchoolId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Staff__UserId__70BF5EF5">
+        <Association Name="FK__Staff__UserId__76AE0DCC">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -688,7 +719,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Students__UserId__7A48C92F">
+        <Association Name="FK__Students__UserId__00377806">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -702,7 +733,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Subjects__School__7F0D7E4C">
+        <Association Name="FK__Subjects__School__04FC2D23">
           <End Role="Schools" Type="Self.Schools" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -716,7 +747,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Teachers__UserId__75841412">
+        <Association Name="FK__Teachers__UserId__7B72C2E9">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -730,7 +761,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TeacherSc__Marki__5205CDAB">
+        <Association Name="FK__TeacherSc__Marki__5F959E4A">
           <End Role="MarkingPeriods" Type="Self.MarkingPeriods" Multiplicity="1" />
           <End Role="TeacherSchedules" Type="Self.TeacherSchedules" Multiplicity="*" />
           <ReferentialConstraint>
@@ -742,19 +773,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TeacherSc__Schoo__52F9F1E4">
-          <End Role="SchoolYears" Type="Self.SchoolYears" Multiplicity="1" />
-          <End Role="TeacherSchedules" Type="Self.TeacherSchedules" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SchoolYears">
-              <PropertyRef Name="Year" />
-            </Principal>
-            <Dependent Role="TeacherSchedules">
-              <PropertyRef Name="SchoolYear" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__TeacherSc__UserI__501D8539">
+        <Association Name="FK__TeacherSc__UserI__5DAD55D8">
           <End Role="Teachers" Type="Self.Teachers" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -768,47 +787,47 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TeacherSchedules__5111A972">
+        <Association Name="FK__TeacherSchedules__5EA17A11">
           <End Role="Sections" Type="Self.Sections" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
           <End Role="TeacherSchedules" Type="Self.TeacherSchedules" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Sections">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
               <PropertyRef Name="SchoolId" />
             </Principal>
             <Dependent Role="TeacherSchedules">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
               <PropertyRef Name="SchoolId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Threads__633059AD">
+        <Association Name="FK__Threads__6FCC0613">
           <End Role="Sections" Type="Self.Sections" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
           <End Role="Threads" Type="Self.Threads" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Sections">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
               <PropertyRef Name="SchoolId" />
             </Principal>
             <Dependent Role="Threads">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
               <PropertyRef Name="SchoolId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Threads__Replied__623C3574">
+        <Association Name="FK__Threads__Replied__6ED7E1DA">
           <End Role="Threads" Type="Self.Threads" Multiplicity="0..1" />
           <End Role="Threads1" Type="Self.Threads" Multiplicity="*" />
           <ReferentialConstraint>
@@ -820,7 +839,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Threads__UserId__6148113B">
+        <Association Name="FK__Threads__UserId__6DE3BDA1">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="Threads" Type="Self.Threads" Multiplicity="*" />
           <ReferentialConstraint>
@@ -832,7 +851,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TimeSlots__Schoo__206E7217">
+        <Association Name="FK__TimeSlots__Schoo__2C15FA44">
           <End Role="Schools" Type="Self.Schools" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -846,7 +865,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__UserCrede__UserI__617D1B65">
+        <Association Name="FK__UserCrede__UserI__676BCA3C">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -860,7 +879,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Users__Gender__59DBF99D">
+        <Association Name="FK__Users__Gender__5FCAA874">
           <End Role="Genders" Type="Self.Genders" Multiplicity="1" />
           <End Role="Users" Type="Self.Users" Multiplicity="*" />
           <ReferentialConstraint>
@@ -880,10 +899,7 @@
           <Parameter Name="UserID" Type="varchar" Mode="In" />
         </Function>
         <Function Name="usp_GetSectionThreads" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="sectionName" Type="varchar" Mode="In" />
-          <Parameter Name="className" Type="varchar" Mode="In" />
-          <Parameter Name="subjectName" Type="varchar" Mode="In" />
-          <Parameter Name="schoolId" Type="int" Mode="In" />
+          <Parameter Name="sectionId" Type="int" Mode="In" />
         </Function>
         <Function Name="usp_GetUsersInSchool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SchoolId" Type="int" Mode="In" />
@@ -918,171 +934,175 @@
           <EntitySet Name="TimeSlots" EntityType="Self.TimeSlots" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserCredentials" EntityType="Self.UserCredentials" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Admins__UserId__6BFAA9D8" Association="Self.FK__Admins__UserId__6BFAA9D8">
+          <AssociationSet Name="FK__Admins__UserId__71E958AF" Association="Self.FK__Admins__UserId__71E958AF">
             <End Role="Users" EntitySet="Users" />
             <End Role="Admins" EntitySet="Admins" />
           </AssociationSet>
-          <AssociationSet Name="FK__Classes__03D23369" Association="Self.FK__Classes__03D23369">
+          <AssociationSet Name="FK__Classes__0C9D4EEB" Association="Self.FK__Classes__0C9D4EEB">
             <End Role="Subjects" EntitySet="Subjects" />
             <End Role="Classes" EntitySet="Classes" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClubEnrol__UserI__3C168C8C" Association="Self.FK__ClubEnrol__UserI__3C168C8C">
+          <AssociationSet Name="FK__ClubEnrol__UserI__48B238F2" Association="Self.FK__ClubEnrol__UserI__48B238F2">
             <End Role="Users" EntitySet="Users" />
             <End Role="ClubEnrollments" EntitySet="ClubEnrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClubEnrollments__3B226853" Association="Self.FK__ClubEnrollments__3B226853">
+          <AssociationSet Name="FK__ClubEnrollments__47BE14B9" Association="Self.FK__ClubEnrollments__47BE14B9">
             <End Role="Clubs" EntitySet="Clubs" />
             <End Role="ClubEnrollments" EntitySet="ClubEnrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Clubs__SchoolId__0D5B9DA3" Association="Self.FK__Clubs__SchoolId__0D5B9DA3">
+          <AssociationSet Name="FK__Clubs__SchoolId__190325D0" Association="Self.FK__Clubs__SchoolId__190325D0">
             <End Role="Schools" EntitySet="Schools" />
             <End Role="Clubs" EntitySet="Clubs" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClubSched__TimeS__35698EFD" Association="Self.FK__ClubSched__TimeS__35698EFD">
+          <AssociationSet Name="FK__ClubSched__Schoo__42F95F9C" Association="Self.FK__ClubSched__Schoo__42F95F9C">
+            <End Role="SchoolYears" EntitySet="SchoolYears" />
+            <End Role="ClubSchedules" EntitySet="ClubSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ClubSched__TimeS__4111172A" Association="Self.FK__ClubSched__TimeS__4111172A">
             <End Role="TimeSlots" EntitySet="TimeSlots" />
             <End Role="ClubSchedules" EntitySet="ClubSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClubSchedul__Day__365DB336" Association="Self.FK__ClubSchedul__Day__365DB336">
+          <AssociationSet Name="FK__ClubSchedul__Day__42053B63" Association="Self.FK__ClubSchedul__Day__42053B63">
             <End Role="Days" EntitySet="Days" />
             <End Role="ClubSchedules" EntitySet="ClubSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClubSchedules__34756AC4" Association="Self.FK__ClubSchedules__34756AC4">
+          <AssociationSet Name="FK__ClubSchedules__401CF2F1" Association="Self.FK__ClubSchedules__401CF2F1">
             <End Role="Clubs" EntitySet="Clubs" />
             <End Role="ClubSchedules" EntitySet="ClubSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__Enrollmen__Grade__4B58D01C" Association="Self.FK__Enrollmen__Grade__4B58D01C">
+          <AssociationSet Name="FK__Enrollmen__Grade__58E8A0BB" Association="Self.FK__Enrollmen__Grade__58E8A0BB">
             <End Role="Grades" EntitySet="Grades" />
             <End Role="Enrollments" EntitySet="Enrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Enrollmen__Marki__497087AA" Association="Self.FK__Enrollmen__Marki__497087AA">
+          <AssociationSet Name="FK__Enrollmen__Marki__57F47C82" Association="Self.FK__Enrollmen__Marki__57F47C82">
             <End Role="MarkingPeriods" EntitySet="MarkingPeriods" />
             <End Role="Enrollments" EntitySet="Enrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Enrollmen__Schoo__4A64ABE3" Association="Self.FK__Enrollmen__Schoo__4A64ABE3">
-            <End Role="SchoolYears" EntitySet="SchoolYears" />
-            <End Role="Enrollments" EntitySet="Enrollments" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Enrollmen__UserI__47883F38" Association="Self.FK__Enrollmen__UserI__47883F38">
+          <AssociationSet Name="FK__Enrollmen__UserI__560C3410" Association="Self.FK__Enrollmen__UserI__560C3410">
             <End Role="Students" EntitySet="Students" />
             <End Role="Enrollments" EntitySet="Enrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Enrollments__487C6371" Association="Self.FK__Enrollments__487C6371">
+          <AssociationSet Name="FK__Enrollments__57005849" Association="Self.FK__Enrollments__57005849">
             <End Role="Sections" EntitySet="Sections" />
             <End Role="Enrollments" EntitySet="Enrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Grades__SchoolId__14FCBF6B" Association="Self.FK__Grades__SchoolId__14FCBF6B">
+          <AssociationSet Name="FK__Grades__SchoolId__20A44798" Association="Self.FK__Grades__SchoolId__20A44798">
             <End Role="Schools" EntitySet="Schools" />
             <End Role="Grades" EntitySet="Grades" />
           </AssociationSet>
-          <AssociationSet Name="FK__KhanShare__KhanS__68E93303" Association="Self.FK__KhanShare__KhanS__68E93303">
+          <AssociationSet Name="FK__KhanShare__KhanS__7584DF69" Association="Self.FK__KhanShare__KhanS__7584DF69">
             <End Role="KhanShares" EntitySet="KhanShares" />
             <End Role="KhanShareThreadMaps" EntitySet="KhanShareThreadMaps" />
           </AssociationSet>
-          <AssociationSet Name="FK__KhanShare__Threa__67F50ECA" Association="Self.FK__KhanShare__Threa__67F50ECA">
+          <AssociationSet Name="FK__KhanShare__Threa__7490BB30" Association="Self.FK__KhanShare__Threa__7490BB30">
             <End Role="Threads" EntitySet="Threads" />
             <End Role="KhanShareThreadMaps" EntitySet="KhanShareThreadMaps" />
           </AssociationSet>
-          <AssociationSet Name="FK__LatestNew__Schoo__6DADE820" Association="Self.FK__LatestNew__Schoo__6DADE820">
+          <AssociationSet Name="FK__LatestNew__Schoo__7A499486" Association="Self.FK__LatestNew__Schoo__7A499486">
             <End Role="Schools" EntitySet="Schools" />
             <End Role="LatestNews" EntitySet="LatestNews" />
           </AssociationSet>
-          <AssociationSet Name="FK__LatestNew__UserI__6EA20C59" Association="Self.FK__LatestNew__UserI__6EA20C59">
+          <AssociationSet Name="FK__LatestNew__UserI__7B3DB8BF" Association="Self.FK__LatestNew__UserI__7B3DB8BF">
             <End Role="Users" EntitySet="Users" />
             <End Role="LatestNews" EntitySet="LatestNews" />
           </AssociationSet>
-          <AssociationSet Name="FK__MarkingPe__Schoo__2FB0B5A7" Association="Self.FK__MarkingPe__Schoo__2FB0B5A7">
-            <End Role="Schools" EntitySet="Schools" />
+          <AssociationSet Name="FK__MarkingPe__Schoo__3B583DD4" Association="Self.FK__MarkingPe__Schoo__3B583DD4">
+            <End Role="SchoolYears" EntitySet="SchoolYears" />
             <End Role="MarkingPeriods" EntitySet="MarkingPeriods" />
           </AssociationSet>
-          <AssociationSet Name="FK__PrivateMe__FromU__58B2CB3A" Association="Self.FK__PrivateMe__FromU__58B2CB3A">
+          <AssociationSet Name="FK__PrivateMe__FromU__654E77A0" Association="Self.FK__PrivateMe__FromU__654E77A0">
             <End Role="Users" EntitySet="Users" />
             <End Role="PrivateMessages" EntitySet="PrivateMessages" />
           </AssociationSet>
-          <AssociationSet Name="FK__PrivateMe__ToUse__57BEA701" Association="Self.FK__PrivateMe__ToUse__57BEA701">
+          <AssociationSet Name="FK__PrivateMe__ToUse__645A5367" Association="Self.FK__PrivateMe__ToUse__645A5367">
             <End Role="Users" EntitySet="Users" />
             <End Role="PrivateMessages" EntitySet="PrivateMessages" />
           </AssociationSet>
-          <AssociationSet Name="FK__SchoolRos__Schoo__6735F4BB" Association="Self.FK__SchoolRos__Schoo__6735F4BB">
+          <AssociationSet Name="FK__SchoolRos__Schoo__6D24A392" Association="Self.FK__SchoolRos__Schoo__6D24A392">
             <End Role="Schools" EntitySet="Schools" />
             <End Role="SchoolRoster" EntitySet="SchoolRoster" />
           </AssociationSet>
-          <AssociationSet Name="FK__SchoolRos__UserI__6641D082" Association="Self.FK__SchoolRos__UserI__6641D082">
+          <AssociationSet Name="FK__SchoolRos__UserI__6C307F59" Association="Self.FK__SchoolRos__UserI__6C307F59">
             <End Role="Users" EntitySet="Users" />
             <End Role="SchoolRoster" EntitySet="SchoolRoster" />
           </AssociationSet>
-          <AssociationSet Name="FK__SchoolYea__Schoo__280F93DF" Association="Self.FK__SchoolYea__Schoo__280F93DF">
+          <AssociationSet Name="FK__SchoolYea__Schoo__33B71C0C" Association="Self.FK__SchoolYea__Schoo__33B71C0C">
             <End Role="Schools" EntitySet="Schools" />
             <End Role="SchoolYears" EntitySet="SchoolYears" />
           </AssociationSet>
-          <AssociationSet Name="FK__Sections__0896E886" Association="Self.FK__Sections__0896E886">
+          <AssociationSet Name="FK__Sections__143E70B3" Association="Self.FK__Sections__143E70B3">
             <End Role="Classes" EntitySet="Classes" />
             <End Role="Sections" EntitySet="Sections" />
           </AssociationSet>
-          <AssociationSet Name="FK__SectionSc__TimeS__41CF65E2" Association="Self.FK__SectionSc__TimeS__41CF65E2">
+          <AssociationSet Name="FK__SectionSc__Marki__50535ABA" Association="Self.FK__SectionSc__Marki__50535ABA">
+            <End Role="MarkingPeriods" EntitySet="MarkingPeriods" />
+            <End Role="SectionSchedules" EntitySet="SectionSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK__SectionSc__Schoo__51477EF3" Association="Self.FK__SectionSc__Schoo__51477EF3">
+            <End Role="SchoolYears" EntitySet="SchoolYears" />
+            <End Role="SectionSchedules" EntitySet="SectionSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK__SectionSc__TimeS__4E6B1248" Association="Self.FK__SectionSc__TimeS__4E6B1248">
             <End Role="TimeSlots" EntitySet="TimeSlots" />
             <End Role="SectionSchedules" EntitySet="SectionSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__SectionSche__Day__42C38A1B" Association="Self.FK__SectionSche__Day__42C38A1B">
+          <AssociationSet Name="FK__SectionSche__Day__4F5F3681" Association="Self.FK__SectionSche__Day__4F5F3681">
             <End Role="Days" EntitySet="Days" />
             <End Role="SectionSchedules" EntitySet="SectionSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__SectionSchedules__40DB41A9" Association="Self.FK__SectionSchedules__40DB41A9">
+          <AssociationSet Name="FK__SectionSchedules__4D76EE0F" Association="Self.FK__SectionSchedules__4D76EE0F">
             <End Role="Sections" EntitySet="Sections" />
             <End Role="SectionSchedules" EntitySet="SectionSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__Staff__UserId__70BF5EF5" Association="Self.FK__Staff__UserId__70BF5EF5">
+          <AssociationSet Name="FK__Staff__UserId__76AE0DCC" Association="Self.FK__Staff__UserId__76AE0DCC">
             <End Role="Users" EntitySet="Users" />
             <End Role="Staff" EntitySet="Staff" />
           </AssociationSet>
-          <AssociationSet Name="FK__Students__UserId__7A48C92F" Association="Self.FK__Students__UserId__7A48C92F">
+          <AssociationSet Name="FK__Students__UserId__00377806" Association="Self.FK__Students__UserId__00377806">
             <End Role="Users" EntitySet="Users" />
             <End Role="Students" EntitySet="Students" />
           </AssociationSet>
-          <AssociationSet Name="FK__Subjects__School__7F0D7E4C" Association="Self.FK__Subjects__School__7F0D7E4C">
+          <AssociationSet Name="FK__Subjects__School__04FC2D23" Association="Self.FK__Subjects__School__04FC2D23">
             <End Role="Schools" EntitySet="Schools" />
             <End Role="Subjects" EntitySet="Subjects" />
           </AssociationSet>
-          <AssociationSet Name="FK__Teachers__UserId__75841412" Association="Self.FK__Teachers__UserId__75841412">
+          <AssociationSet Name="FK__Teachers__UserId__7B72C2E9" Association="Self.FK__Teachers__UserId__7B72C2E9">
             <End Role="Users" EntitySet="Users" />
             <End Role="Teachers" EntitySet="Teachers" />
           </AssociationSet>
-          <AssociationSet Name="FK__TeacherSc__Marki__5205CDAB" Association="Self.FK__TeacherSc__Marki__5205CDAB">
+          <AssociationSet Name="FK__TeacherSc__Marki__5F959E4A" Association="Self.FK__TeacherSc__Marki__5F959E4A">
             <End Role="MarkingPeriods" EntitySet="MarkingPeriods" />
             <End Role="TeacherSchedules" EntitySet="TeacherSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__TeacherSc__Schoo__52F9F1E4" Association="Self.FK__TeacherSc__Schoo__52F9F1E4">
-            <End Role="SchoolYears" EntitySet="SchoolYears" />
-            <End Role="TeacherSchedules" EntitySet="TeacherSchedules" />
-          </AssociationSet>
-          <AssociationSet Name="FK__TeacherSc__UserI__501D8539" Association="Self.FK__TeacherSc__UserI__501D8539">
+          <AssociationSet Name="FK__TeacherSc__UserI__5DAD55D8" Association="Self.FK__TeacherSc__UserI__5DAD55D8">
             <End Role="Teachers" EntitySet="Teachers" />
             <End Role="TeacherSchedules" EntitySet="TeacherSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__TeacherSchedules__5111A972" Association="Self.FK__TeacherSchedules__5111A972">
+          <AssociationSet Name="FK__TeacherSchedules__5EA17A11" Association="Self.FK__TeacherSchedules__5EA17A11">
             <End Role="Sections" EntitySet="Sections" />
             <End Role="TeacherSchedules" EntitySet="TeacherSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__Threads__633059AD" Association="Self.FK__Threads__633059AD">
+          <AssociationSet Name="FK__Threads__6FCC0613" Association="Self.FK__Threads__6FCC0613">
             <End Role="Sections" EntitySet="Sections" />
             <End Role="Threads" EntitySet="Threads" />
           </AssociationSet>
-          <AssociationSet Name="FK__Threads__Replied__623C3574" Association="Self.FK__Threads__Replied__623C3574">
+          <AssociationSet Name="FK__Threads__Replied__6ED7E1DA" Association="Self.FK__Threads__Replied__6ED7E1DA">
             <End Role="Threads" EntitySet="Threads" />
             <End Role="Threads1" EntitySet="Threads" />
           </AssociationSet>
-          <AssociationSet Name="FK__Threads__UserId__6148113B" Association="Self.FK__Threads__UserId__6148113B">
+          <AssociationSet Name="FK__Threads__UserId__6DE3BDA1" Association="Self.FK__Threads__UserId__6DE3BDA1">
             <End Role="Users" EntitySet="Users" />
             <End Role="Threads" EntitySet="Threads" />
           </AssociationSet>
-          <AssociationSet Name="FK__TimeSlots__Schoo__206E7217" Association="Self.FK__TimeSlots__Schoo__206E7217">
+          <AssociationSet Name="FK__TimeSlots__Schoo__2C15FA44" Association="Self.FK__TimeSlots__Schoo__2C15FA44">
             <End Role="Schools" EntitySet="Schools" />
             <End Role="TimeSlots" EntitySet="TimeSlots" />
           </AssociationSet>
-          <AssociationSet Name="FK__UserCrede__UserI__617D1B65" Association="Self.FK__UserCrede__UserI__617D1B65">
+          <AssociationSet Name="FK__UserCrede__UserI__676BCA3C" Association="Self.FK__UserCrede__UserI__676BCA3C">
             <End Role="Users" EntitySet="Users" />
             <End Role="UserCredentials" EntitySet="UserCredentials" />
           </AssociationSet>
-          <AssociationSet Name="FK__Users__Gender__59DBF99D" Association="Self.FK__Users__Gender__59DBF99D">
+          <AssociationSet Name="FK__Users__Gender__5FCAA874" Association="Self.FK__Users__Gender__5FCAA874">
             <End Role="Genders" EntitySet="Genders" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
@@ -1092,6 +1112,17 @@
     <edmx:ConceptualModels>
       <Schema Namespace="SmacModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="SmacEntities" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="usp_GetLatestPrivateMessages" ReturnType="Collection(SmacModel.usp_GetLatestPrivateMessages_Result)">
+          <Parameter Name="UserID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetClubSchedule" ReturnType="Collection(SmacModel.usp_GetClubSchedule_Result)">
+            <Parameter Name="schoolId" Mode="In" Type="Int32" />
+            <Parameter Name="clubName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetUsersInSchool" ReturnType="Collection(SmacModel.usp_GetUsersInSchool_Result)">
+            <Parameter Name="SchoolId" Mode="In" Type="Int32" />
+            <Parameter Name="UserId" Mode="In" Type="String" />
+          </FunctionImport>
           <EntitySet Name="Admins" EntityType="SmacModel.Admin" />
           <EntitySet Name="Classes" EntityType="SmacModel.Class" />
           <EntitySet Name="ClubEnrollments" EntityType="SmacModel.ClubEnrollment" />
@@ -1102,6 +1133,7 @@
           <EntitySet Name="Genders" EntityType="SmacModel.Gender" />
           <EntitySet Name="Grades" EntityType="SmacModel.Grade" />
           <EntitySet Name="KhanShares" EntityType="SmacModel.KhanShare" />
+          <EntitySet Name="LatestNewsSet" EntityType="SmacModel.LatestNews" />
           <EntitySet Name="MarkingPeriods" EntityType="SmacModel.MarkingPeriod" />
           <EntitySet Name="PrivateMessages" EntityType="SmacModel.PrivateMessage" />
           <EntitySet Name="Schools" EntityType="SmacModel.School" />
@@ -1117,147 +1149,159 @@
           <EntitySet Name="TimeSlots" EntityType="SmacModel.TimeSlot" />
           <EntitySet Name="UserCredentials" EntityType="SmacModel.UserCredential" />
           <EntitySet Name="Users" EntityType="SmacModel.User" />
-          <AssociationSet Name="FK__Admins__UserId__7A67F969" Association="SmacModel.FK__Admins__UserId__7A67F969">
+          <AssociationSet Name="FK__Admins__UserId__5ECB9743" Association="SmacModel.FK__Admins__UserId__5ECB9743">
             <End Role="User" EntitySet="Users" />
             <End Role="Admin" EntitySet="Admins" />
           </AssociationSet>
-          <AssociationSet Name="FK__Classes__123F82FA" Association="SmacModel.FK__Classes__123F82FA">
+          <AssociationSet Name="FK__Classes__76A320D4" Association="SmacModel.FK__Classes__76A320D4">
             <End Role="Subject" EntitySet="Subjects" />
             <End Role="Class" EntitySet="Classes" />
           </AssociationSet>
-          <AssociationSet Name="FK__Sections__17043817" Association="SmacModel.FK__Sections__17043817">
+          <AssociationSet Name="FK__Sections__7B67D5F1" Association="SmacModel.FK__Sections__7B67D5F1">
             <End Role="Class" EntitySet="Classes" />
             <End Role="Section" EntitySet="Sections" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClubEnrol__UserI__4A83DC1D" Association="SmacModel.FK__ClubEnrol__UserI__4A83DC1D">
+          <AssociationSet Name="FK__ClubEnrol__UserI__2FDB9E30" Association="SmacModel.FK__ClubEnrol__UserI__2FDB9E30">
             <End Role="User" EntitySet="Users" />
             <End Role="ClubEnrollment" EntitySet="ClubEnrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClubEnrollments__498FB7E4" Association="SmacModel.FK__ClubEnrollments__498FB7E4">
+          <AssociationSet Name="FK__ClubEnrollments__2EE779F7" Association="SmacModel.FK__ClubEnrollments__2EE779F7">
             <End Role="Club" EntitySet="Clubs" />
             <End Role="ClubEnrollment" EntitySet="ClubEnrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Clubs__SchoolId__1BC8ED34" Association="SmacModel.FK__Clubs__SchoolId__1BC8ED34">
+          <AssociationSet Name="FK__Clubs__SchoolId__002C8B0E" Association="SmacModel.FK__Clubs__SchoolId__002C8B0E">
             <End Role="School" EntitySet="Schools" />
             <End Role="Club" EntitySet="Clubs" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClubSchedules__42E2BA55" Association="SmacModel.FK__ClubSchedules__42E2BA55">
+          <AssociationSet Name="FK__ClubSchedules__2746582F" Association="SmacModel.FK__ClubSchedules__2746582F">
             <End Role="Club" EntitySet="Clubs" />
             <End Role="ClubSchedule" EntitySet="ClubSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClubSched__TimeS__43D6DE8E" Association="SmacModel.FK__ClubSched__TimeS__43D6DE8E">
+          <AssociationSet Name="FK__ClubSched__Schoo__2A22C4DA" Association="SmacModel.FK__ClubSched__Schoo__2A22C4DA">
+            <End Role="SchoolYear" EntitySet="SchoolYears" />
+            <End Role="ClubSchedule" EntitySet="ClubSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ClubSched__TimeS__283A7C68" Association="SmacModel.FK__ClubSched__TimeS__283A7C68">
             <End Role="TimeSlot" EntitySet="TimeSlots" />
             <End Role="ClubSchedule" EntitySet="ClubSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClubSchedul__Day__44CB02C7" Association="SmacModel.FK__ClubSchedul__Day__44CB02C7">
+          <AssociationSet Name="FK__ClubSchedul__Day__292EA0A1" Association="SmacModel.FK__ClubSchedul__Day__292EA0A1">
             <End Role="Day" EntitySet="Days" />
             <End Role="ClubSchedule" EntitySet="ClubSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__SectionSche__Day__5130D9AC" Association="SmacModel.FK__SectionSche__Day__5130D9AC">
+          <AssociationSet Name="FK__SectionSche__Day__36889BBF" Association="SmacModel.FK__SectionSche__Day__36889BBF">
             <End Role="Day" EntitySet="Days" />
             <End Role="SectionSchedule" EntitySet="SectionSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__Enrollmen__Grade__59C61FAD" Association="SmacModel.FK__Enrollmen__Grade__59C61FAD">
+          <AssociationSet Name="FK__Enrollmen__Grade__401205F9" Association="SmacModel.FK__Enrollmen__Grade__401205F9">
             <End Role="Grade" EntitySet="Grades" />
             <End Role="Enrollment" EntitySet="Enrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Enrollmen__Marki__57DDD73B" Association="SmacModel.FK__Enrollmen__Marki__57DDD73B">
+          <AssociationSet Name="FK__Enrollmen__Marki__3F1DE1C0" Association="SmacModel.FK__Enrollmen__Marki__3F1DE1C0">
             <End Role="MarkingPeriod" EntitySet="MarkingPeriods" />
             <End Role="Enrollment" EntitySet="Enrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Enrollmen__Schoo__58D1FB74" Association="SmacModel.FK__Enrollmen__Schoo__58D1FB74">
-            <End Role="SchoolYear" EntitySet="SchoolYears" />
-            <End Role="Enrollment" EntitySet="Enrollments" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Enrollmen__UserI__55F58EC9" Association="SmacModel.FK__Enrollmen__UserI__55F58EC9">
+          <AssociationSet Name="FK__Enrollmen__UserI__3D35994E" Association="SmacModel.FK__Enrollmen__UserI__3D35994E">
             <End Role="Student" EntitySet="Students" />
             <End Role="Enrollment" EntitySet="Enrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Enrollments__56E9B302" Association="SmacModel.FK__Enrollments__56E9B302">
+          <AssociationSet Name="FK__Enrollments__3E29BD87" Association="SmacModel.FK__Enrollments__3E29BD87">
             <End Role="Section" EntitySet="Sections" />
             <End Role="Enrollment" EntitySet="Enrollments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Users__Gender__6849492E" Association="SmacModel.FK__Users__Gender__6849492E">
+          <AssociationSet Name="FK__Users__Gender__4CACE708" Association="SmacModel.FK__Users__Gender__4CACE708">
             <End Role="Gender" EntitySet="Genders" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
-          <AssociationSet Name="FK__Grades__SchoolId__236A0EFC" Association="SmacModel.FK__Grades__SchoolId__236A0EFC">
+          <AssociationSet Name="FK__Grades__SchoolId__07CDACD6" Association="SmacModel.FK__Grades__SchoolId__07CDACD6">
             <End Role="School" EntitySet="Schools" />
             <End Role="Grade" EntitySet="Grades" />
           </AssociationSet>
-          <AssociationSet Name="FK__MarkingPe__Schoo__3E1E0538" Association="SmacModel.FK__MarkingPe__Schoo__3E1E0538">
+          <AssociationSet Name="FK__LatestNew__Schoo__62671DFD" Association="SmacModel.FK__LatestNew__Schoo__62671DFD">
             <End Role="School" EntitySet="Schools" />
+            <End Role="LatestNew" EntitySet="LatestNewsSet" />
+          </AssociationSet>
+          <AssociationSet Name="FK__LatestNew__UserI__635B4236" Association="SmacModel.FK__LatestNew__UserI__635B4236">
+            <End Role="User" EntitySet="Users" />
+            <End Role="LatestNew" EntitySet="LatestNewsSet" />
+          </AssociationSet>
+          <AssociationSet Name="FK__MarkingPe__Schoo__2281A312" Association="SmacModel.FK__MarkingPe__Schoo__2281A312">
+            <End Role="SchoolYear" EntitySet="SchoolYears" />
             <End Role="MarkingPeriod" EntitySet="MarkingPeriods" />
           </AssociationSet>
-          <AssociationSet Name="FK__TeacherSc__Marki__60731D3C" Association="SmacModel.FK__TeacherSc__Marki__60731D3C">
+          <AssociationSet Name="FK__SectionSc__Marki__377CBFF8" Association="SmacModel.FK__SectionSc__Marki__377CBFF8">
+            <End Role="MarkingPeriod" EntitySet="MarkingPeriods" />
+            <End Role="SectionSchedule" EntitySet="SectionSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TeacherSc__Marki__46BF0388" Association="SmacModel.FK__TeacherSc__Marki__46BF0388">
             <End Role="MarkingPeriod" EntitySet="MarkingPeriods" />
             <End Role="TeacherSchedule" EntitySet="TeacherSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__PrivateMe__FromU__67201ACB" Association="SmacModel.FK__PrivateMe__FromU__67201ACB">
+          <AssociationSet Name="FK__PrivateMe__FromU__4D6C0117" Association="SmacModel.FK__PrivateMe__FromU__4D6C0117">
             <End Role="User" EntitySet="Users" />
             <End Role="PrivateMessage" EntitySet="PrivateMessages" />
           </AssociationSet>
-          <AssociationSet Name="FK__PrivateMe__ToUse__662BF692" Association="SmacModel.FK__PrivateMe__ToUse__662BF692">
+          <AssociationSet Name="FK__PrivateMe__ToUse__4C77DCDE" Association="SmacModel.FK__PrivateMe__ToUse__4C77DCDE">
             <End Role="User" EntitySet="Users" />
             <End Role="PrivateMessage" EntitySet="PrivateMessages" />
           </AssociationSet>
-          <AssociationSet Name="FK__SchoolYea__Schoo__367CE370" Association="SmacModel.FK__SchoolYea__Schoo__367CE370">
+          <AssociationSet Name="FK__SchoolYea__Schoo__1AE0814A" Association="SmacModel.FK__SchoolYea__Schoo__1AE0814A">
             <End Role="School" EntitySet="Schools" />
             <End Role="SchoolYear" EntitySet="SchoolYears" />
           </AssociationSet>
-          <AssociationSet Name="FK__Subjects__School__0D7ACDDD" Association="SmacModel.FK__Subjects__School__0D7ACDDD">
+          <AssociationSet Name="FK__Subjects__School__71DE6BB7" Association="SmacModel.FK__Subjects__School__71DE6BB7">
             <End Role="School" EntitySet="Schools" />
             <End Role="Subject" EntitySet="Subjects" />
           </AssociationSet>
-          <AssociationSet Name="FK__TimeSlots__Schoo__2EDBC1A8" Association="SmacModel.FK__TimeSlots__Schoo__2EDBC1A8">
+          <AssociationSet Name="FK__TimeSlots__Schoo__133F5F82" Association="SmacModel.FK__TimeSlots__Schoo__133F5F82">
             <End Role="School" EntitySet="Schools" />
             <End Role="TimeSlot" EntitySet="TimeSlots" />
           </AssociationSet>
-          <AssociationSet Name="FK__TeacherSc__Schoo__61674175" Association="SmacModel.FK__TeacherSc__Schoo__61674175">
+          <AssociationSet Name="FK__SectionSc__Schoo__3870E431" Association="SmacModel.FK__SectionSc__Schoo__3870E431">
             <End Role="SchoolYear" EntitySet="SchoolYears" />
-            <End Role="TeacherSchedule" EntitySet="TeacherSchedules" />
+            <End Role="SectionSchedule" EntitySet="SectionSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__SectionSchedules__4F48913A" Association="SmacModel.FK__SectionSchedules__4F48913A">
+          <AssociationSet Name="FK__SectionSchedules__34A0534D" Association="SmacModel.FK__SectionSchedules__34A0534D">
             <End Role="Section" EntitySet="Sections" />
             <End Role="SectionSchedule" EntitySet="SectionSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__TeacherSchedules__5F7EF903" Association="SmacModel.FK__TeacherSchedules__5F7EF903">
+          <AssociationSet Name="FK__TeacherSchedules__45CADF4F" Association="SmacModel.FK__TeacherSchedules__45CADF4F">
             <End Role="Section" EntitySet="Sections" />
             <End Role="TeacherSchedule" EntitySet="TeacherSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__Threads__719DA93E" Association="SmacModel.FK__Threads__719DA93E">
+          <AssociationSet Name="FK__Threads__57E98F8A" Association="SmacModel.FK__Threads__57E98F8A">
             <End Role="Section" EntitySet="Sections" />
             <End Role="Thread" EntitySet="Threads" />
           </AssociationSet>
-          <AssociationSet Name="FK__SectionSc__TimeS__503CB573" Association="SmacModel.FK__SectionSc__TimeS__503CB573">
+          <AssociationSet Name="FK__SectionSc__TimeS__35947786" Association="SmacModel.FK__SectionSc__TimeS__35947786">
             <End Role="TimeSlot" EntitySet="TimeSlots" />
             <End Role="SectionSchedule" EntitySet="SectionSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__Staff__UserId__7F2CAE86" Association="SmacModel.FK__Staff__UserId__7F2CAE86">
+          <AssociationSet Name="FK__Staff__UserId__63904C60" Association="SmacModel.FK__Staff__UserId__63904C60">
             <End Role="User" EntitySet="Users" />
             <End Role="Staff" EntitySet="Staffs" />
           </AssociationSet>
-          <AssociationSet Name="FK__Students__UserId__08B618C0" Association="SmacModel.FK__Students__UserId__08B618C0">
+          <AssociationSet Name="FK__Students__UserId__6D19B69A" Association="SmacModel.FK__Students__UserId__6D19B69A">
             <End Role="User" EntitySet="Users" />
             <End Role="Student" EntitySet="Students" />
           </AssociationSet>
-          <AssociationSet Name="FK__Teachers__UserId__03F163A3" Association="SmacModel.FK__Teachers__UserId__03F163A3">
+          <AssociationSet Name="FK__Teachers__UserId__6855017D" Association="SmacModel.FK__Teachers__UserId__6855017D">
             <End Role="User" EntitySet="Users" />
             <End Role="Teacher" EntitySet="Teachers" />
           </AssociationSet>
-          <AssociationSet Name="FK__TeacherSc__UserI__5E8AD4CA" Association="SmacModel.FK__TeacherSc__UserI__5E8AD4CA">
+          <AssociationSet Name="FK__TeacherSc__UserI__44D6BB16" Association="SmacModel.FK__TeacherSc__UserI__44D6BB16">
             <End Role="Teacher" EntitySet="Teachers" />
             <End Role="TeacherSchedule" EntitySet="TeacherSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK__Threads__Replied__70A98505" Association="SmacModel.FK__Threads__Replied__70A98505">
+          <AssociationSet Name="FK__Threads__Replied__56F56B51" Association="SmacModel.FK__Threads__Replied__56F56B51">
             <End Role="Thread" EntitySet="Threads" />
             <End Role="Thread1" EntitySet="Threads" />
           </AssociationSet>
-          <AssociationSet Name="FK__Threads__UserId__6FB560CC" Association="SmacModel.FK__Threads__UserId__6FB560CC">
+          <AssociationSet Name="FK__Threads__UserId__56014718" Association="SmacModel.FK__Threads__UserId__56014718">
             <End Role="User" EntitySet="Users" />
             <End Role="Thread" EntitySet="Threads" />
           </AssociationSet>
-          <AssociationSet Name="FK__UserCrede__UserI__6FEA6AF6" Association="SmacModel.FK__UserCrede__UserI__6FEA6AF6">
+          <AssociationSet Name="FK__UserCrede__UserI__544E08D0" Association="SmacModel.FK__UserCrede__UserI__544E08D0">
             <End Role="User" EntitySet="Users" />
             <End Role="UserCredential" EntitySet="UserCredentials" />
           </AssociationSet>
@@ -1269,916 +1313,10 @@
             <End Role="School" EntitySet="Schools" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
-          <EntitySet Name="LatestNewsSet" EntityType="SmacModel.LatestNews" />
-          <AssociationSet Name="FK__LatestNew__Schoo__7C1B37B1" Association="SmacModel.FK__LatestNew__Schoo__7C1B37B1">
-            <End Role="School" EntitySet="Schools" />
-            <End Role="LatestNew" EntitySet="LatestNewsSet" />
-          </AssociationSet>
-          <AssociationSet Name="FK__LatestNew__UserI__3E730AF3" Association="SmacModel.FK__LatestNew__UserI__3E730AF3">
-            <End Role="User" EntitySet="Users" />
-            <End Role="LatestNew" EntitySet="LatestNewsSet" />
-          </AssociationSet>
-          <FunctionImport Name="usp_GetLatestPrivateMessages" ReturnType="Collection(SmacModel.usp_GetLatestPrivateMessages_Result)">
-          <Parameter Name="UserID" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="usp_GetClubSchedule" ReturnType="Collection(SmacModel.usp_GetClubSchedule_Result)">
-            <Parameter Name="schoolId" Mode="In" Type="Int32" />
-            <Parameter Name="clubName" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="usp_GetUsersInSchool" ReturnType="Collection(SmacModel.usp_GetUsersInSchool_Result)">
-            <Parameter Name="SchoolId" Mode="In" Type="Int32" />
-            <Parameter Name="UserId" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="usp_GetSectionThreads" ReturnType="Collection(SmacModel.usp_GetSectionThreads_Result)">
-            <Parameter Name="sectionName" Mode="In" Type="String" />
-            <Parameter Name="className" Mode="In" Type="String" />
-            <Parameter Name="subjectName" Mode="In" Type="String" />
-            <Parameter Name="schoolId" Mode="In" Type="Int32" />
+            <Parameter Name="sectionId" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
-        <EntityType Name="Admin">
-          <Key>
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="User" Relationship="SmacModel.FK__Admins__UserId__7A67F969" FromRole="Admin" ToRole="User" />
-        </EntityType>
-        <EntityType Name="Class">
-          <Key>
-            <PropertyRef Name="ClassName" />
-            <PropertyRef Name="SubjectName" />
-            <PropertyRef Name="SchoolId" />
-          </Key>
-          <Property Name="ClassName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SubjectName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SchoolId" Type="Int32" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Subject" Relationship="SmacModel.FK__Classes__123F82FA" FromRole="Class" ToRole="Subject" />
-          <NavigationProperty Name="Sections" Relationship="SmacModel.FK__Sections__17043817" FromRole="Class" ToRole="Section" />
-        </EntityType>
-        <EntityType Name="ClubEnrollment">
-          <Key>
-            <PropertyRef Name="ClubName" />
-            <PropertyRef Name="SchoolId" />
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="ClubName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Name="SchoolId" Type="Int32" Nullable="false" />
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="IsLeader" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="SmacModel.FK__ClubEnrol__UserI__4A83DC1D" FromRole="ClubEnrollment" ToRole="User" />
-          <NavigationProperty Name="Club" Relationship="SmacModel.FK__ClubEnrollments__498FB7E4" FromRole="ClubEnrollment" ToRole="Club" />
-        </EntityType>
-        <EntityType Name="Club">
-          <Key>
-            <PropertyRef Name="ClubName" />
-            <PropertyRef Name="SchoolId" />
-          </Key>
-          <Property Name="ClubName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Name="SchoolId" Type="Int32" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="ClubEnrollments" Relationship="SmacModel.FK__ClubEnrollments__498FB7E4" FromRole="Club" ToRole="ClubEnrollment" />
-          <NavigationProperty Name="School" Relationship="SmacModel.FK__Clubs__SchoolId__1BC8ED34" FromRole="Club" ToRole="School" />
-          <NavigationProperty Name="ClubSchedules" Relationship="SmacModel.FK__ClubSchedules__42E2BA55" FromRole="Club" ToRole="ClubSchedule" />
-        </EntityType>
-        <EntityType Name="ClubSchedule">
-          <Key>
-            <PropertyRef Name="ClubName" />
-            <PropertyRef Name="SchoolId" />
-            <PropertyRef Name="TimeSlotId" />
-            <PropertyRef Name="DayValue" />
-          </Key>
-          <Property Name="ClubName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Name="SchoolId" Type="Int32" Nullable="false" />
-          <Property Name="TimeSlotId" Type="Int32" Nullable="false" />
-          <Property Name="DayValue" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Club" Relationship="SmacModel.FK__ClubSchedules__42E2BA55" FromRole="ClubSchedule" ToRole="Club" />
-          <NavigationProperty Name="TimeSlot" Relationship="SmacModel.FK__ClubSched__TimeS__43D6DE8E" FromRole="ClubSchedule" ToRole="TimeSlot" />
-          <NavigationProperty Name="Day" Relationship="SmacModel.FK__ClubSchedul__Day__44CB02C7" FromRole="ClubSchedule" ToRole="Day" />
-        </EntityType>
-        <EntityType Name="Day">
-          <Key>
-            <PropertyRef Name="Day1" />
-          </Key>
-          <Property Name="Day1" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="ClubSchedules" Relationship="SmacModel.FK__ClubSchedul__Day__44CB02C7" FromRole="Day" ToRole="ClubSchedule" />
-          <NavigationProperty Name="SectionSchedules" Relationship="SmacModel.FK__SectionSche__Day__5130D9AC" FromRole="Day" ToRole="SectionSchedule" />
-        </EntityType>
-        <EntityType Name="Enrollment">
-          <Key>
-            <PropertyRef Name="UserId" />
-            <PropertyRef Name="SectionName" />
-            <PropertyRef Name="ClassName" />
-            <PropertyRef Name="SubjectName" />
-            <PropertyRef Name="SchoolId" />
-            <PropertyRef Name="MarkingPeriodId" />
-            <PropertyRef Name="Year" />
-          </Key>
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="SectionName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ClassName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SubjectName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SchoolId" Type="Int32" Nullable="false" />
-          <Property Name="MarkingPeriodId" Type="Int32" Nullable="false" />
-          <Property Name="Year" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="GradeValue" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Grade" Relationship="SmacModel.FK__Enrollmen__Grade__59C61FAD" FromRole="Enrollment" ToRole="Grade" />
-          <NavigationProperty Name="MarkingPeriod" Relationship="SmacModel.FK__Enrollmen__Marki__57DDD73B" FromRole="Enrollment" ToRole="MarkingPeriod" />
-          <NavigationProperty Name="SchoolYear" Relationship="SmacModel.FK__Enrollmen__Schoo__58D1FB74" FromRole="Enrollment" ToRole="SchoolYear" />
-          <NavigationProperty Name="Student" Relationship="SmacModel.FK__Enrollmen__UserI__55F58EC9" FromRole="Enrollment" ToRole="Student" />
-          <NavigationProperty Name="Section" Relationship="SmacModel.FK__Enrollments__56E9B302" FromRole="Enrollment" ToRole="Section" />
-        </EntityType>
-        <EntityType Name="Gender">
-          <Key>
-            <PropertyRef Name="GenderType" />
-          </Key>
-          <Property Name="GenderType" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Users" Relationship="SmacModel.FK__Users__Gender__6849492E" FromRole="Gender" ToRole="User" />
-        </EntityType>
-        <EntityType Name="Grade">
-          <Key>
-            <PropertyRef Name="GradeVal" />
-          </Key>
-          <Property Name="GradeVal" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="SchoolId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Enrollments" Relationship="SmacModel.FK__Enrollmen__Grade__59C61FAD" FromRole="Grade" ToRole="Enrollment" />
-          <NavigationProperty Name="School" Relationship="SmacModel.FK__Grades__SchoolId__236A0EFC" FromRole="Grade" ToRole="School" />
-        </EntityType>
-        <EntityType Name="KhanShare">
-          <Key>
-            <PropertyRef Name="KhanShareId" />
-          </Key>
-          <Property Name="KhanShareId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Url" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ApiId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Threads" Relationship="SmacModel.KhanShareThreadMaps" FromRole="KhanShare" ToRole="Thread" />
-        </EntityType>
-        <EntityType Name="MarkingPeriod">
-          <Key>
-            <PropertyRef Name="MarkingPeriodId" />
-          </Key>
-          <Property Name="MarkingPeriodId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SchoolId" Type="Int32" Nullable="false" />
-          <Property Name="Period" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Enrollments" Relationship="SmacModel.FK__Enrollmen__Marki__57DDD73B" FromRole="MarkingPeriod" ToRole="Enrollment" />
-          <NavigationProperty Name="School" Relationship="SmacModel.FK__MarkingPe__Schoo__3E1E0538" FromRole="MarkingPeriod" ToRole="School" />
-          <NavigationProperty Name="TeacherSchedules" Relationship="SmacModel.FK__TeacherSc__Marki__60731D3C" FromRole="MarkingPeriod" ToRole="TeacherSchedule" />
-          <Property Name="FullYear" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="PrivateMessage">
-          <Key>
-            <PropertyRef Name="PrivateMessageId" />
-          </Key>
-          <Property Name="PrivateMessageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ToUser" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="FromUser" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="DateSent" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DateRead" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="UserSentFrom" Relationship="SmacModel.FK__PrivateMe__FromU__67201ACB" FromRole="PrivateMessage" ToRole="User" />
-          <NavigationProperty Name="UserSentTo" Relationship="SmacModel.FK__PrivateMe__ToUse__662BF692" FromRole="PrivateMessage" ToRole="User" />
-        </EntityType>
-        <EntityType Name="School">
-          <Key>
-            <PropertyRef Name="SchoolId" />
-          </Key>
-          <Property Name="SchoolId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SchoolName" Type="String" Nullable="false" MaxLength="125" FixedLength="false" Unicode="false" />
-          <Property Name="StreetAddress" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Name="City" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="State" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ZipCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Clubs" Relationship="SmacModel.FK__Clubs__SchoolId__1BC8ED34" FromRole="School" ToRole="Club" />
-          <NavigationProperty Name="Grades" Relationship="SmacModel.FK__Grades__SchoolId__236A0EFC" FromRole="School" ToRole="Grade" />
-          <NavigationProperty Name="MarkingPeriods" Relationship="SmacModel.FK__MarkingPe__Schoo__3E1E0538" FromRole="School" ToRole="MarkingPeriod" />
-          <NavigationProperty Name="SchoolYears" Relationship="SmacModel.FK__SchoolYea__Schoo__367CE370" FromRole="School" ToRole="SchoolYear" />
-          <NavigationProperty Name="Subjects" Relationship="SmacModel.FK__Subjects__School__0D7ACDDD" FromRole="School" ToRole="Subject" />
-          <NavigationProperty Name="TimeSlots" Relationship="SmacModel.FK__TimeSlots__Schoo__2EDBC1A8" FromRole="School" ToRole="TimeSlot" />
-          <NavigationProperty Name="Users" Relationship="SmacModel.SchoolRoster" FromRole="School" ToRole="User" />
-          <NavigationProperty Name="LatestNews" Relationship="SmacModel.FK__LatestNew__Schoo__7C1B37B1" FromRole="School" ToRole="LatestNew" />
-        </EntityType>
-        <EntityType Name="SchoolYear">
-          <Key>
-            <PropertyRef Name="Year" />
-          </Key>
-          <Property Name="Year" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="SchoolId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Enrollments" Relationship="SmacModel.FK__Enrollmen__Schoo__58D1FB74" FromRole="SchoolYear" ToRole="Enrollment" />
-          <NavigationProperty Name="School" Relationship="SmacModel.FK__SchoolYea__Schoo__367CE370" FromRole="SchoolYear" ToRole="School" />
-          <NavigationProperty Name="TeacherSchedules" Relationship="SmacModel.FK__TeacherSc__Schoo__61674175" FromRole="SchoolYear" ToRole="TeacherSchedule" />
-        </EntityType>
-        <EntityType Name="Section">
-          <Key>
-            <PropertyRef Name="SectionName" />
-            <PropertyRef Name="ClassName" />
-            <PropertyRef Name="SubjectName" />
-            <PropertyRef Name="SchoolId" />
-          </Key>
-          <Property Name="SectionName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ClassName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SubjectName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SchoolId" Type="Int32" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Class" Relationship="SmacModel.FK__Sections__17043817" FromRole="Section" ToRole="Class" />
-          <NavigationProperty Name="Enrollments" Relationship="SmacModel.FK__Enrollments__56E9B302" FromRole="Section" ToRole="Enrollment" />
-          <NavigationProperty Name="SectionSchedules" Relationship="SmacModel.FK__SectionSchedules__4F48913A" FromRole="Section" ToRole="SectionSchedule" />
-          <NavigationProperty Name="TeacherSchedules" Relationship="SmacModel.FK__TeacherSchedules__5F7EF903" FromRole="Section" ToRole="TeacherSchedule" />
-          <NavigationProperty Name="Threads" Relationship="SmacModel.FK__Threads__719DA93E" FromRole="Section" ToRole="Thread" />
-        </EntityType>
-        <EntityType Name="SectionSchedule">
-          <Key>
-            <PropertyRef Name="SectionName" />
-            <PropertyRef Name="ClassName" />
-            <PropertyRef Name="SubjectName" />
-            <PropertyRef Name="SchoolId" />
-            <PropertyRef Name="TimeSlotId" />
-            <PropertyRef Name="DayValue" />
-          </Key>
-          <Property Name="SectionName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ClassName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SubjectName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SchoolId" Type="Int32" Nullable="false" />
-          <Property Name="TimeSlotId" Type="Int32" Nullable="false" />
-          <Property Name="DayValue" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Day" Relationship="SmacModel.FK__SectionSche__Day__5130D9AC" FromRole="SectionSchedule" ToRole="Day" />
-          <NavigationProperty Name="Section" Relationship="SmacModel.FK__SectionSchedules__4F48913A" FromRole="SectionSchedule" ToRole="Section" />
-          <NavigationProperty Name="TimeSlot" Relationship="SmacModel.FK__SectionSc__TimeS__503CB573" FromRole="SectionSchedule" ToRole="TimeSlot" />
-        </EntityType>
-        <EntityType Name="Staff">
-          <Key>
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="User" Relationship="SmacModel.FK__Staff__UserId__7F2CAE86" FromRole="Staff" ToRole="User" />
-        </EntityType>
-        <EntityType Name="Student">
-          <Key>
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Enrollments" Relationship="SmacModel.FK__Enrollmen__UserI__55F58EC9" FromRole="Student" ToRole="Enrollment" />
-          <NavigationProperty Name="User" Relationship="SmacModel.FK__Students__UserId__08B618C0" FromRole="Student" ToRole="User" />
-        </EntityType>
-        <EntityType Name="Subject">
-          <Key>
-            <PropertyRef Name="SubjectName" />
-            <PropertyRef Name="SchoolId" />
-          </Key>
-          <Property Name="SubjectName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SchoolId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Classes" Relationship="SmacModel.FK__Classes__123F82FA" FromRole="Subject" ToRole="Class" />
-          <NavigationProperty Name="School" Relationship="SmacModel.FK__Subjects__School__0D7ACDDD" FromRole="Subject" ToRole="School" />
-        </EntityType>
-        <EntityType Name="Teacher">
-          <Key>
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="User" Relationship="SmacModel.FK__Teachers__UserId__03F163A3" FromRole="Teacher" ToRole="User" />
-          <NavigationProperty Name="TeacherSchedules" Relationship="SmacModel.FK__TeacherSc__UserI__5E8AD4CA" FromRole="Teacher" ToRole="TeacherSchedule" />
-        </EntityType>
-        <EntityType Name="TeacherSchedule">
-          <Key>
-            <PropertyRef Name="UserId" />
-            <PropertyRef Name="SectionName" />
-            <PropertyRef Name="ClassName" />
-            <PropertyRef Name="SubjectName" />
-            <PropertyRef Name="SchoolId" />
-            <PropertyRef Name="MarkingPeriodId" />
-            <PropertyRef Name="SchoolYear" />
-          </Key>
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="SectionName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ClassName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SubjectName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SchoolId" Type="Int32" Nullable="false" />
-          <Property Name="MarkingPeriodId" Type="Int32" Nullable="false" />
-          <Property Name="SchoolYear" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="MarkingPeriod" Relationship="SmacModel.FK__TeacherSc__Marki__60731D3C" FromRole="TeacherSchedule" ToRole="MarkingPeriod" />
-          <NavigationProperty Name="SchoolYear1" Relationship="SmacModel.FK__TeacherSc__Schoo__61674175" FromRole="TeacherSchedule" ToRole="SchoolYear" />
-          <NavigationProperty Name="Section" Relationship="SmacModel.FK__TeacherSchedules__5F7EF903" FromRole="TeacherSchedule" ToRole="Section" />
-          <NavigationProperty Name="Teacher" Relationship="SmacModel.FK__TeacherSc__UserI__5E8AD4CA" FromRole="TeacherSchedule" ToRole="Teacher" />
-        </EntityType>
-        <EntityType Name="Thread">
-          <Key>
-            <PropertyRef Name="ThreadId" />
-          </Key>
-          <Property Name="ThreadId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="SectionName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ClassName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SubjectName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SchoolId" Type="Int32" Nullable="false" />
-          <Property Name="ThreadTitle" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="DateTimePosted" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="RepliedTo" Type="Int32" />
-          <NavigationProperty Name="Section" Relationship="SmacModel.FK__Threads__719DA93E" FromRole="Thread" ToRole="Section" />
-          <NavigationProperty Name="Threads1" Relationship="SmacModel.FK__Threads__Replied__70A98505" FromRole="Thread" ToRole="Thread1" />
-          <NavigationProperty Name="Thread1" Relationship="SmacModel.FK__Threads__Replied__70A98505" FromRole="Thread1" ToRole="Thread" />
-          <NavigationProperty Name="User" Relationship="SmacModel.FK__Threads__UserId__6FB560CC" FromRole="Thread" ToRole="User" />
-          <NavigationProperty Name="KhanShares" Relationship="SmacModel.KhanShareThreadMaps" FromRole="Thread" ToRole="KhanShare" />
-        </EntityType>
-        <EntityType Name="TimeSlot">
-          <Key>
-            <PropertyRef Name="TimeSlotId" />
-          </Key>
-          <Property Name="TimeSlotId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EndTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="SchoolId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="ClubSchedules" Relationship="SmacModel.FK__ClubSched__TimeS__43D6DE8E" FromRole="TimeSlot" ToRole="ClubSchedule" />
-          <NavigationProperty Name="School" Relationship="SmacModel.FK__TimeSlots__Schoo__2EDBC1A8" FromRole="TimeSlot" ToRole="School" />
-          <NavigationProperty Name="SectionSchedules" Relationship="SmacModel.FK__SectionSc__TimeS__503CB573" FromRole="TimeSlot" ToRole="SectionSchedule" />
-        </EntityType>
-        <EntityType Name="UserCredential">
-          <Key>
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="UserName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Password" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="User" Relationship="SmacModel.FK__UserCrede__UserI__6FEA6AF6" FromRole="UserCredential" ToRole="User" />
-        </EntityType>
-        <EntityType Name="User">
-          <Key>
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="MiddleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="EmailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="GenderType" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
-          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EndDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="LastLoggedIn" Type="DateTime" Precision="3" />
-          <Property Name="LastLoggedOut" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Admin" Relationship="SmacModel.FK__Admins__UserId__7A67F969" FromRole="User" ToRole="Admin" />
-          <NavigationProperty Name="ClubEnrollments" Relationship="SmacModel.FK__ClubEnrol__UserI__4A83DC1D" FromRole="User" ToRole="ClubEnrollment" />
-          <NavigationProperty Name="Gender" Relationship="SmacModel.FK__Users__Gender__6849492E" FromRole="User" ToRole="Gender" />
-          <NavigationProperty Name="PrivateMessages" Relationship="SmacModel.FK__PrivateMe__FromU__67201ACB" FromRole="User" ToRole="PrivateMessage" />
-          <NavigationProperty Name="PrivateMessages1" Relationship="SmacModel.FK__PrivateMe__ToUse__662BF692" FromRole="User" ToRole="PrivateMessage" />
-          <NavigationProperty Name="Staff" Relationship="SmacModel.FK__Staff__UserId__7F2CAE86" FromRole="User" ToRole="Staff" />
-          <NavigationProperty Name="Student" Relationship="SmacModel.FK__Students__UserId__08B618C0" FromRole="User" ToRole="Student" />
-          <NavigationProperty Name="Teacher" Relationship="SmacModel.FK__Teachers__UserId__03F163A3" FromRole="User" ToRole="Teacher" />
-          <NavigationProperty Name="Threads" Relationship="SmacModel.FK__Threads__UserId__6FB560CC" FromRole="User" ToRole="Thread" />
-          <NavigationProperty Name="UserCredential" Relationship="SmacModel.FK__UserCrede__UserI__6FEA6AF6" FromRole="User" ToRole="UserCredential" />
-          <NavigationProperty Name="Schools" Relationship="SmacModel.SchoolRoster" FromRole="User" ToRole="School" />
-          <NavigationProperty Name="LatestNews" Relationship="SmacModel.FK__LatestNew__UserI__3E730AF3" FromRole="User" ToRole="LatestNew" />
-        </EntityType>
-        <Association Name="FK__Admins__UserId__7A67F969">
-          <End Type="SmacModel.User" Role="User" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.Admin" Role="Admin" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Admin">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Classes__123F82FA">
-          <End Type="SmacModel.Subject" Role="Subject" Multiplicity="1" />
-          <End Type="SmacModel.Class" Role="Class" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Subject">
-              <PropertyRef Name="SubjectName" />
-              <PropertyRef Name="SchoolId" />
-            </Principal>
-            <Dependent Role="Class">
-              <PropertyRef Name="SubjectName" />
-              <PropertyRef Name="SchoolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Sections__17043817">
-          <End Type="SmacModel.Class" Role="Class" Multiplicity="1" />
-          <End Type="SmacModel.Section" Role="Section" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Class">
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
-              <PropertyRef Name="SchoolId" />
-            </Principal>
-            <Dependent Role="Section">
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
-              <PropertyRef Name="SchoolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__ClubEnrol__UserI__4A83DC1D">
-          <End Type="SmacModel.User" Role="User" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.ClubEnrollment" Role="ClubEnrollment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="ClubEnrollment">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__ClubEnrollments__498FB7E4">
-          <End Type="SmacModel.Club" Role="Club" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.ClubEnrollment" Role="ClubEnrollment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Club">
-              <PropertyRef Name="ClubName" />
-              <PropertyRef Name="SchoolId" />
-            </Principal>
-            <Dependent Role="ClubEnrollment">
-              <PropertyRef Name="ClubName" />
-              <PropertyRef Name="SchoolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Clubs__SchoolId__1BC8ED34">
-          <End Type="SmacModel.School" Role="School" Multiplicity="1" />
-          <End Type="SmacModel.Club" Role="Club" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="School">
-              <PropertyRef Name="SchoolId" />
-            </Principal>
-            <Dependent Role="Club">
-              <PropertyRef Name="SchoolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__ClubSchedules__42E2BA55">
-          <End Type="SmacModel.Club" Role="Club" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.ClubSchedule" Role="ClubSchedule" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Club">
-              <PropertyRef Name="ClubName" />
-              <PropertyRef Name="SchoolId" />
-            </Principal>
-            <Dependent Role="ClubSchedule">
-              <PropertyRef Name="ClubName" />
-              <PropertyRef Name="SchoolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__ClubSched__TimeS__43D6DE8E">
-          <End Type="SmacModel.TimeSlot" Role="TimeSlot" Multiplicity="1" />
-          <End Type="SmacModel.ClubSchedule" Role="ClubSchedule" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TimeSlot">
-              <PropertyRef Name="TimeSlotId" />
-            </Principal>
-            <Dependent Role="ClubSchedule">
-              <PropertyRef Name="TimeSlotId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__ClubSchedul__Day__44CB02C7">
-          <End Type="SmacModel.Day" Role="Day" Multiplicity="1" />
-          <End Type="SmacModel.ClubSchedule" Role="ClubSchedule" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Day">
-              <PropertyRef Name="Day1" />
-            </Principal>
-            <Dependent Role="ClubSchedule">
-              <PropertyRef Name="DayValue" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__SectionSche__Day__5130D9AC">
-          <End Type="SmacModel.Day" Role="Day" Multiplicity="1" />
-          <End Type="SmacModel.SectionSchedule" Role="SectionSchedule" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Day">
-              <PropertyRef Name="Day1" />
-            </Principal>
-            <Dependent Role="SectionSchedule">
-              <PropertyRef Name="DayValue" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Enrollmen__Grade__59C61FAD">
-          <End Type="SmacModel.Grade" Role="Grade" Multiplicity="0..1" />
-          <End Type="SmacModel.Enrollment" Role="Enrollment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Grade">
-              <PropertyRef Name="GradeVal" />
-            </Principal>
-            <Dependent Role="Enrollment">
-              <PropertyRef Name="GradeValue" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Enrollmen__Marki__57DDD73B">
-          <End Type="SmacModel.MarkingPeriod" Role="MarkingPeriod" Multiplicity="1" />
-          <End Type="SmacModel.Enrollment" Role="Enrollment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="MarkingPeriod">
-              <PropertyRef Name="MarkingPeriodId" />
-            </Principal>
-            <Dependent Role="Enrollment">
-              <PropertyRef Name="MarkingPeriodId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Enrollmen__Schoo__58D1FB74">
-          <End Type="SmacModel.SchoolYear" Role="SchoolYear" Multiplicity="1" />
-          <End Type="SmacModel.Enrollment" Role="Enrollment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SchoolYear">
-              <PropertyRef Name="Year" />
-            </Principal>
-            <Dependent Role="Enrollment">
-              <PropertyRef Name="Year" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Enrollmen__UserI__55F58EC9">
-          <End Type="SmacModel.Student" Role="Student" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.Enrollment" Role="Enrollment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Student">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Enrollment">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Enrollments__56E9B302">
-          <End Type="SmacModel.Section" Role="Section" Multiplicity="1" />
-          <End Type="SmacModel.Enrollment" Role="Enrollment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Section">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
-              <PropertyRef Name="SchoolId" />
-            </Principal>
-            <Dependent Role="Enrollment">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
-              <PropertyRef Name="SchoolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Users__Gender__6849492E">
-          <End Type="SmacModel.Gender" Role="Gender" Multiplicity="1" />
-          <End Type="SmacModel.User" Role="User" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Gender">
-              <PropertyRef Name="GenderType" />
-            </Principal>
-            <Dependent Role="User">
-              <PropertyRef Name="GenderType" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Grades__SchoolId__236A0EFC">
-          <End Type="SmacModel.School" Role="School" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.Grade" Role="Grade" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="School">
-              <PropertyRef Name="SchoolId" />
-            </Principal>
-            <Dependent Role="Grade">
-              <PropertyRef Name="SchoolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__MarkingPe__Schoo__3E1E0538">
-          <End Type="SmacModel.School" Role="School" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.MarkingPeriod" Role="MarkingPeriod" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="School">
-              <PropertyRef Name="SchoolId" />
-            </Principal>
-            <Dependent Role="MarkingPeriod">
-              <PropertyRef Name="SchoolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__TeacherSc__Marki__60731D3C">
-          <End Type="SmacModel.MarkingPeriod" Role="MarkingPeriod" Multiplicity="1" />
-          <End Type="SmacModel.TeacherSchedule" Role="TeacherSchedule" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="MarkingPeriod">
-              <PropertyRef Name="MarkingPeriodId" />
-            </Principal>
-            <Dependent Role="TeacherSchedule">
-              <PropertyRef Name="MarkingPeriodId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__PrivateMe__FromU__67201ACB">
-          <End Type="SmacModel.User" Role="User" Multiplicity="1" />
-          <End Type="SmacModel.PrivateMessage" Role="PrivateMessage" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="PrivateMessage">
-              <PropertyRef Name="FromUser" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__PrivateMe__ToUse__662BF692">
-          <End Type="SmacModel.User" Role="User" Multiplicity="1" />
-          <End Type="SmacModel.PrivateMessage" Role="PrivateMessage" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="PrivateMessage">
-              <PropertyRef Name="ToUser" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__SchoolYea__Schoo__367CE370">
-          <End Type="SmacModel.School" Role="School" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.SchoolYear" Role="SchoolYear" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="School">
-              <PropertyRef Name="SchoolId" />
-            </Principal>
-            <Dependent Role="SchoolYear">
-              <PropertyRef Name="SchoolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Subjects__School__0D7ACDDD">
-          <End Type="SmacModel.School" Role="School" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.Subject" Role="Subject" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="School">
-              <PropertyRef Name="SchoolId" />
-            </Principal>
-            <Dependent Role="Subject">
-              <PropertyRef Name="SchoolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__TimeSlots__Schoo__2EDBC1A8">
-          <End Type="SmacModel.School" Role="School" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.TimeSlot" Role="TimeSlot" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="School">
-              <PropertyRef Name="SchoolId" />
-            </Principal>
-            <Dependent Role="TimeSlot">
-              <PropertyRef Name="SchoolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__TeacherSc__Schoo__61674175">
-          <End Type="SmacModel.SchoolYear" Role="SchoolYear" Multiplicity="1" />
-          <End Type="SmacModel.TeacherSchedule" Role="TeacherSchedule" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SchoolYear">
-              <PropertyRef Name="Year" />
-            </Principal>
-            <Dependent Role="TeacherSchedule">
-              <PropertyRef Name="SchoolYear" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__SectionSchedules__4F48913A">
-          <End Type="SmacModel.Section" Role="Section" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.SectionSchedule" Role="SectionSchedule" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Section">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
-              <PropertyRef Name="SchoolId" />
-            </Principal>
-            <Dependent Role="SectionSchedule">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
-              <PropertyRef Name="SchoolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__TeacherSchedules__5F7EF903">
-          <End Type="SmacModel.Section" Role="Section" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.TeacherSchedule" Role="TeacherSchedule" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Section">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
-              <PropertyRef Name="SchoolId" />
-            </Principal>
-            <Dependent Role="TeacherSchedule">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
-              <PropertyRef Name="SchoolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Threads__719DA93E">
-          <End Type="SmacModel.Section" Role="Section" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.Thread" Role="Thread" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Section">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
-              <PropertyRef Name="SchoolId" />
-            </Principal>
-            <Dependent Role="Thread">
-              <PropertyRef Name="SectionName" />
-              <PropertyRef Name="ClassName" />
-              <PropertyRef Name="SubjectName" />
-              <PropertyRef Name="SchoolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__SectionSc__TimeS__503CB573">
-          <End Type="SmacModel.TimeSlot" Role="TimeSlot" Multiplicity="1" />
-          <End Type="SmacModel.SectionSchedule" Role="SectionSchedule" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TimeSlot">
-              <PropertyRef Name="TimeSlotId" />
-            </Principal>
-            <Dependent Role="SectionSchedule">
-              <PropertyRef Name="TimeSlotId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Staff__UserId__7F2CAE86">
-          <End Type="SmacModel.User" Role="User" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.Staff" Role="Staff" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Staff">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Students__UserId__08B618C0">
-          <End Type="SmacModel.User" Role="User" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.Student" Role="Student" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Student">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Teachers__UserId__03F163A3">
-          <End Type="SmacModel.User" Role="User" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.Teacher" Role="Teacher" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Teacher">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__TeacherSc__UserI__5E8AD4CA">
-          <End Type="SmacModel.Teacher" Role="Teacher" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.TeacherSchedule" Role="TeacherSchedule" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Teacher">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="TeacherSchedule">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Threads__Replied__70A98505">
-          <End Type="SmacModel.Thread" Role="Thread" Multiplicity="0..1" />
-          <End Type="SmacModel.Thread" Role="Thread1" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Thread">
-              <PropertyRef Name="ThreadId" />
-            </Principal>
-            <Dependent Role="Thread1">
-              <PropertyRef Name="RepliedTo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Threads__UserId__6FB560CC">
-          <End Type="SmacModel.User" Role="User" Multiplicity="0..1" />
-          <End Type="SmacModel.Thread" Role="Thread" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Thread">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__UserCrede__UserI__6FEA6AF6">
-          <End Type="SmacModel.User" Role="User" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.UserCredential" Role="UserCredential" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="UserCredential">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="KhanShareThreadMaps">
-          <End Type="SmacModel.KhanShare" Role="KhanShare" Multiplicity="*" />
-          <End Type="SmacModel.Thread" Role="Thread" Multiplicity="*" />
-        </Association>
-        <Association Name="SchoolRoster">
-          <End Type="SmacModel.School" Role="School" Multiplicity="*" />
-          <End Type="SmacModel.User" Role="User" Multiplicity="*" />
-        </Association>
-        <EntityType Name="LatestNews">
-          <Key>
-            <PropertyRef Name="LatestNewsId" />
-          </Key>
-          <Property Name="LatestNewsId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SchoolId" Type="Int32" Nullable="false" />
-          <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="School" Relationship="SmacModel.FK__LatestNew__Schoo__7C1B37B1" FromRole="LatestNew" ToRole="School" />
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PostedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="User" Relationship="SmacModel.FK__LatestNew__UserI__3E730AF3" FromRole="LatestNew" ToRole="User" />
-        </EntityType>
-        <Association Name="FK__LatestNew__Schoo__7C1B37B1">
-          <End Type="SmacModel.School" Role="School" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="SmacModel.LatestNews" Role="LatestNew" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="School">
-              <PropertyRef Name="SchoolId" />
-            </Principal>
-            <Dependent Role="LatestNew">
-              <PropertyRef Name="SchoolId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__LatestNew__UserI__3E730AF3">
-          <End Type="SmacModel.User" Role="User" Multiplicity="1" />
-          <End Type="SmacModel.LatestNews" Role="LatestNew" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="LatestNew">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <ComplexType Name="usp_GetLatestPrivateMessages_Result">
           <Property Type="Int32" Name="PrivateMessageId" Nullable="false" />
           <Property Type="String" Name="ToUser" Nullable="false" MaxLength="20" />
@@ -2224,12 +1362,965 @@
           <Property Type="String" Name="lastPostBy" Nullable="true" MaxLength="101" />
           <Property Type="Int32" Name="replies" Nullable="true" />
         </ComplexType>
+        <EntityType Name="Admin">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="User" Relationship="SmacModel.FK__Admins__UserId__5ECB9743" FromRole="Admin" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Class">
+          <Key>
+            <PropertyRef Name="ClassId" />
+            <PropertyRef Name="SubjectId" />
+            <PropertyRef Name="SchoolId" />
+          </Key>
+          <Property Name="ClassId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClassName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SubjectId" Type="Int32" Nullable="false" />
+          <Property Name="SchoolId" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Subject" Relationship="SmacModel.FK__Classes__76A320D4" FromRole="Class" ToRole="Subject" />
+          <NavigationProperty Name="Sections" Relationship="SmacModel.FK__Sections__7B67D5F1" FromRole="Class" ToRole="Section" />
+        </EntityType>
+        <EntityType Name="ClubEnrollment">
+          <Key>
+            <PropertyRef Name="ClubName" />
+            <PropertyRef Name="SchoolId" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="ClubName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="SchoolId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IsLeader" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="SmacModel.FK__ClubEnrol__UserI__2FDB9E30" FromRole="ClubEnrollment" ToRole="User" />
+          <NavigationProperty Name="Club" Relationship="SmacModel.FK__ClubEnrollments__2EE779F7" FromRole="ClubEnrollment" ToRole="Club" />
+        </EntityType>
+        <EntityType Name="Club">
+          <Key>
+            <PropertyRef Name="ClubName" />
+            <PropertyRef Name="SchoolId" />
+          </Key>
+          <Property Name="ClubName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="SchoolId" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ClubEnrollments" Relationship="SmacModel.FK__ClubEnrollments__2EE779F7" FromRole="Club" ToRole="ClubEnrollment" />
+          <NavigationProperty Name="School" Relationship="SmacModel.FK__Clubs__SchoolId__002C8B0E" FromRole="Club" ToRole="School" />
+          <NavigationProperty Name="ClubSchedules" Relationship="SmacModel.FK__ClubSchedules__2746582F" FromRole="Club" ToRole="ClubSchedule" />
+        </EntityType>
+        <EntityType Name="ClubSchedule">
+          <Key>
+            <PropertyRef Name="ClubName" />
+            <PropertyRef Name="SchoolId" />
+            <PropertyRef Name="TimeSlotId" />
+            <PropertyRef Name="DayValue" />
+          </Key>
+          <Property Name="ClubName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="SchoolId" Type="Int32" Nullable="false" />
+          <Property Name="TimeSlotId" Type="Int32" Nullable="false" />
+          <Property Name="DayValue" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="SchoolYearId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Club" Relationship="SmacModel.FK__ClubSchedules__2746582F" FromRole="ClubSchedule" ToRole="Club" />
+          <NavigationProperty Name="SchoolYear" Relationship="SmacModel.FK__ClubSched__Schoo__2A22C4DA" FromRole="ClubSchedule" ToRole="SchoolYear" />
+          <NavigationProperty Name="TimeSlot" Relationship="SmacModel.FK__ClubSched__TimeS__283A7C68" FromRole="ClubSchedule" ToRole="TimeSlot" />
+          <NavigationProperty Name="Day" Relationship="SmacModel.FK__ClubSchedul__Day__292EA0A1" FromRole="ClubSchedule" ToRole="Day" />
+        </EntityType>
+        <EntityType Name="Day">
+          <Key>
+            <PropertyRef Name="DayValue" />
+          </Key>
+          <Property Name="DayValue" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ClubSchedules" Relationship="SmacModel.FK__ClubSchedul__Day__292EA0A1" FromRole="Day" ToRole="ClubSchedule" />
+          <NavigationProperty Name="SectionSchedules" Relationship="SmacModel.FK__SectionSche__Day__36889BBF" FromRole="Day" ToRole="SectionSchedule" />
+        </EntityType>
+        <EntityType Name="Enrollment">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="SectionId" />
+            <PropertyRef Name="ClassId" />
+            <PropertyRef Name="SubjectId" />
+            <PropertyRef Name="SchoolId" />
+            <PropertyRef Name="MarkingPeriodId" />
+          </Key>
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SectionId" Type="Int32" Nullable="false" />
+          <Property Name="ClassId" Type="Int32" Nullable="false" />
+          <Property Name="SubjectId" Type="Int32" Nullable="false" />
+          <Property Name="SchoolId" Type="Int32" Nullable="false" />
+          <Property Name="MarkingPeriodId" Type="Int32" Nullable="false" />
+          <Property Name="GradeValue" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Grade" Relationship="SmacModel.FK__Enrollmen__Grade__401205F9" FromRole="Enrollment" ToRole="Grade" />
+          <NavigationProperty Name="MarkingPeriod" Relationship="SmacModel.FK__Enrollmen__Marki__3F1DE1C0" FromRole="Enrollment" ToRole="MarkingPeriod" />
+          <NavigationProperty Name="Student" Relationship="SmacModel.FK__Enrollmen__UserI__3D35994E" FromRole="Enrollment" ToRole="Student" />
+          <NavigationProperty Name="Section" Relationship="SmacModel.FK__Enrollments__3E29BD87" FromRole="Enrollment" ToRole="Section" />
+        </EntityType>
+        <EntityType Name="Gender">
+          <Key>
+            <PropertyRef Name="GenderType" />
+          </Key>
+          <Property Name="GenderType" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Users" Relationship="SmacModel.FK__Users__Gender__4CACE708" FromRole="Gender" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Grade">
+          <Key>
+            <PropertyRef Name="GradeValue" />
+          </Key>
+          <Property Name="GradeValue" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="SchoolId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Enrollments" Relationship="SmacModel.FK__Enrollmen__Grade__401205F9" FromRole="Grade" ToRole="Enrollment" />
+          <NavigationProperty Name="School" Relationship="SmacModel.FK__Grades__SchoolId__07CDACD6" FromRole="Grade" ToRole="School" />
+        </EntityType>
+        <EntityType Name="KhanShare">
+          <Key>
+            <PropertyRef Name="KhanShareId" />
+          </Key>
+          <Property Name="KhanShareId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Url" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ApiId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Threads" Relationship="SmacModel.KhanShareThreadMaps" FromRole="KhanShare" ToRole="Thread" />
+        </EntityType>
+        <EntityType Name="LatestNews">
+          <Key>
+            <PropertyRef Name="LatestNewsId" />
+          </Key>
+          <Property Name="LatestNewsId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SchoolId" Type="Int32" Nullable="false" />
+          <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PostedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="School" Relationship="SmacModel.FK__LatestNew__Schoo__62671DFD" FromRole="LatestNew" ToRole="School" />
+          <NavigationProperty Name="User" Relationship="SmacModel.FK__LatestNew__UserI__635B4236" FromRole="LatestNew" ToRole="User" />
+        </EntityType>
+        <EntityType Name="MarkingPeriod">
+          <Key>
+            <PropertyRef Name="MarkingPeriodId" />
+          </Key>
+          <Property Name="MarkingPeriodId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SchoolYearId" Type="Int32" Nullable="false" />
+          <Property Name="Period" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FullYear" Type="Boolean" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Enrollments" Relationship="SmacModel.FK__Enrollmen__Marki__3F1DE1C0" FromRole="MarkingPeriod" ToRole="Enrollment" />
+          <NavigationProperty Name="SchoolYear" Relationship="SmacModel.FK__MarkingPe__Schoo__2281A312" FromRole="MarkingPeriod" ToRole="SchoolYear" />
+          <NavigationProperty Name="SectionSchedules" Relationship="SmacModel.FK__SectionSc__Marki__377CBFF8" FromRole="MarkingPeriod" ToRole="SectionSchedule" />
+          <NavigationProperty Name="TeacherSchedules" Relationship="SmacModel.FK__TeacherSc__Marki__46BF0388" FromRole="MarkingPeriod" ToRole="TeacherSchedule" />
+        </EntityType>
+        <EntityType Name="PrivateMessage">
+          <Key>
+            <PropertyRef Name="PrivateMessageId" />
+          </Key>
+          <Property Name="PrivateMessageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ToUser" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FromUser" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DateSent" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateRead" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="UserSentFrom" Relationship="SmacModel.FK__PrivateMe__FromU__4D6C0117" FromRole="PrivateMessage" ToRole="User" />
+          <NavigationProperty Name="UserSentTo" Relationship="SmacModel.FK__PrivateMe__ToUse__4C77DCDE" FromRole="PrivateMessage" ToRole="User" />
+        </EntityType>
+        <EntityType Name="School">
+          <Key>
+            <PropertyRef Name="SchoolId" />
+          </Key>
+          <Property Name="SchoolId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SchoolName" Type="String" Nullable="false" MaxLength="125" FixedLength="false" Unicode="false" />
+          <Property Name="StreetAddress" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="State" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ZipCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Clubs" Relationship="SmacModel.FK__Clubs__SchoolId__002C8B0E" FromRole="School" ToRole="Club" />
+          <NavigationProperty Name="Grades" Relationship="SmacModel.FK__Grades__SchoolId__07CDACD6" FromRole="School" ToRole="Grade" />
+          <NavigationProperty Name="LatestNews" Relationship="SmacModel.FK__LatestNew__Schoo__62671DFD" FromRole="School" ToRole="LatestNew" />
+          <NavigationProperty Name="SchoolYears" Relationship="SmacModel.FK__SchoolYea__Schoo__1AE0814A" FromRole="School" ToRole="SchoolYear" />
+          <NavigationProperty Name="Subjects" Relationship="SmacModel.FK__Subjects__School__71DE6BB7" FromRole="School" ToRole="Subject" />
+          <NavigationProperty Name="TimeSlots" Relationship="SmacModel.FK__TimeSlots__Schoo__133F5F82" FromRole="School" ToRole="TimeSlot" />
+          <NavigationProperty Name="Users" Relationship="SmacModel.SchoolRoster" FromRole="School" ToRole="User" />
+        </EntityType>
+        <EntityType Name="SchoolYear">
+          <Key>
+            <PropertyRef Name="SchoolYearId" />
+          </Key>
+          <Property Name="SchoolYearId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SchoolId" Type="Int32" Nullable="false" />
+          <Property Name="Year" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="ClubSchedules" Relationship="SmacModel.FK__ClubSched__Schoo__2A22C4DA" FromRole="SchoolYear" ToRole="ClubSchedule" />
+          <NavigationProperty Name="MarkingPeriods" Relationship="SmacModel.FK__MarkingPe__Schoo__2281A312" FromRole="SchoolYear" ToRole="MarkingPeriod" />
+          <NavigationProperty Name="School" Relationship="SmacModel.FK__SchoolYea__Schoo__1AE0814A" FromRole="SchoolYear" ToRole="School" />
+          <NavigationProperty Name="SectionSchedules" Relationship="SmacModel.FK__SectionSc__Schoo__3870E431" FromRole="SchoolYear" ToRole="SectionSchedule" />
+        </EntityType>
+        <EntityType Name="Section">
+          <Key>
+            <PropertyRef Name="SectionId" />
+            <PropertyRef Name="ClassId" />
+            <PropertyRef Name="SubjectId" />
+            <PropertyRef Name="SchoolId" />
+          </Key>
+          <Property Name="SectionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SectionName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ClassId" Type="Int32" Nullable="false" />
+          <Property Name="SubjectId" Type="Int32" Nullable="false" />
+          <Property Name="SchoolId" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Class" Relationship="SmacModel.FK__Sections__7B67D5F1" FromRole="Section" ToRole="Class" />
+          <NavigationProperty Name="Enrollments" Relationship="SmacModel.FK__Enrollments__3E29BD87" FromRole="Section" ToRole="Enrollment" />
+          <NavigationProperty Name="SectionSchedules" Relationship="SmacModel.FK__SectionSchedules__34A0534D" FromRole="Section" ToRole="SectionSchedule" />
+          <NavigationProperty Name="TeacherSchedules" Relationship="SmacModel.FK__TeacherSchedules__45CADF4F" FromRole="Section" ToRole="TeacherSchedule" />
+          <NavigationProperty Name="Threads" Relationship="SmacModel.FK__Threads__57E98F8A" FromRole="Section" ToRole="Thread" />
+        </EntityType>
+        <EntityType Name="SectionSchedule">
+          <Key>
+            <PropertyRef Name="SectionId" />
+            <PropertyRef Name="ClassId" />
+            <PropertyRef Name="SubjectId" />
+            <PropertyRef Name="SchoolId" />
+            <PropertyRef Name="TimeSlotId" />
+            <PropertyRef Name="DayValue" />
+            <PropertyRef Name="MarkingPeriodId" />
+            <PropertyRef Name="SchoolYearId" />
+          </Key>
+          <Property Name="SectionId" Type="Int32" Nullable="false" />
+          <Property Name="ClassId" Type="Int32" Nullable="false" />
+          <Property Name="SubjectId" Type="Int32" Nullable="false" />
+          <Property Name="SchoolId" Type="Int32" Nullable="false" />
+          <Property Name="TimeSlotId" Type="Int32" Nullable="false" />
+          <Property Name="DayValue" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="MarkingPeriodId" Type="Int32" Nullable="false" />
+          <Property Name="SchoolYearId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Day" Relationship="SmacModel.FK__SectionSche__Day__36889BBF" FromRole="SectionSchedule" ToRole="Day" />
+          <NavigationProperty Name="MarkingPeriod" Relationship="SmacModel.FK__SectionSc__Marki__377CBFF8" FromRole="SectionSchedule" ToRole="MarkingPeriod" />
+          <NavigationProperty Name="SchoolYear" Relationship="SmacModel.FK__SectionSc__Schoo__3870E431" FromRole="SectionSchedule" ToRole="SchoolYear" />
+          <NavigationProperty Name="Section" Relationship="SmacModel.FK__SectionSchedules__34A0534D" FromRole="SectionSchedule" ToRole="Section" />
+          <NavigationProperty Name="TimeSlot" Relationship="SmacModel.FK__SectionSc__TimeS__35947786" FromRole="SectionSchedule" ToRole="TimeSlot" />
+        </EntityType>
+        <EntityType Name="Staff">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="User" Relationship="SmacModel.FK__Staff__UserId__63904C60" FromRole="Staff" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Enrollments" Relationship="SmacModel.FK__Enrollmen__UserI__3D35994E" FromRole="Student" ToRole="Enrollment" />
+          <NavigationProperty Name="User" Relationship="SmacModel.FK__Students__UserId__6D19B69A" FromRole="Student" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Subject">
+          <Key>
+            <PropertyRef Name="SubjectId" />
+            <PropertyRef Name="SchoolId" />
+          </Key>
+          <Property Name="SubjectId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SubjectName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SchoolId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Classes" Relationship="SmacModel.FK__Classes__76A320D4" FromRole="Subject" ToRole="Class" />
+          <NavigationProperty Name="School" Relationship="SmacModel.FK__Subjects__School__71DE6BB7" FromRole="Subject" ToRole="School" />
+        </EntityType>
+        <EntityType Name="Teacher">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="User" Relationship="SmacModel.FK__Teachers__UserId__6855017D" FromRole="Teacher" ToRole="User" />
+          <NavigationProperty Name="TeacherSchedules" Relationship="SmacModel.FK__TeacherSc__UserI__44D6BB16" FromRole="Teacher" ToRole="TeacherSchedule" />
+        </EntityType>
+        <EntityType Name="TeacherSchedule">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="SectionId" />
+            <PropertyRef Name="ClassId" />
+            <PropertyRef Name="SubjectId" />
+            <PropertyRef Name="SchoolId" />
+            <PropertyRef Name="MarkingPeriodId" />
+          </Key>
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SectionId" Type="Int32" Nullable="false" />
+          <Property Name="ClassId" Type="Int32" Nullable="false" />
+          <Property Name="SubjectId" Type="Int32" Nullable="false" />
+          <Property Name="SchoolId" Type="Int32" Nullable="false" />
+          <Property Name="MarkingPeriodId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MarkingPeriod" Relationship="SmacModel.FK__TeacherSc__Marki__46BF0388" FromRole="TeacherSchedule" ToRole="MarkingPeriod" />
+          <NavigationProperty Name="Section" Relationship="SmacModel.FK__TeacherSchedules__45CADF4F" FromRole="TeacherSchedule" ToRole="Section" />
+          <NavigationProperty Name="Teacher" Relationship="SmacModel.FK__TeacherSc__UserI__44D6BB16" FromRole="TeacherSchedule" ToRole="Teacher" />
+        </EntityType>
+        <EntityType Name="Thread">
+          <Key>
+            <PropertyRef Name="ThreadId" />
+          </Key>
+          <Property Name="ThreadId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SectionId" Type="Int32" Nullable="false" />
+          <Property Name="ClassId" Type="Int32" Nullable="false" />
+          <Property Name="SubjectId" Type="Int32" Nullable="false" />
+          <Property Name="SchoolId" Type="Int32" Nullable="false" />
+          <Property Name="ThreadTitle" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DateTimePosted" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RepliedTo" Type="Int32" />
+          <NavigationProperty Name="Section" Relationship="SmacModel.FK__Threads__57E98F8A" FromRole="Thread" ToRole="Section" />
+          <NavigationProperty Name="Threads1" Relationship="SmacModel.FK__Threads__Replied__56F56B51" FromRole="Thread" ToRole="Thread1" />
+          <NavigationProperty Name="Thread1" Relationship="SmacModel.FK__Threads__Replied__56F56B51" FromRole="Thread1" ToRole="Thread" />
+          <NavigationProperty Name="User" Relationship="SmacModel.FK__Threads__UserId__56014718" FromRole="Thread" ToRole="User" />
+          <NavigationProperty Name="KhanShares" Relationship="SmacModel.KhanShareThreadMaps" FromRole="Thread" ToRole="KhanShare" />
+        </EntityType>
+        <EntityType Name="TimeSlot">
+          <Key>
+            <PropertyRef Name="TimeSlotId" />
+          </Key>
+          <Property Name="TimeSlotId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StartTime" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="EndTime" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="SchoolId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ClubSchedules" Relationship="SmacModel.FK__ClubSched__TimeS__283A7C68" FromRole="TimeSlot" ToRole="ClubSchedule" />
+          <NavigationProperty Name="School" Relationship="SmacModel.FK__TimeSlots__Schoo__133F5F82" FromRole="TimeSlot" ToRole="School" />
+          <NavigationProperty Name="SectionSchedules" Relationship="SmacModel.FK__SectionSc__TimeS__35947786" FromRole="TimeSlot" ToRole="SectionSchedule" />
+        </EntityType>
+        <EntityType Name="UserCredential">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="User" Relationship="SmacModel.FK__UserCrede__UserI__544E08D0" FromRole="UserCredential" ToRole="User" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="MiddleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="GenderType" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="LastLoggedIn" Type="DateTime" Precision="3" />
+          <Property Name="LastLoggedOut" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Admin" Relationship="SmacModel.FK__Admins__UserId__5ECB9743" FromRole="User" ToRole="Admin" />
+          <NavigationProperty Name="ClubEnrollments" Relationship="SmacModel.FK__ClubEnrol__UserI__2FDB9E30" FromRole="User" ToRole="ClubEnrollment" />
+          <NavigationProperty Name="Gender" Relationship="SmacModel.FK__Users__Gender__4CACE708" FromRole="User" ToRole="Gender" />
+          <NavigationProperty Name="LatestNews" Relationship="SmacModel.FK__LatestNew__UserI__635B4236" FromRole="User" ToRole="LatestNew" />
+          <NavigationProperty Name="PrivateMessages" Relationship="SmacModel.FK__PrivateMe__FromU__4D6C0117" FromRole="User" ToRole="PrivateMessage" />
+          <NavigationProperty Name="PrivateMessages1" Relationship="SmacModel.FK__PrivateMe__ToUse__4C77DCDE" FromRole="User" ToRole="PrivateMessage" />
+          <NavigationProperty Name="Staff" Relationship="SmacModel.FK__Staff__UserId__63904C60" FromRole="User" ToRole="Staff" />
+          <NavigationProperty Name="Student" Relationship="SmacModel.FK__Students__UserId__6D19B69A" FromRole="User" ToRole="Student" />
+          <NavigationProperty Name="Teacher" Relationship="SmacModel.FK__Teachers__UserId__6855017D" FromRole="User" ToRole="Teacher" />
+          <NavigationProperty Name="Threads" Relationship="SmacModel.FK__Threads__UserId__56014718" FromRole="User" ToRole="Thread" />
+          <NavigationProperty Name="UserCredential" Relationship="SmacModel.FK__UserCrede__UserI__544E08D0" FromRole="User" ToRole="UserCredential" />
+          <NavigationProperty Name="Schools" Relationship="SmacModel.SchoolRoster" FromRole="User" ToRole="School" />
+        </EntityType>
+        <Association Name="FK__Admins__UserId__5ECB9743">
+          <End Type="SmacModel.User" Role="User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.Admin" Role="Admin" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Admin">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Classes__76A320D4">
+          <End Type="SmacModel.Subject" Role="Subject" Multiplicity="1" />
+          <End Type="SmacModel.Class" Role="Class" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subject">
+              <PropertyRef Name="SubjectId" />
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="Class">
+              <PropertyRef Name="SubjectId" />
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Sections__7B67D5F1">
+          <End Type="SmacModel.Class" Role="Class" Multiplicity="1" />
+          <End Type="SmacModel.Section" Role="Section" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Class">
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="Section">
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ClubEnrol__UserI__2FDB9E30">
+          <End Type="SmacModel.User" Role="User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.ClubEnrollment" Role="ClubEnrollment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ClubEnrollment">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ClubEnrollments__2EE779F7">
+          <End Type="SmacModel.Club" Role="Club" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.ClubEnrollment" Role="ClubEnrollment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Club">
+              <PropertyRef Name="ClubName" />
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="ClubEnrollment">
+              <PropertyRef Name="ClubName" />
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Clubs__SchoolId__002C8B0E">
+          <End Type="SmacModel.School" Role="School" Multiplicity="1" />
+          <End Type="SmacModel.Club" Role="Club" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="School">
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="Club">
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ClubSchedules__2746582F">
+          <End Type="SmacModel.Club" Role="Club" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.ClubSchedule" Role="ClubSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Club">
+              <PropertyRef Name="ClubName" />
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="ClubSchedule">
+              <PropertyRef Name="ClubName" />
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ClubSched__Schoo__2A22C4DA">
+          <End Type="SmacModel.SchoolYear" Role="SchoolYear" Multiplicity="1" />
+          <End Type="SmacModel.ClubSchedule" Role="ClubSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SchoolYear">
+              <PropertyRef Name="SchoolYearId" />
+            </Principal>
+            <Dependent Role="ClubSchedule">
+              <PropertyRef Name="SchoolYearId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ClubSched__TimeS__283A7C68">
+          <End Type="SmacModel.TimeSlot" Role="TimeSlot" Multiplicity="1" />
+          <End Type="SmacModel.ClubSchedule" Role="ClubSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TimeSlot">
+              <PropertyRef Name="TimeSlotId" />
+            </Principal>
+            <Dependent Role="ClubSchedule">
+              <PropertyRef Name="TimeSlotId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ClubSchedul__Day__292EA0A1">
+          <End Type="SmacModel.Day" Role="Day" Multiplicity="1" />
+          <End Type="SmacModel.ClubSchedule" Role="ClubSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Day">
+              <PropertyRef Name="DayValue" />
+            </Principal>
+            <Dependent Role="ClubSchedule">
+              <PropertyRef Name="DayValue" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SectionSche__Day__36889BBF">
+          <End Type="SmacModel.Day" Role="Day" Multiplicity="1" />
+          <End Type="SmacModel.SectionSchedule" Role="SectionSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Day">
+              <PropertyRef Name="DayValue" />
+            </Principal>
+            <Dependent Role="SectionSchedule">
+              <PropertyRef Name="DayValue" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Enrollmen__Grade__401205F9">
+          <End Type="SmacModel.Grade" Role="Grade" Multiplicity="0..1" />
+          <End Type="SmacModel.Enrollment" Role="Enrollment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grade">
+              <PropertyRef Name="GradeValue" />
+            </Principal>
+            <Dependent Role="Enrollment">
+              <PropertyRef Name="GradeValue" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Enrollmen__Marki__3F1DE1C0">
+          <End Type="SmacModel.MarkingPeriod" Role="MarkingPeriod" Multiplicity="1" />
+          <End Type="SmacModel.Enrollment" Role="Enrollment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MarkingPeriod">
+              <PropertyRef Name="MarkingPeriodId" />
+            </Principal>
+            <Dependent Role="Enrollment">
+              <PropertyRef Name="MarkingPeriodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Enrollmen__UserI__3D35994E">
+          <End Type="SmacModel.Student" Role="Student" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.Enrollment" Role="Enrollment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Enrollment">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Enrollments__3E29BD87">
+          <End Type="SmacModel.Section" Role="Section" Multiplicity="1" />
+          <End Type="SmacModel.Enrollment" Role="Enrollment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Section">
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="Enrollment">
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Users__Gender__4CACE708">
+          <End Type="SmacModel.Gender" Role="Gender" Multiplicity="1" />
+          <End Type="SmacModel.User" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gender">
+              <PropertyRef Name="GenderType" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="GenderType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Grades__SchoolId__07CDACD6">
+          <End Type="SmacModel.School" Role="School" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.Grade" Role="Grade" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="School">
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="Grade">
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__LatestNew__Schoo__62671DFD">
+          <End Type="SmacModel.School" Role="School" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.LatestNews" Role="LatestNew" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="School">
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="LatestNew">
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__LatestNew__UserI__635B4236">
+          <End Type="SmacModel.User" Role="User" Multiplicity="1" />
+          <End Type="SmacModel.LatestNews" Role="LatestNew" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="LatestNew">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__MarkingPe__Schoo__2281A312">
+          <End Type="SmacModel.SchoolYear" Role="SchoolYear" Multiplicity="1" />
+          <End Type="SmacModel.MarkingPeriod" Role="MarkingPeriod" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SchoolYear">
+              <PropertyRef Name="SchoolYearId" />
+            </Principal>
+            <Dependent Role="MarkingPeriod">
+              <PropertyRef Name="SchoolYearId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SectionSc__Marki__377CBFF8">
+          <End Type="SmacModel.MarkingPeriod" Role="MarkingPeriod" Multiplicity="1" />
+          <End Type="SmacModel.SectionSchedule" Role="SectionSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MarkingPeriod">
+              <PropertyRef Name="MarkingPeriodId" />
+            </Principal>
+            <Dependent Role="SectionSchedule">
+              <PropertyRef Name="MarkingPeriodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TeacherSc__Marki__46BF0388">
+          <End Type="SmacModel.MarkingPeriod" Role="MarkingPeriod" Multiplicity="1" />
+          <End Type="SmacModel.TeacherSchedule" Role="TeacherSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MarkingPeriod">
+              <PropertyRef Name="MarkingPeriodId" />
+            </Principal>
+            <Dependent Role="TeacherSchedule">
+              <PropertyRef Name="MarkingPeriodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PrivateMe__FromU__4D6C0117">
+          <End Type="SmacModel.User" Role="User" Multiplicity="1" />
+          <End Type="SmacModel.PrivateMessage" Role="PrivateMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="PrivateMessage">
+              <PropertyRef Name="FromUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PrivateMe__ToUse__4C77DCDE">
+          <End Type="SmacModel.User" Role="User" Multiplicity="1" />
+          <End Type="SmacModel.PrivateMessage" Role="PrivateMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="PrivateMessage">
+              <PropertyRef Name="ToUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SchoolYea__Schoo__1AE0814A">
+          <End Type="SmacModel.School" Role="School" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.SchoolYear" Role="SchoolYear" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="School">
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="SchoolYear">
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Subjects__School__71DE6BB7">
+          <End Type="SmacModel.School" Role="School" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.Subject" Role="Subject" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="School">
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="Subject">
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TimeSlots__Schoo__133F5F82">
+          <End Type="SmacModel.School" Role="School" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.TimeSlot" Role="TimeSlot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="School">
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="TimeSlot">
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SectionSc__Schoo__3870E431">
+          <End Type="SmacModel.SchoolYear" Role="SchoolYear" Multiplicity="1" />
+          <End Type="SmacModel.SectionSchedule" Role="SectionSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SchoolYear">
+              <PropertyRef Name="SchoolYearId" />
+            </Principal>
+            <Dependent Role="SectionSchedule">
+              <PropertyRef Name="SchoolYearId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SectionSchedules__34A0534D">
+          <End Type="SmacModel.Section" Role="Section" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.SectionSchedule" Role="SectionSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Section">
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="SectionSchedule">
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TeacherSchedules__45CADF4F">
+          <End Type="SmacModel.Section" Role="Section" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.TeacherSchedule" Role="TeacherSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Section">
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="TeacherSchedule">
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Threads__57E98F8A">
+          <End Type="SmacModel.Section" Role="Section" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.Thread" Role="Thread" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Section">
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="Thread">
+              <PropertyRef Name="SectionId" />
+              <PropertyRef Name="ClassId" />
+              <PropertyRef Name="SubjectId" />
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SectionSc__TimeS__35947786">
+          <End Type="SmacModel.TimeSlot" Role="TimeSlot" Multiplicity="1" />
+          <End Type="SmacModel.SectionSchedule" Role="SectionSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TimeSlot">
+              <PropertyRef Name="TimeSlotId" />
+            </Principal>
+            <Dependent Role="SectionSchedule">
+              <PropertyRef Name="TimeSlotId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Staff__UserId__63904C60">
+          <End Type="SmacModel.User" Role="User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.Staff" Role="Staff" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Staff">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Students__UserId__6D19B69A">
+          <End Type="SmacModel.User" Role="User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.Student" Role="Student" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Teachers__UserId__6855017D">
+          <End Type="SmacModel.User" Role="User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.Teacher" Role="Teacher" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Teacher">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TeacherSc__UserI__44D6BB16">
+          <End Type="SmacModel.Teacher" Role="Teacher" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.TeacherSchedule" Role="TeacherSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="TeacherSchedule">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Threads__Replied__56F56B51">
+          <End Type="SmacModel.Thread" Role="Thread" Multiplicity="0..1" />
+          <End Type="SmacModel.Thread" Role="Thread1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Thread">
+              <PropertyRef Name="ThreadId" />
+            </Principal>
+            <Dependent Role="Thread1">
+              <PropertyRef Name="RepliedTo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Threads__UserId__56014718">
+          <End Type="SmacModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="SmacModel.Thread" Role="Thread" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Thread">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UserCrede__UserI__544E08D0">
+          <End Type="SmacModel.User" Role="User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SmacModel.UserCredential" Role="UserCredential" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserCredential">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="KhanShareThreadMaps">
+          <End Type="SmacModel.KhanShare" Role="KhanShare" Multiplicity="*" />
+          <End Type="SmacModel.Thread" Role="Thread" Multiplicity="*" />
+        </Association>
+        <Association Name="SchoolRoster">
+          <End Type="SmacModel.School" Role="School" Multiplicity="*" />
+          <End Type="SmacModel.User" Role="User" Multiplicity="*" />
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="SmacModelStoreContainer" CdmEntityContainer="SmacEntities">
+          <FunctionImportMapping FunctionImportName="usp_GetLatestPrivateMessages" FunctionName="SmacModel.Store.usp_GetLatestPrivateMessages">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SmacModel.usp_GetLatestPrivateMessages_Result">
+                <ScalarProperty Name="PrivateMessageId" ColumnName="PrivateMessageId" />
+                <ScalarProperty Name="ToUser" ColumnName="ToUser" />
+                <ScalarProperty Name="FromUser" ColumnName="FromUser" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="DateSent" ColumnName="DateSent" />
+                <ScalarProperty Name="DateRead" ColumnName="DateRead" />
+                <ScalarProperty Name="SenderFN" ColumnName="SenderFN" />
+                <ScalarProperty Name="SenderMN" ColumnName="SenderMN" />
+                <ScalarProperty Name="SenderLN" ColumnName="SenderLN" />
+                <ScalarProperty Name="ReceiverFN" ColumnName="ReceiverFN" />
+                <ScalarProperty Name="ReceiverMN" ColumnName="ReceiverMN" />
+                <ScalarProperty Name="ReceiverLN" ColumnName="ReceiverLN" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetClubSchedule" FunctionName="SmacModel.Store.usp_GetClubSchedule">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SmacModel.usp_GetClubSchedule_Result">
+                <ScalarProperty Name="Day" ColumnName="Day" />
+                <ScalarProperty Name="TimeSpans" ColumnName="TimeSpans" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetUsersInSchool" FunctionName="SmacModel.Store.usp_GetUsersInSchool">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SmacModel.usp_GetUsersInSchool_Result">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="LastLoggedIn" ColumnName="LastLoggedIn" />
+                <ScalarProperty Name="LastLoggedOut" ColumnName="LastLoggedOut" />
+                <ScalarProperty Name="Admin" ColumnName="Admin" />
+                <ScalarProperty Name="Staff" ColumnName="Staff" />
+                <ScalarProperty Name="Student" ColumnName="Student" />
+                <ScalarProperty Name="Teacher" ColumnName="Teacher" />
+                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <EntitySetMapping Name="Admins">
             <EntityTypeMapping TypeName="SmacModel.Admin">
               <MappingFragment StoreEntitySet="Admins">
@@ -2242,8 +2333,9 @@
               <MappingFragment StoreEntitySet="Classes">
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
-                <ScalarProperty Name="SubjectName" ColumnName="SubjectName" />
+                <ScalarProperty Name="SubjectId" ColumnName="SubjectId" />
                 <ScalarProperty Name="ClassName" ColumnName="ClassName" />
+                <ScalarProperty Name="ClassId" ColumnName="ClassId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2269,6 +2361,7 @@
           <EntitySetMapping Name="ClubSchedules">
             <EntityTypeMapping TypeName="SmacModel.ClubSchedule">
               <MappingFragment StoreEntitySet="ClubSchedules">
+                <ScalarProperty Name="SchoolYearId" ColumnName="SchoolYearId" />
                 <ScalarProperty Name="DayValue" ColumnName="Day" />
                 <ScalarProperty Name="TimeSlotId" ColumnName="TimeSlotId" />
                 <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
@@ -2279,7 +2372,7 @@
           <EntitySetMapping Name="Days">
             <EntityTypeMapping TypeName="SmacModel.Day">
               <MappingFragment StoreEntitySet="Days">
-                <ScalarProperty Name="Day1" ColumnName="Day" />
+                <ScalarProperty Name="DayValue" ColumnName="Day" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2287,12 +2380,11 @@
             <EntityTypeMapping TypeName="SmacModel.Enrollment">
               <MappingFragment StoreEntitySet="Enrollments">
                 <ScalarProperty Name="GradeValue" ColumnName="Grade" />
-                <ScalarProperty Name="Year" ColumnName="SchoolYear" />
                 <ScalarProperty Name="MarkingPeriodId" ColumnName="MarkingPeriodId" />
                 <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
-                <ScalarProperty Name="SubjectName" ColumnName="SubjectName" />
-                <ScalarProperty Name="ClassName" ColumnName="ClassName" />
-                <ScalarProperty Name="SectionName" ColumnName="SectionName" />
+                <ScalarProperty Name="SubjectId" ColumnName="SubjectId" />
+                <ScalarProperty Name="ClassId" ColumnName="ClassId" />
+                <ScalarProperty Name="SectionId" ColumnName="SectionId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2308,7 +2400,7 @@
             <EntityTypeMapping TypeName="SmacModel.Grade">
               <MappingFragment StoreEntitySet="Grades">
                 <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
-                <ScalarProperty Name="GradeVal" ColumnName="Grade" />
+                <ScalarProperty Name="GradeValue" ColumnName="Grade" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2322,12 +2414,25 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="LatestNewsSet">
+            <EntityTypeMapping TypeName="SmacModel.LatestNews">
+              <MappingFragment StoreEntitySet="LatestNews">
+                <ScalarProperty Name="PostedAt" ColumnName="PostedAt" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
+                <ScalarProperty Name="LatestNewsId" ColumnName="LatestNewsId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="MarkingPeriods">
             <EntityTypeMapping TypeName="SmacModel.MarkingPeriod">
               <MappingFragment StoreEntitySet="MarkingPeriods">
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="FullYear" ColumnName="FullYear" />
                 <ScalarProperty Name="Period" ColumnName="MarkingPeriod" />
-                <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
+                <ScalarProperty Name="SchoolYearId" ColumnName="SchoolYearId" />
                 <ScalarProperty Name="MarkingPeriodId" ColumnName="MarkingPeriodId" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2360,8 +2465,11 @@
           <EntitySetMapping Name="SchoolYears">
             <EntityTypeMapping TypeName="SmacModel.SchoolYear">
               <MappingFragment StoreEntitySet="SchoolYears">
-                <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
+                <ScalarProperty Name="SchoolYearId" ColumnName="SchoolYearId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2370,21 +2478,24 @@
               <MappingFragment StoreEntitySet="Sections">
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
-                <ScalarProperty Name="SubjectName" ColumnName="SubjectName" />
-                <ScalarProperty Name="ClassName" ColumnName="ClassName" />
+                <ScalarProperty Name="SubjectId" ColumnName="SubjectId" />
+                <ScalarProperty Name="ClassId" ColumnName="ClassId" />
                 <ScalarProperty Name="SectionName" ColumnName="SectionName" />
+                <ScalarProperty Name="SectionId" ColumnName="SectionId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="SectionSchedules">
             <EntityTypeMapping TypeName="SmacModel.SectionSchedule">
               <MappingFragment StoreEntitySet="SectionSchedules">
+                <ScalarProperty Name="SchoolYearId" ColumnName="SchoolYearId" />
+                <ScalarProperty Name="MarkingPeriodId" ColumnName="MarkingPeriodId" />
                 <ScalarProperty Name="DayValue" ColumnName="Day" />
                 <ScalarProperty Name="TimeSlotId" ColumnName="TimeSlotId" />
                 <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
-                <ScalarProperty Name="SubjectName" ColumnName="SubjectName" />
-                <ScalarProperty Name="ClassName" ColumnName="ClassName" />
-                <ScalarProperty Name="SectionName" ColumnName="SectionName" />
+                <ScalarProperty Name="SubjectId" ColumnName="SubjectId" />
+                <ScalarProperty Name="ClassId" ColumnName="ClassId" />
+                <ScalarProperty Name="SectionId" ColumnName="SectionId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2407,6 +2518,7 @@
               <MappingFragment StoreEntitySet="Subjects">
                 <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
                 <ScalarProperty Name="SubjectName" ColumnName="SubjectName" />
+                <ScalarProperty Name="SubjectId" ColumnName="SubjectId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2420,12 +2532,11 @@
           <EntitySetMapping Name="TeacherSchedules">
             <EntityTypeMapping TypeName="SmacModel.TeacherSchedule">
               <MappingFragment StoreEntitySet="TeacherSchedules">
-                <ScalarProperty Name="SchoolYear" ColumnName="SchoolYear" />
                 <ScalarProperty Name="MarkingPeriodId" ColumnName="MarkingPeriodId" />
                 <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
-                <ScalarProperty Name="SubjectName" ColumnName="SubjectName" />
-                <ScalarProperty Name="ClassName" ColumnName="ClassName" />
-                <ScalarProperty Name="SectionName" ColumnName="SectionName" />
+                <ScalarProperty Name="SubjectId" ColumnName="SubjectId" />
+                <ScalarProperty Name="ClassId" ColumnName="ClassId" />
+                <ScalarProperty Name="SectionId" ColumnName="SectionId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2438,9 +2549,9 @@
                 <ScalarProperty Name="Content" ColumnName="Content" />
                 <ScalarProperty Name="ThreadTitle" ColumnName="ThreadTitle" />
                 <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
-                <ScalarProperty Name="SubjectName" ColumnName="SubjectName" />
-                <ScalarProperty Name="ClassName" ColumnName="ClassName" />
-                <ScalarProperty Name="SectionName" ColumnName="SectionName" />
+                <ScalarProperty Name="SubjectId" ColumnName="SubjectId" />
+                <ScalarProperty Name="ClassId" ColumnName="ClassId" />
+                <ScalarProperty Name="SectionId" ColumnName="SectionId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="ThreadId" ColumnName="ThreadId" />
               </MappingFragment>
@@ -2499,66 +2610,6 @@
               <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
             </EndProperty>
           </AssociationSetMapping>
-          <EntitySetMapping Name="LatestNewsSet">
-            <EntityTypeMapping TypeName="SmacModel.LatestNews">
-              <MappingFragment StoreEntitySet="LatestNews">
-                <ScalarProperty Name="PostedAt" ColumnName="PostedAt" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Content" ColumnName="Content" />
-                <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
-                <ScalarProperty Name="LatestNewsId" ColumnName="LatestNewsId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="usp_GetLatestPrivateMessages" FunctionName="SmacModel.Store.usp_GetLatestPrivateMessages">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SmacModel.usp_GetLatestPrivateMessages_Result">
-                <ScalarProperty Name="PrivateMessageId" ColumnName="PrivateMessageId" />
-                <ScalarProperty Name="ToUser" ColumnName="ToUser" />
-                <ScalarProperty Name="FromUser" ColumnName="FromUser" />
-                <ScalarProperty Name="Content" ColumnName="Content" />
-                <ScalarProperty Name="DateSent" ColumnName="DateSent" />
-                <ScalarProperty Name="DateRead" ColumnName="DateRead" />
-                <ScalarProperty Name="SenderFN" ColumnName="SenderFN" />
-                <ScalarProperty Name="SenderMN" ColumnName="SenderMN" />
-                <ScalarProperty Name="SenderLN" ColumnName="SenderLN" />
-                <ScalarProperty Name="ReceiverFN" ColumnName="ReceiverFN" />
-                <ScalarProperty Name="ReceiverMN" ColumnName="ReceiverMN" />
-                <ScalarProperty Name="ReceiverLN" ColumnName="ReceiverLN" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_GetClubSchedule" FunctionName="SmacModel.Store.usp_GetClubSchedule">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SmacModel.usp_GetClubSchedule_Result">
-                <ScalarProperty Name="Day" ColumnName="Day" />
-                <ScalarProperty Name="TimeSpans" ColumnName="TimeSpans" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_GetUsersInSchool" FunctionName="SmacModel.Store.usp_GetUsersInSchool">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SmacModel.usp_GetUsersInSchool_Result">
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="Gender" ColumnName="Gender" />
-                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="LastLoggedIn" ColumnName="LastLoggedIn" />
-                <ScalarProperty Name="LastLoggedOut" ColumnName="LastLoggedOut" />
-                <ScalarProperty Name="Admin" ColumnName="Admin" />
-                <ScalarProperty Name="Staff" ColumnName="Staff" />
-                <ScalarProperty Name="Student" ColumnName="Student" />
-                <ScalarProperty Name="Teacher" ColumnName="Teacher" />
-                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="usp_GetSectionThreads" FunctionName="SmacModel.Store.usp_GetSectionThreads">
             <ResultMapping>
               <ComplexTypeMapping TypeName="SmacModel.usp_GetSectionThreads_Result">

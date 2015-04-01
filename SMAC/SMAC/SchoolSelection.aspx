@@ -2,17 +2,17 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ScriptContent" runat="server">
     <script>
         $(document).ready(function () {
-            $('#MainContent_SchoolSelectSubmit').attr('disabled', 'disabled');
-            $('#MainContent_ddList_SchoolSelect').on('change', ToggleSubmit);
+            $('#SchoolSelectSubmit').attr('disabled', 'disabled');
+            $('#ddList_SchoolSelect').on('change', ToggleSubmit);
         });
 
         function ToggleSubmit() {
-            console.log($('#MainContent_ddList_SchoolSelect option:selected').val());
-            if ($('#MainContent_ddList_SchoolSelect option:selected').val().indexOf('----') == -1) {
-                $('#MainContent_SchoolSelectSubmit').removeAttr('disabled');
+            console.log($('#ddList_SchoolSelect option:selected').val());
+            if ($('#ddList_SchoolSelect option:selected').val().indexOf('----') == -1) {
+                $('#SchoolSelectSubmit').removeAttr('disabled');
             }
             else {
-                $('#MainContent_SchoolSelectSubmit').attr('disabled', 'disabled');
+                $('#SchoolSelectSubmit').attr('disabled', 'disabled');
             }
         }
     </script>
@@ -20,7 +20,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <form runat="server">
         <label class="">You are enrolled in multiple schools.  Please select a school</label><br /><br />
-        <asp:DropDownList ID="ddList_SchoolSelect" runat="server" CssClass="schoolSelectDdl"></asp:DropDownList><br />
-        <asp:Button runat="server" ID="SchoolSelectSubmit" Text="Submit" OnClick="SchoolSelectSubmit_Click" CssClass="sendButton" />
+        <asp:DropDownList ID="ddList_SchoolSelect" runat="server" CssClass="schoolSelectDdl" ClientIDMode="Static"></asp:DropDownList><br />
+        <asp:Button runat="server" ID="SchoolSelectSubmit" Text="Submit" OnClick="SchoolSelectSubmit_Click" CssClass="sendButton" ClientIDMode="Static"/>
     </form>
 </asp:Content>

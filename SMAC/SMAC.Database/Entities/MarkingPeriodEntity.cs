@@ -7,40 +7,24 @@ namespace SMAC.Database
 {
     public class MarkingPeriodEntity
     {
-        public static void CreateMarkingPeriod(int schoolId, string mPeriod, bool fullYear)
+        public static void CreateMarkingPeriod(string period, bool fullYear, int schoolYearId)
         {
-            CreateEditMarkingPeriod("ADD", schoolId, mPeriod, fullYear, null);
+            CreateEditMarkingPeriod("ADD", null, period, fullYear, schoolYearId);
         }
 
-        public static void UpdateMarkingPeriod(int schoolId, string mPeriod, bool fullYear, int? Id)
+        public static void UpdateMarkingPeriod(int markingPeriodId, string period, bool fullYear, int schoolYearId)
         {
-            CreateEditMarkingPeriod("EDIT", schoolId, mPeriod, fullYear, Id);
+            CreateEditMarkingPeriod("EDIT", markingPeriodId, period, fullYear, schoolYearId);
         }
 
-        public static MarkingPeriod GetMarkingPeriod(int schoolId, int Id)
-        {
-            try
-            {
-                using (SmacEntities context = new SmacEntities())
-                {
-                    return (from a in context.MarkingPeriods where a.SchoolId == schoolId && a.MarkingPeriodId == Id select a).FirstOrDefault();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public static MarkingPeriod GetMarkingPeriod(int schoolId, string mPeriod, bool fullYear)
+        public static MarkingPeriod GetMarkingPeriod(int markingPeriodId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
                     return (from a in context.MarkingPeriods
-                            where a.SchoolId == schoolId && a.Period == mPeriod
-                                && a.FullYear == fullYear
+                            where a.MarkingPeriodId == markingPeriodId
                             select a).FirstOrDefault();
                 }
             }
@@ -50,11 +34,18 @@ namespace SMAC.Database
             }
         }
 
-        public static List<MarkingPeriod> GetMarkingPeriods(int schoolId)
+        public static MarkingPeriod GetMarkingPeriod(string period, bool fullYear, int schoolYearId)
         {
             try
             {
-                return SchoolEntity.GetSchool(schoolId).MarkingPeriods.ToList();
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.MarkingPeriods
+                            where a.Period == period &&
+                            a.FullYear == fullYear &&
+                            a.SchoolYearId == schoolYearId
+                            select a).FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -62,7 +53,22 @@ namespace SMAC.Database
             }
         }
 
-        private static void CreateEditMarkingPeriod(string op, int schoolId, string mPeriod, bool fullYear, int? Id)
+        public static List<MarkingPeriod> GetMarkingPeriods(int schoolYearId)
+        {
+            try
+            {
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.MarkingPeriods where a.SchoolYearId == schoolYearId select a).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static void CreateEditMarkingPeriod(string op, int? markingPeriodId, string period, bool fullYear, int schoolYearId)
         {
             try
             {
@@ -70,16 +76,16 @@ namespace SMAC.Database
                 {
                     if (op.Equals("ADD"))
                     {
-                        if (GetMarkingPeriod(schoolId, mPeriod, fullYear) != null)
+                        if (GetMarkingPeriod(period, fullYear, schoolYearId) != null)
                         {
-                            throw new Exception("Marking period was not created.  Marking period already exists for this school.");
+                            throw new Exception("Marking period was not created.  Marking period already exists for this school year.");
                         }
                         else
                         {
                             MarkingPeriod MarkingPeriod = new MarkingPeriod()
                             {
-                                School = SchoolEntity.GetSchool(schoolId),
-                                Period = fullYear ? null : mPeriod,
+                                SchoolYear = SchoolYearEntity.GetSchoolYear(schoolYearId),
+                                Period = fullYear ? null : period,
                                 FullYear = fullYear
                             };
 
@@ -89,21 +95,21 @@ namespace SMAC.Database
                     }
                     else if (op.Equals("EDIT"))
                     {
-                        if (GetMarkingPeriod(schoolId, Id.Value) == null)
+                        if (GetMarkingPeriod(markingPeriodId.Value) == null)
                         {
                             throw new Exception("Marking period was not updated.  Marking period not found.");
                         }
-                        else if (GetMarkingPeriod(schoolId, mPeriod, fullYear) != null)
+                        else if (GetMarkingPeriod(period, fullYear, schoolYearId) != null)
                         {
-                            throw new Exception("Marking period was not updated.  New marking period values already exists in database.");
+                            throw new Exception("Marking period was not updated.  New marking period values already exist.");
                         }
                         else
                         {
-                            var period = GetMarkingPeriod(schoolId, Id.Value);
+                            var mPeriod = GetMarkingPeriod(markingPeriodId.Value);
 
-                            period.Period = mPeriod;
-                            period.FullYear = fullYear;
-                            context.Entry(period).State = System.Data.Entity.EntityState.Modified;
+                            mPeriod.Period = period;
+                            mPeriod.FullYear = fullYear;
+                            context.Entry(mPeriod).State = System.Data.Entity.EntityState.Modified;
                             context.SaveChanges();
                         }
                     }

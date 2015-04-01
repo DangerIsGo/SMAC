@@ -11,18 +11,18 @@ namespace SMAC.Database
         {
             try
             {
-                using (SmacEntities context = new SmacEntities())
-                {
-                    TimeSlot ts = new TimeSlot()
-                    {
-                        StartTime = start,
-                        EndTime = end,
-                        School = SchoolEntity.GetSchool(schoolId)
-                    };
+                //using (SmacEntities context = new SmacEntities())
+                //{
+                //    TimeSlot ts = new TimeSlot()
+                //    {
+                //        StartTime = start,
+                //        EndTime = end,
+                //        School = SchoolEntity.GetSchool(schoolId)
+                //    };
 
-                    context.TimeSlots.Add(ts);
-                    context.SaveChanges();
-                }
+                //    context.TimeSlots.Add(ts);
+                //    context.SaveChanges();
+                //}
             }
             catch (Exception ex)
             {
@@ -34,15 +34,15 @@ namespace SMAC.Database
         {
             try
             {
-                using (SmacEntities context = new SmacEntities())
-                {
-                    var ts = GetTimeSlot(id);
+                //using (SmacEntities context = new SmacEntities())
+                //{
+                //    var ts = GetTimeSlot(id);
 
-                    ts.StartTime = start;
-                    ts.EndTime = end;
-                    context.Entry(ts).State = System.Data.Entity.EntityState.Modified;
-                    context.SaveChanges();
-                }
+                //    ts.StartTime = start;
+                //    ts.EndTime = end;
+                //    context.Entry(ts).State = System.Data.Entity.EntityState.Modified;
+                //    context.SaveChanges();
+                //}
             }
             catch (Exception ex)
             {

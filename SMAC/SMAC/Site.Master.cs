@@ -100,12 +100,6 @@ namespace SMAC
                 ck.Values.Add("SchoolId", Session["SchoolId"].ToString());
                 ck.Values.Add("Genders", sb.ToString());
 
-                ck.Values.Add("SectionName", Session["SectionName"].ToString());
-                ck.Values.Add("ClassName", Session["ClassName"].ToString());
-                ck.Values.Add("SubjectName", Session["SubjectName"].ToString());
-                ck.Values.Add("MarkingPeriod", Session["MarkingPeriod"].ToString());
-                ck.Values.Add("SchoolYear", Session["SchoolYear"].ToString());
-
                 Response.Cookies.Add(ck);
                 Session["UpdateCookie"] = "no";
             }
@@ -122,12 +116,6 @@ namespace SMAC
                 Session["SchoolName"] = Request.Cookies["SmacCookie"]["SchoolName"];
                 Session["SchoolId"] = Request.Cookies["SmacCookie"]["SchoolId"];
                 Session["Genders"] = Request.Cookies["SmacCookie"]["Genders"];
-
-                Session["SectionName"] = Request.Cookies["SmacCookie"]["SectionName"];
-                Session["ClassName"] = Request.Cookies["SmacCookie"]["ClassName"];
-                Session["SubjectName"] = Request.Cookies["SmacCookie"]["SubjectName"];
-                Session["MarkingPeriod"] = Request.Cookies["SmacCookie"]["MarkingPeriod"];
-                Session["SchoolYear"] = Request.Cookies["SmacCookie"]["SchoolYear"];
 
                 if (Session["SchoolName"] != null)
                 {

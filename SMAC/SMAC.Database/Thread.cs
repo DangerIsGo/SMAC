@@ -22,9 +22,9 @@ namespace SMAC.Database
     
         public int ThreadId { get; set; }
         public string UserId { get; set; }
-        public string SectionName { get; set; }
-        public string ClassName { get; set; }
-        public string SubjectName { get; set; }
+        public int SectionId { get; set; }
+        public int ClassId { get; set; }
+        public int SubjectId { get; set; }
         public int SchoolId { get; set; }
         public string ThreadTitle { get; set; }
         public string Content { get; set; }

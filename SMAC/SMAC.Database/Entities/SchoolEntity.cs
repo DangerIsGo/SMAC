@@ -53,7 +53,7 @@ namespace SMAC.Database
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    return (from a in context.Schools where a.SchoolId == schoolId select a).Include(a => a.SchoolYears).Include(a => a.MarkingPeriods).FirstOrDefault();
+                    return (from a in context.Schools where a.SchoolId == schoolId select a).Include(a => a.SchoolYears).FirstOrDefault();
                 }
             }
             catch (Exception ex)

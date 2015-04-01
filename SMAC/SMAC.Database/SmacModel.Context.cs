@@ -37,6 +37,7 @@ namespace SMAC.Database
         public virtual DbSet<Gender> Genders { get; set; }
         public virtual DbSet<Grade> Grades { get; set; }
         public virtual DbSet<KhanShare> KhanShares { get; set; }
+        public virtual DbSet<LatestNews> LatestNewsSet { get; set; }
         public virtual DbSet<MarkingPeriod> MarkingPeriods { get; set; }
         public virtual DbSet<PrivateMessage> PrivateMessages { get; set; }
         public virtual DbSet<School> Schools { get; set; }
@@ -52,7 +53,6 @@ namespace SMAC.Database
         public virtual DbSet<TimeSlot> TimeSlots { get; set; }
         public virtual DbSet<UserCredential> UserCredentials { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<LatestNews> LatestNewsSet { get; set; }
     
         public virtual ObjectResult<usp_GetLatestPrivateMessages_Result> usp_GetLatestPrivateMessages(string userID)
         {
@@ -89,25 +89,13 @@ namespace SMAC.Database
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetUsersInSchool_Result>("usp_GetUsersInSchool", schoolIdParameter, userIdParameter);
         }
     
-        public virtual ObjectResult<usp_GetSectionThreads_Result> usp_GetSectionThreads(string sectionName, string className, string subjectName, Nullable<int> schoolId)
+        public virtual ObjectResult<usp_GetSectionThreads_Result> usp_GetSectionThreads(Nullable<int> sectionId)
         {
-            var sectionNameParameter = sectionName != null ?
-                new ObjectParameter("sectionName", sectionName) :
-                new ObjectParameter("sectionName", typeof(string));
+            var sectionIdParameter = sectionId.HasValue ?
+                new ObjectParameter("sectionId", sectionId) :
+                new ObjectParameter("sectionId", typeof(int));
     
-            var classNameParameter = className != null ?
-                new ObjectParameter("className", className) :
-                new ObjectParameter("className", typeof(string));
-    
-            var subjectNameParameter = subjectName != null ?
-                new ObjectParameter("subjectName", subjectName) :
-                new ObjectParameter("subjectName", typeof(string));
-    
-            var schoolIdParameter = schoolId.HasValue ?
-                new ObjectParameter("schoolId", schoolId) :
-                new ObjectParameter("schoolId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetSectionThreads_Result>("usp_GetSectionThreads", sectionNameParameter, classNameParameter, subjectNameParameter, schoolIdParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetSectionThreads_Result>("usp_GetSectionThreads", sectionIdParameter);
         }
     }
 }

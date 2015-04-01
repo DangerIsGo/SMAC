@@ -19,7 +19,7 @@ namespace SMAC.Database
             this.Enrollments = new HashSet<Enrollment>();
         }
     
-        public string GradeVal { get; set; }
+        public string GradeValue { get; set; }
         public int SchoolId { get; set; }
     
         public virtual ICollection<Enrollment> Enrollments { get; set; }

@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SMAC.Database
 {
     public class ClassEntity
     {
-        public static void CreateClass(int schoolId, string subjName, string className, string description)
+        public static void CreateClass(int schoolId, int subjectId, string className, string description)
         {
-            CreateEditClass("ADD", schoolId, subjName, className, description, null);
+            CreateEditClass("ADD", schoolId, subjectId, null, description, className);
         }
 
-        public static void UpdateClass(int schoolId, string subjName, string className, string description, string newClassName)
+        public static void UpdateClass(int schoolId, int subjectId, string className, string description, int classId)
         {
-            CreateEditClass("EDIT", schoolId, subjName, className, description, newClassName);
+            CreateEditClass("EDIT", schoolId, subjectId, classId, description, className);
         }
 
         public static List<Class> GetAllClasses(int schoolId, string subjName)
@@ -55,13 +54,13 @@ namespace SMAC.Database
             }
         }
 
-        public static Class GetClass(int schoolId, string subjName, string className)
+        public static Class GetClass(int schoolId, int subjectId, string className)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    return (from a in context.Classes where a.ClassName == className && a.SubjectName == subjName && a.SchoolId == schoolId select a).FirstOrDefault();
+                    return (from a in context.Classes where a.ClassName == className && a.SubjectId == subjectId && a.SchoolId == schoolId select a).FirstOrDefault();
                 }
             }
             catch (Exception ex)
@@ -70,7 +69,22 @@ namespace SMAC.Database
             }
         }
 
-        private static void CreateEditClass(string op, int schoolId, string subjName, string className, string description, string newClassName)
+        public static Class GetClass(int schoolId, int subjectId, int classId)
+        {
+            try
+            {
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Classes where a.ClassId == classId && a.SubjectId == subjectId && a.SchoolId == schoolId select a).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static void CreateEditClass(string op, int schoolId, int subjectId, int? classId, string description, string className)
         {
             try
             {
@@ -78,7 +92,7 @@ namespace SMAC.Database
                 {
                     if (op.Equals("ADD"))
                     {
-                        if (GetClass(schoolId, subjName, className) != null)
+                        if (GetClass(schoolId, subjectId, className) != null)
                         {
                             throw new Exception("Class was not created.  Class name already exists for this school/subject.");
                         }
@@ -87,7 +101,7 @@ namespace SMAC.Database
                             Class Class = new Class()
                             {
                                 ClassName = className,
-                                Subject = SubjectEntity.GetSubject(schoolId, subjName),
+                                Subject = SubjectEntity.GetSubject(subjectId),
                                 Description = description
                             };
 
@@ -97,19 +111,15 @@ namespace SMAC.Database
                     }
                     else if (op.Equals("EDIT"))
                     {
-                        if (GetClass(schoolId, subjName, className) == null)
+                        if (GetClass(schoolId, subjectId, classId.Value) == null)
                         {
                             throw new Exception("Class was not updated.  Class name not found.");
                         }
-                        else if (GetClass(schoolId, subjName, newClassName) != null)
-                        {
-                            throw new Exception("Class was not updated.  Class name already exists in system.");
-                        }
                         else
                         {
-                            var mClass = GetClass(schoolId, subjName, className);
+                            var mClass = GetClass(schoolId, subjectId, classId.Value);
 
-                            mClass.ClassName = newClassName;
+                            mClass.ClassName = className;
                             mClass.Description = description;
                             context.Entry(mClass).State = System.Data.Entity.EntityState.Modified;
                             context.SaveChanges();
@@ -123,13 +133,13 @@ namespace SMAC.Database
             }
         }
 
-        public static void DeleteClass(string className, string subjName, int schoolId)
+        public static void DeleteClass(int classId, int subjectId, int schoolId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    var Class = GetClass(schoolId, subjName, className);
+                    var Class = GetClass(schoolId, subjectId, classId);
                     context.Classes.Remove(Class);
                     context.SaveChanges();
                 }

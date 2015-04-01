@@ -34,16 +34,33 @@ namespace SMAC
             }
         }
 
-        [WebMethod(EnableSession = true)]
+        [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void StoreSectionInClass(string sectionname, string classname, string subject, string mp, string year)
+        public string PopulateMarkingPeriods(string yearId)
         {
-            Session["SectionName"] = sectionname;
-            Session["ClassName"] = classname;
-            Session["SubjectName"] = subject;
-            Session["MarkingPeriod"] = mp;
-            Session["SchoolYear"] = year;
-            Session["UpdateCookie"] = "yes";
+            try
+            {
+                var periods = MarkingPeriodEntity.GetMarkingPeriods(int.Parse(yearId));
+
+                var rtnObj = new object[periods.Count];
+
+                for (int i = 0; i < periods.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        period = periods[i].FullYear ? "All Year" : periods[i].Period,
+                        id = periods[i].MarkingPeriodId
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
         }
 
         [WebMethod(EnableSession = true)]
@@ -55,7 +72,7 @@ namespace SMAC
                 var schoolId = Session["SchoolId"].ToString();
                 var userId = Session["UserId"].ToString();
 
-                var enrollments = EnrollmentEntity.GetStudentEnrollments(userId, int.Parse(schoolId), int.Parse(mp), year);
+                var enrollments = EnrollmentEntity.GetStudentEnrollments(userId, int.Parse(schoolId), int.Parse(mp));
 
                 var rtnObj = new object[enrollments.Count];
 
@@ -63,9 +80,10 @@ namespace SMAC
                 {
                     var obj = new
                     {
-                        sectionname = enrollments[i].SectionName,
-                        classname = enrollments[i].ClassName,
-                        subjectname = enrollments[i].SubjectName
+                        sectionname = enrollments[i].Section.SectionName,
+                        sectionid = enrollments[i].SectionId,
+                        classname = enrollments[i].Section.Class.ClassName,
+                        subjectname = enrollments[i].Section.Class.Subject.SubjectName
                     };
 
                     rtnObj[i] = obj;
@@ -81,15 +99,13 @@ namespace SMAC
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public string SendPrivateMessage(string msgId, string content)
+        public string SendPrivateMessage(string toUserId, string content)
         {
             try
             {
                 var userId = Session["UserId"].ToString();
 
-                var pm = PrivateMessageEntity.GetPrivateMessage(int.Parse(msgId));
-
-                PrivateMessageEntity.SendPrivateMessage(pm.ToUser == userId ? pm.FromUser : pm.ToUser, userId, content);
+                PrivateMessageEntity.SendPrivateMessage(toUserId, userId, content);
 
                 return JsonConvert.SerializeObject(new { data = "success", date = DateTime.Now.ToString("M/d/yyyy h:mm:ss tt") });
             }
@@ -101,36 +117,28 @@ namespace SMAC
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public string FillStudentGradeTable(string year, string markingPeriod)
+        public string FillStudentGradeTable(string markingPeriodId)
         {
-            int tmpSchId = -1;
-            int tmpMpId = -1;
-
             var schoolId = Session["SchoolId"].ToString();
             var userId = Session["UserId"].ToString();
 
-            if (int.TryParse(schoolId, out tmpSchId) && ((markingPeriod != "fy" && int.TryParse(markingPeriod, out tmpMpId)) || (markingPeriod == "fy")))
+            var enrollments = EnrollmentEntity.GetStudentEnrollments(userId, int.Parse(schoolId), int.Parse(markingPeriodId));
+
+            var rtnObj = new object[enrollments.Count];
+
+            for (int i = 0; i < enrollments.Count; ++i)
             {
-                var fullYear = MarkingPeriodEntity.GetMarkingPeriod(tmpSchId, null, true);
-                var enrollments = EnrollmentEntity.GetStudentEnrollments(userId, tmpSchId, markingPeriod == "fy" ? fullYear.MarkingPeriodId : tmpMpId, year);
-
-                var rtnObj = new object[enrollments.Count];
-
-                for (int i = 0; i < enrollments.Count; ++i)
+                var obj = new
                 {
-                    var obj = new
-                    {
-                        classname = enrollments[i].ClassName,
-                        section = enrollments[i].SectionName,
-                        grade = enrollments[i].GradeValue
-                    };
+                    classname = enrollments[i].Section.Class.ClassName,
+                    section = enrollments[i].Section.SectionName,
+                    grade = enrollments[i].GradeValue
+                };
 
-                    rtnObj[i] = obj;
-                }
-
-                return JsonConvert.SerializeObject(rtnObj);
+                rtnObj[i] = obj;
             }
-            return null;
+
+            return JsonConvert.SerializeObject(rtnObj);
         }
 
         [WebMethod(EnableSession = true)]

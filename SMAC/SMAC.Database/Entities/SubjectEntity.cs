@@ -16,6 +16,21 @@ namespace SMAC.Database
             CreateEditSubject("EDIT", schoolId, subjName, newSubjName);
         }
 
+        public static Subject GetSubject(int subjectId)
+        {
+            try
+            {
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.Subjects where a.SubjectId == subjectId select a).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public static Subject GetSubject(int schoolId, string subjName)
         {
             try

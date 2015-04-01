@@ -17,13 +17,13 @@ namespace SMAC.Database
             CreateEditSchoolYear("EDIT", schoolId, year, newYear);
         }
 
-        public static SchoolYear GetSchoolYear(int schoolId, string year)
+        public static SchoolYear GetSchoolYear(int schoolYearId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    return (from a in context.SchoolYears where a.SchoolId == schoolId && a.Year == year select a).FirstOrDefault();
+                    return (from a in context.SchoolYears where a.SchoolYearId == schoolYearId select a).FirstOrDefault();
                 }
             }
             catch (Exception ex)
@@ -48,46 +48,46 @@ namespace SMAC.Database
         {
             try
             {
-                using (SmacEntities context = new SmacEntities())
-                {
-                    if (op.Equals("ADD"))
-                    {
-                        if (GetSchoolYear(schoolId, year) != null)
-                        {
-                            throw new Exception("School year was not created.  School year already exists for this school.");
-                        }
-                        else
-                        {
-                            SchoolYear schoolyear = new SchoolYear()
-                            {
-                                School = (from a in context.Schools where a.SchoolId == schoolId select a).FirstOrDefault(),
-                                Year = year
-                            };
+                //using (SmacEntities context = new SmacEntities())
+                //{
+                //    if (op.Equals("ADD"))
+                //    {
+                //        if (GetSchoolYear(schoolId, year) != null)
+                //        {
+                //            throw new Exception("School year was not created.  School year already exists for this school.");
+                //        }
+                //        else
+                //        {
+                //            SchoolYear schoolyear = new SchoolYear()
+                //            {
+                //                School = (from a in context.Schools where a.SchoolId == schoolId select a).FirstOrDefault(),
+                //                Year = year
+                //            };
 
-                            context.SchoolYears.Add(schoolyear);
-                            context.SaveChanges();
-                        }
-                    }
-                    else if (op.Equals("EDIT"))
-                    {
-                        if (GetSchoolYear(schoolId, year) == null)
-                        {
-                            throw new Exception("Subject was not updated.  Subject name not found.");
-                        }
-                        else if (GetSchoolYear(schoolId, newYear) != null)
-                        {
-                            throw new Exception("Subject was not updated.  New subject name already exists in database.");
-                        }
-                        else
-                        {
-                            var schYear = GetSchoolYear(schoolId, year);
+                //            context.SchoolYears.Add(schoolyear);
+                //            context.SaveChanges();
+                //        }
+                //    }
+                //    else if (op.Equals("EDIT"))
+                //    {
+                //        if (GetSchoolYear(schoolId, year) == null)
+                //        {
+                //            throw new Exception("Subject was not updated.  Subject name not found.");
+                //        }
+                //        else if (GetSchoolYear(schoolId, newYear) != null)
+                //        {
+                //            throw new Exception("Subject was not updated.  New subject name already exists in database.");
+                //        }
+                //        else
+                //        {
+                //            var schYear = GetSchoolYear(schoolId, year);
 
-                            schYear.Year = newYear;
-                            context.Entry(schYear).State = System.Data.Entity.EntityState.Modified;
-                            context.SaveChanges();
-                        }
-                    }
-                }
+                //            schYear.Year = newYear;
+                //            context.Entry(schYear).State = System.Data.Entity.EntityState.Modified;
+                //            context.SaveChanges();
+                //        }
+                //    }
+                //}
             }
             catch (Exception ex)
             {

@@ -19,8 +19,9 @@ namespace SMAC.Database
             this.Sections = new HashSet<Section>();
         }
     
+        public int ClassId { get; set; }
         public string ClassName { get; set; }
-        public string SubjectName { get; set; }
+        public int SubjectId { get; set; }
         public int SchoolId { get; set; }
         public string Description { get; set; }
     

@@ -17,16 +17,20 @@ namespace SMAC.Database
         public MarkingPeriod()
         {
             this.Enrollments = new HashSet<Enrollment>();
+            this.SectionSchedules = new HashSet<SectionSchedule>();
             this.TeacherSchedules = new HashSet<TeacherSchedule>();
         }
     
         public int MarkingPeriodId { get; set; }
-        public int SchoolId { get; set; }
+        public int SchoolYearId { get; set; }
         public string Period { get; set; }
         public bool FullYear { get; set; }
+        public System.DateTime StartDate { get; set; }
+        public System.DateTime EndDate { get; set; }
     
         public virtual ICollection<Enrollment> Enrollments { get; set; }
-        public virtual School School { get; set; }
+        public virtual SchoolYear SchoolYear { get; set; }
+        public virtual ICollection<SectionSchedule> SectionSchedules { get; set; }
         public virtual ICollection<TeacherSchedule> TeacherSchedules { get; set; }
     }
 }

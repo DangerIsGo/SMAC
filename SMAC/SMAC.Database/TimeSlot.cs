@@ -21,8 +21,8 @@ namespace SMAC.Database
         }
     
         public int TimeSlotId { get; set; }
-        public System.DateTime StartTime { get; set; }
-        public System.DateTime EndTime { get; set; }
+        public System.TimeSpan StartTime { get; set; }
+        public System.TimeSpan EndTime { get; set; }
         public int SchoolId { get; set; }
     
         public virtual ICollection<ClubSchedule> ClubSchedules { get; set; }

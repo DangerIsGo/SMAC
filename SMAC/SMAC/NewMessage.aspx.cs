@@ -54,29 +54,5 @@ namespace SMAC
 
             return string.Empty;
         }
-
-        protected void textSubmit_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                //var userId = Request.Cookies["SmacCookie"]["UserId"];
-                //var toUserId = this.ddl_AllUsers.SelectedValue;
-                //var content = this.textInput.Text.Trim();
-
-                //PrivateMessageEntity.SendPrivateMessage(toUserId, userId, content);
-
-                //this.textInput.Text = string.Empty;
-                //this.ddl_AllUsers.SelectedIndex = 0;
-                //this.textSubmit.Enabled = false;
-
-                //this.sendStatus.Text = "Message was sent successfully!";
-                //this.sendStatus.ForeColor = System.Drawing.Color.Green;
-            }
-            catch
-            {
-                this.sendStatus.Text = "An internal error has occurred.  Please notify your administrator.";
-                this.sendStatus.ForeColor = System.Drawing.Color.Red;
-            }
-        }
     }
 }

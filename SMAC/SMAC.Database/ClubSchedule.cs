@@ -18,8 +18,10 @@ namespace SMAC.Database
         public int SchoolId { get; set; }
         public int TimeSlotId { get; set; }
         public string DayValue { get; set; }
+        public int SchoolYearId { get; set; }
     
         public virtual Club Club { get; set; }
+        public virtual SchoolYear SchoolYear { get; set; }
         public virtual TimeSlot TimeSlot { get; set; }
         public virtual Day Day { get; set; }
     }

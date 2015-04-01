@@ -7,7 +7,7 @@ namespace SMAC.Database
 {
     public class TeacherScheduleEntity
     {
-        public static void CreateTeacherSchedule(string teacherId, string secName, string className, string subjName, int schoolId, int mpId, string year)
+        public static void CreateTeacherSchedule(string teacherId, int sectionId, int schoolId, int markingPeriodId)
         {
             try
             {
@@ -15,10 +15,9 @@ namespace SMAC.Database
                 {
                     TeacherSchedule sch = new TeacherSchedule()
                     {
-                        Section = SectionEntity.GetSection(schoolId, subjName, className, secName),
+                        Section = SectionEntity.GetSection(sectionId),
                         Teacher = TeacherEntity.GetTeacher(teacherId),
-                        MarkingPeriodId = mpId,
-                        SchoolYear = year
+                        MarkingPeriodId = markingPeriodId
                     };
 
                     context.TeacherSchedules.Add(sch);
@@ -31,16 +30,15 @@ namespace SMAC.Database
             }
         }
 
-        public static void DeleteTeacherSchedule(string teacherId, string secName, string className, string subjName, int schoolId, int mpId, string year)
+        public static void DeleteTeacherSchedule(string teacherId, int sectionId, int schoolId, int markingPeriodId, string year)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
                     var sch = (from a in context.TeacherSchedules
-                               where a.SectionName == secName && a.ClassName == className
-                               && a.SubjectName == subjName && a.SchoolId == schoolId
-                               && a.MarkingPeriodId == mpId && a.SchoolYear == year
+                               where a.UserId == teacherId && a.SectionId == sectionId
+                               && a.MarkingPeriodId == markingPeriodId
                                select a).FirstOrDefault();
 
                     if (sch != null)
@@ -56,41 +54,41 @@ namespace SMAC.Database
             }
         }
 
-        public static List<TeacherSchedule> GetTeacherSchedule(string teacherId, int mpId, string year)
-        {
-            try
-            {
-                using (SmacEntities context = new SmacEntities())
-                {
-                    return (from a in context.TeacherSchedules
-                            where a.UserId == teacherId
-                            && a.MarkingPeriodId == mpId && a.SchoolYear == year
-                            select a).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+    //    public static List<TeacherSchedule> GetTeacherSchedule(string teacherId, int mpId, string year)
+    //    {
+    //        try
+    //        {
+    //            using (SmacEntities context = new SmacEntities())
+    //            {
+    //                return (from a in context.TeacherSchedules
+    //                        where a.UserId == teacherId
+    //                        && a.MarkingPeriodId == mpId && a.SchoolYear == year
+    //                        select a).ToList();
+    //            }
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            throw ex;
+    //        }
+    //    }
 
-        public static List<Teacher> GetSectionsTeachers(string secName, string className, string subjName, int schoolId, int mpId, string year)
-        {
-            try
-            {
-                using (SmacEntities context = new SmacEntities())
-                {
-                    return (from a in context.TeacherSchedules
-                            where a.SectionName == secName && a.ClassName == className
-                            && a.SubjectName == subjName && a.SchoolId == schoolId
-                            && a.MarkingPeriodId == mpId && a.SchoolYear == year
-                            select a.Teacher).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+    //    public static List<Teacher> GetSectionsTeachers(string secName, string className, string subjName, int schoolId, int mpId, string year)
+    //    {
+    //        try
+    //        {
+    //            using (SmacEntities context = new SmacEntities())
+    //            {
+    //                return (from a in context.TeacherSchedules
+    //                        where a.SectionName == secName && a.ClassName == className
+    //                        && a.SubjectName == subjName && a.SchoolId == schoolId
+    //                        && a.MarkingPeriodId == mpId && a.SchoolYear == year
+    //                        select a.Teacher).ToList();
+    //            }
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            throw ex;
+    //        }
+    //    }
     }
 }

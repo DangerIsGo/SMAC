@@ -19,6 +19,7 @@ namespace SMAC.Database
             this.Classes = new HashSet<Class>();
         }
     
+        public int SubjectId { get; set; }
         public string SubjectName { get; set; }
         public int SchoolId { get; set; }
     

@@ -22,7 +22,7 @@
 
             $('#AllClubs').removeAttr('checked');
 
-            var myClubs = $('#MainContent_myClubNames').val().split(';');
+            var myClubs = $('#myClubNames').val().split(';');
 
             var allClubs = $('.clubBlock');
 
@@ -54,7 +54,7 @@
         function LoadClubSchedule(clubName) {
             $('#clubScheduleSub').empty();
 
-            var hdnVal = $('#MainContent_clubScheduleHdn').val();
+            var hdnVal = $('#clubScheduleHdn').val();
             
             var schedules = JSON.parse(hdnVal);
 
@@ -111,7 +111,7 @@
         <div id="clubScheduleSub"></div>
     </div>
     <form runat="server">
-        <asp:HiddenField ID="clubScheduleHdn" runat="server" />
-        <asp:HiddenField ID="myClubNames" runat="server" />
+        <asp:HiddenField ID="clubScheduleHdn" runat="server" ClientIDMode="Static" />
+        <asp:HiddenField ID="myClubNames" runat="server" ClientIDMode="Static" />
     </form>
 </asp:Content>
