@@ -161,9 +161,11 @@
     <Content Include="Images\ajax-loader.gif" />
     <Content Include="Messages.aspx" />
     <Content Include="NewMessage.aspx" />
+    <Content Include="NewThread.aspx" />
     <Content Include="packages.config" />
     <Content Include="SchoolSelection.aspx" />
     <Content Include="Scripts\bootbox.min.js" />
+    <Content Include="Scripts\Common.js" />
     <Content Include="Scripts\jquery.maskedinput.min.js" />
     <Content Include="Services.asmx" />
     <Content Include="Threads.aspx" />
@@ -234,6 +236,13 @@
     </Compile>
     <Compile Include="NewMessage.aspx.designer.cs">
       <DependentUpon>NewMessage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewThread.aspx.cs">
+      <DependentUpon>NewThread.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewThread.aspx.designer.cs">
+      <DependentUpon>NewThread.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchoolSelection.aspx.cs">

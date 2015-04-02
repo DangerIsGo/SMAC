@@ -69,13 +69,13 @@ namespace SMAC.Database
             }
         }
 
-        public static Class GetClass(int schoolId, int subjectId, int classId)
+        public static Class GetClass(int classId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    return (from a in context.Classes where a.ClassId == classId && a.SubjectId == subjectId && a.SchoolId == schoolId select a).FirstOrDefault();
+                    return (from a in context.Classes where a.ClassId == classId select a).FirstOrDefault();
                 }
             }
             catch (Exception ex)
@@ -111,13 +111,13 @@ namespace SMAC.Database
                     }
                     else if (op.Equals("EDIT"))
                     {
-                        if (GetClass(schoolId, subjectId, classId.Value) == null)
+                        if (GetClass(classId.Value) == null)
                         {
                             throw new Exception("Class was not updated.  Class name not found.");
                         }
                         else
                         {
-                            var mClass = GetClass(schoolId, subjectId, classId.Value);
+                            var mClass = GetClass(classId.Value);
 
                             mClass.ClassName = className;
                             mClass.Description = description;
@@ -133,13 +133,13 @@ namespace SMAC.Database
             }
         }
 
-        public static void DeleteClass(int classId, int subjectId, int schoolId)
+        public static void DeleteClass(int classId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    var Class = GetClass(schoolId, subjectId, classId);
+                    var Class = GetClass(classId);
                     context.Classes.Remove(Class);
                     context.SaveChanges();
                 }

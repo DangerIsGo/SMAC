@@ -1,8 +1,19 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Threads.aspx.cs" Inherits="SMAC.Threads" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ScriptContent" runat="server">
+    <script>
+        $(document).ready(function () {
+            $('.newThreadClick').on('click', function () {
+                console.log('foo');
+                var secId = getParameterByName('secId');
+
+                window.location.href = '/NewThread.aspx?secId=' + secId;
+            });
+        });
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div id="pmBreadCrumbs"><i class="fa fa-arrow-circle-left"></i><a href="Classes.aspx" class="bread"> Back to Classes</a></div>
+    <div class="newThread"><span class="newThreadClick"><i class="fa fa-plus"></i><span>New Thread</span></span></div>
     <form runat="server">
         <table id="threadTable">
             <thead>

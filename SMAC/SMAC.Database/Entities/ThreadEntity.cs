@@ -15,12 +15,12 @@ namespace SMAC.Database
                 {
                     var thread = new Thread()
                     {
-                        Section = SectionEntity.GetSection(sectionId),
+                        Section = SectionEntity.GetSection(sectionId, context),
                         RepliedTo = repliedTo,
                         DateTimePosted = DateTime.Now,
                         Content = content,
                         ThreadTitle = title,
-                        User = UserEntity.GetUser(userId)
+                        User = UserEntity.GetUser(userId, context)
                     };
 
                     context.Threads.Add(thread);

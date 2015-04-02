@@ -38,12 +38,113 @@ body {
         margin-right: auto;
         padding-top: 20px;
 
+        .newThreadHeader {
+            margin-top: 10px;
+            font-size: 12px;
+
+            span {
+                display: inline-block;
+                font-weight: bold;
+
+                &:nth-child(1) {
+                    width: 450px;
+                    text-align: left;
+                    font-size: 14px;
+                }
+
+                &:nth-child(2) {
+                    width: 450px;
+                    text-align: right;
+                }
+            }
+        }
+
+        #submitNewThread {
+            .border-radius-mixin(5px);
+            border: 1px solid lightgrey;
+
+            &:disabled {
+                background-color: grey;
+            }
+
+            &:active {
+                top: 1px;
+                position: relative;
+            }
+        }
+
+        .newThreadContainer {
+            width: 900px;
+            border: 1px solid lightslategrey;
+            .border-radius-mixin(5px);
+            margin: 10px auto 10px auto;
+            padding: 5px 0px;
+
+            .newThreadTitle {
+                width: 500px;
+                margin-left: auto;
+                margin-right: auto;
+                font-size: 10px;
+
+                input {
+                    width: 100%;
+                    font-size: 12px;
+                    .border-radius-mixin(5px);
+                    border: 1px solid lightgrey;
+                    padding-left: 2px;
+                }
+
+                div {
+                    text-align: left;
+                }
+            }
+
+            .newThreadBody {
+                width: 500px;
+                margin-left: auto;
+                margin-right: auto;
+                font-size: 10px;
+                margin-top: 5px;
+
+                textarea {
+                    width: 100%;
+                    height: 200px;
+                    font-size: 12px;
+                    .border-radius-mixin(5px);
+                    border: 1px solid lightgrey;
+                }
+
+                div {
+                    text-align: left;
+                }
+            }
+        }
+
+        .newThread {
+            width: 911px;
+            text-align: right;
+            margin-left: auto;
+            margin-right: auto;
+
+            .newThreadClick {
+                border: 1px solid lightslategrey;
+                padding: 1px 3px;
+                .border-radius-mixin(5px);
+                cursor: pointer;
+                background-color: lightyellow;
+
+                i {
+                    margin-right: 5px;
+                }
+            }
+        }
+
         #threadTable {
             border: 1px solid black;
             margin-left: auto;
             margin-right: auto;
-            margin-top: 20px;
-            background-color: lightyellow;
+            background-color: white;
+            margin-top: 3px;
 
             tr {
                 th {
@@ -250,7 +351,7 @@ body {
 
         #pmBreadCrumbs {
             text-align: left;
-            margin-left: 100px;
+            margin-left: 50px;
             margin-top: 10px;
         }
 

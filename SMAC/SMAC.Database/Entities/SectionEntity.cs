@@ -41,13 +41,13 @@ namespace SMAC.Database
             }
         }
 
-        public static List<Section> GetSections(int schoolId, int subjectId, int classId)
+        public static List<Section> GetSections(int classId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    var mClass = ClassEntity.GetClass(schoolId, subjectId, classId);
+                    var mClass = ClassEntity.GetClass(classId);
                     if (mClass != null)
                     {
                         return mClass.Sections.ToList();
@@ -72,6 +72,20 @@ namespace SMAC.Database
                             where a.SectionId == sectionId
                             select a).Include(t=>t.Enrollments).FirstOrDefault();
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static Section GetSection(int sectionId, SmacEntities context)
+        {
+            try
+            {
+                return (from a in context.Sections
+                        where a.SectionId == sectionId
+                        select a).Include(t => t.Enrollments).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -114,7 +128,7 @@ namespace SMAC.Database
                             Section section = new Section()
                             {
                                 SectionName = sectionName,
-                                Class = ClassEntity.GetClass(schoolId, subjectId, classId),
+                                Class = ClassEntity.GetClass(classId),
                                 Description = description
                             };
 
