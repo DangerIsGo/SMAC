@@ -34,6 +34,24 @@ namespace SMAC
             }
         }
 
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string PostNewThreadReply(string threadId, string sectionId, string content)
+        {
+            try
+            {
+                var userId = Session["UserId"].ToString();
+
+                ThreadEntity.CreatePost(userId, null, int.Parse(sectionId), content, int.Parse(threadId));
+
+                return JsonConvert.SerializeObject("fgh");
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string PopulateMarkingPeriods(string yearId)

@@ -43,9 +43,15 @@ namespace SMAC
                     var origMsg = PrivateMessageEntity.GetPrivateMessage(int.Parse(Request.QueryString["msgId"]));
                     var msgs = PrivateMessageEntity.GetPrivateMessageThread(origMsg.ToUser, origMsg.FromUser);
 
-                    this.toUserId.Value = userId == origMsg.ToUser ? origMsg.FromUser : origMsg.ToUser;
+                    var toUser = userId == origMsg.ToUser ? origMsg.FromUser : origMsg.ToUser;
+                    this.toUserId.Value = toUser;
 
-                    PrivateMessageEntity.MarkAllConvosAsRead(origMsg.ToUser, origMsg.FromUser);
+                    var toUserName = toUser != origMsg.FromUser ? origMsg.UserSentTo.FirstName + " " + origMsg.UserSentTo.LastName :
+                        origMsg.UserSentFrom.FirstName + " " + origMsg.UserSentFrom.LastName;
+
+                    this.threadTitle.Text = "Conversation between you and " + toUserName;
+
+                    PrivateMessageEntity.MarkAllConvosAsRead(userId, toUser);
 
                     var list = new List<string> { "Date", "Author", "Content" };
 

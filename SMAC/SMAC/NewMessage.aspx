@@ -7,14 +7,14 @@
         $(document).ready(function () {
             $('#spinner').hide();
 
-            $('#textSubmit').attr('disabled', 'disabled');
+            $('#replySubmit').attr('disabled', 'disabled');
             $('#allusersFilter').attr('checked', 'checked');
-            $('#textInput').val('');
+            $('#replyInput').val('');
 
             $('#ddl_AllUsers').change(EnableSendButton);
             $('.userFilter').on('click', FilterDropDown);
-            $('#textSubmit').on('click', SendMessage);
-            $('#textInput').keyup(EnableSendButton);
+            $('#replySubmit').on('click', SendMessage);
+            $('#replyInput').keyup(EnableSendButton);
 
             SaveAllUsersList();
         });
@@ -35,6 +35,8 @@
         }
 
         function FilterDropDown() {
+            ClearStatus();
+
             if (localList != undefined) {
                 var selected = $('.userFilter:checked').attr('data-type');
                 var json = JSON.parse(localList);
@@ -51,10 +53,12 @@
         }
 
         function SendMessage() {
+            ClearStatus();
+
             $.ajax({
                 type: "POST",
                 url: "Services.asmx/SendPrivateMessage",
-                data: "{'toUserId':'" + $('#ddl_AllUsers option:selected').val() + "', 'content':'" + $('#textInput').val() + "'}",
+                data: "{'toUserId':'" + $('#ddl_AllUsers option:selected').val() + "', 'content':'" + $('#replyInput').val() + "'}",
                 contentType: "application/json; charset=UTF-8",
                 beforeSend: function () {
                     $('#spinner').show();
@@ -66,8 +70,9 @@
                     if (json.data == 'success') {
                         $('#sendStatus').text('Message was sent successfully!');
                         $('#sendStatus').css('color', 'green');
-                        $('#textInput').val('');
+                        $('#replyInput').val('');
                         $('#ddl_AllUsers').prop('selectedIndex', 0);
+                        $('#replySubmit').attr('disabled', 'disabled');
                     }
                     else {
                         $('#sendStatus').text('An internal error has occurred.  Please notify your administrator.');
@@ -78,27 +83,25 @@
         }
 
         function EnableSendButton() {
-
+            ClearStatus();
             $('#toUserId').val($('#ddl_AllUsers option:selected').val());
 
-            if ($('#ddl_AllUsers').prop('selectedIndex') > 0 && $('#textInput').val() != '') {
-                $('#textSubmit').removeAttr('disabled');
+            if ($('#ddl_AllUsers').prop('selectedIndex') > 0 && $('#replyInput').val() != '') {
+                $('#replySubmit').removeAttr('disabled');
             }
             else {
-                $('#textSubmit').attr('disabled', 'disabled');
+                $('#replySubmit').attr('disabled', 'disabled');
             }
         }
 
         function ClearStatus() {
-            $('#sendStatus').val('');
+            $('#sendStatus').text('');
         }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div id="pmBreadCrumbs"><i class="fa fa-arrow-circle-left"></i><a href="Messages.aspx" class="bread"> Back to messages</a></div>
     <form runat="server">
         <div class="newMsgBlock">
-            <div>1. Who would you like to send this message to?</div>
             <div class="filters">
                 <span>Filter:&nbsp;</span>
                 <input type="radio" class="userFilter" id="allusersFilter" name="filter" data-type="all" /><label for="allusersFilter" class="filterLabel">All Users</label>
@@ -118,14 +121,11 @@
                 </asp:ListView>
             </select>
         </div>
-        <div class="newMsgBlock">
-            <div>2. Enter your message.</div>
-            <textarea id="textInput"></textarea>
+        <div class="threadReply">
+            <div><span>Message:</span></div>
+            <div><textarea id="replyInput"></textarea></div>
         </div>
-        <div class="newMsgBlock">
-            <div>3. Send your message!</div>
-            <input type="button" id="textSubmit" class="sendButton" value="Send" />
-        </div>
+        <input type="button" id="replySubmit" class="btn btn-primary btn-xs" value="Send Private Message" />
         <div><label id="sendStatus"></label></div>
         <span><asp:Image ImageUrl="~/Images/ajax-loader-white.gif" runat="server" ID="spinner" ClientIDMode="Static" /></span>
         <asp:HiddenField ID="toUserId" runat="server" ClientIDMode="Static" />

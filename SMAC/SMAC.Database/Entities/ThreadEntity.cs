@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data.Entity;
 
 namespace SMAC.Database
 {
     public class ThreadEntity
     {
-        public static void CreateThread(string userId, string title, int sectionId, string content, int? repliedTo)
+        public static void CreatePost(string userId, string title, int sectionId, string content, int? repliedTo)
         {
             try
             {
@@ -103,6 +104,7 @@ namespace SMAC.Database
                 using (SmacEntities context = new SmacEntities())
                 {
                     return (from a in context.Threads where a.ThreadId == threadId || a.RepliedTo == threadId select a)
+                        .Include(t=>t.User)
                         .OrderBy(t => t.DateTimePosted).ToList();
                 }
             }

@@ -10,7 +10,7 @@
 
             param = getParameterByName('secId');
 
-            $('#pmBreadCrumbs a').attr('href', '/Threads.aspx?secId=' + param);
+            $('#breadCrumbs a').attr('href', '/Threads.aspx?secId=' + param);
         });
 
         function EnableSubmit() {
@@ -27,7 +27,6 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div id="pmBreadCrumbs"><i class="fa fa-arrow-circle-left"></i><a class="bread"> Back to Threads</a></div>
     <div class="newThreadHeader">
         <span>Post new thread</span>
         <asp:Label runat="server" ID="threadHeader" ClientIDMode="Static"></asp:Label>
@@ -43,6 +42,6 @@
                 <asp:TextBox ClientIDMode="Static" ID="threadInput" runat="server" TextMode="MultiLine"></asp:TextBox>
             </div>
         </div>
-        <asp:Button ID="submitNewThread" runat="server" ClientIDMode="Static" Text="Submit New Thread" OnClick="submitNewThread_Click" />
+        <asp:Button ID="submitNewThread" runat="server" ClientIDMode="Static" CssClass="btn btn-xs btn-primary" Text="Post New Thread" OnClick="submitNewThread_Click" />
     </form>
 </asp:Content>

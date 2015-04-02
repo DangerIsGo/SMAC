@@ -127,9 +127,9 @@
                 <div class="gradeHeader" id="mpLbl">Select Marking Period:</div>
                 <select id="periodList"></select>
             </div>
-            <input type="button" id="searchButton" class="sendButton inline" value="Search" />
+            <input type="button" id="searchButton" class="btn btn-primary searchButton" value="Search" />
             <span><asp:Image ImageUrl="~/Images/ajax-loader-white.gif" runat="server" ID="spinner" ClientIDMode="Static" /></span>
-            <div><table id="gradeTable"></table></div>
+            <div><table id="gradeTable" class=""></table></div>
         </div>
     </form>
 </asp:Content>

@@ -7,7 +7,7 @@
         });
 
         function ToggleSubmit() {
-            console.log($('#ddList_SchoolSelect option:selected').val());
+
             if ($('#ddList_SchoolSelect option:selected').val().indexOf('----') == -1) {
                 $('#SchoolSelectSubmit').removeAttr('disabled');
             }
@@ -21,6 +21,6 @@
     <form runat="server">
         <label class="">You are enrolled in multiple schools.  Please select a school</label><br /><br />
         <asp:DropDownList ID="ddList_SchoolSelect" runat="server" CssClass="schoolSelectDdl" ClientIDMode="Static"></asp:DropDownList><br />
-        <asp:Button runat="server" ID="SchoolSelectSubmit" Text="Submit" OnClick="SchoolSelectSubmit_Click" CssClass="sendButton" ClientIDMode="Static"/>
+        <asp:Button runat="server" ID="SchoolSelectSubmit" Text="Select" OnClick="SchoolSelectSubmit_Click" CssClass="btn btn-primary" ClientIDMode="Static"/>
     </form>
 </asp:Content>

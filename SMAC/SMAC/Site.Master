@@ -68,18 +68,19 @@
             <div class="mainHeader">
                 <div class="headerRow">
                     <div class="headerOption welcome"><span id="greeting"></span></div>
-                    <div class="headerOption small" id="home"><i class="fa fa-home right"></i><span>Home</span></div>
-                    <div class="headerOption small" id="controlPanel"><i class="fa fa-cogs right"></i><span>Control Panel</span></div>
-                    <div class="headerOption small" id="logout"><span>Log Out</span><i class="fa fa-sign-out left"></i></div>
+                    <div class="btn btn-info headerOption small" id="home"><i class="fa fa-home right"></i><span>Home</span></div>
+                    <div class="btn btn-info headerOption small" id="controlPanel"><i class="fa fa-cogs right"></i><span>Control Panel</span></div>
+                    <div class="btn btn-info headerOption small" id="logout"><span>Log Out</span><i class="fa fa-sign-out left"></i></div>
                 </div>
                 <div class="headerRow">
-                    <div class="headerOption" id="messages"><i class="fa fa-comment right"></i><span>Messages</span></div>
-                    <div class="headerOption" id="classes"><i class="fa fa-bed right"></i><span>Classes</span></div>
-                    <div class="headerOption" id="grades"><i class="fa fa-list-alt right"></i><span>Grades</span></div>
-                    <div class="headerOption" id="clubs"><i class="fa fa-camera right"></i><span>Clubs</span></div>
+                    <div class="btn btn-info headerOption" id="messages"><i class="fa fa-comment right"></i><span>Messages</span></div>
+                    <div class="btn btn-info headerOption" id="classes"><i class="fa fa-bed right"></i><span>Classes</span></div>
+                    <div class="btn btn-info headerOption" id="grades"><i class="fa fa-list-alt right"></i><span>Grades</span></div>
+                    <div class="btn btn-info headerOption" id="clubs"><i class="fa fa-camera right"></i><span>Clubs</span></div>
                 </div>
             </div>
             <div class="mainBody">
+                <div id="breadCrumbs"></div>
                 <asp:ContentPlaceHolder ID="MainContent" runat="server" />
             </div>
         </div>
@@ -109,7 +110,90 @@
                 (window.location.href.indexOf("Thread") > -1)) {
                 $('#classes').addClass('active');
             }
+            else if (window.location.href.indexOf("SchoolSelection")) {
+                $('#classes').addClass('active');
+                $('#messages').addClass('active');
+                $('#clubs').addClass('active');
+                $('#home').addClass('active');
+                $('#grades').addClass('active');
+
+                $('#classes').off('click');
+                $('#messages').off('click');
+                $('#clubs').off('click');
+                $('#home').off('click');
+                $('#grades').off('click');
+            }
+
+            GenerateBreadCrumbs();
         });
+
+        function GenerateBreadCrumbs() {
+            var bc = $('#breadCrumbs');
+
+            if (window.location.href.indexOf("Grades") > -1) {
+                var home = $('<a>').addClass('crumb').text('Home').attr('href', '/Home.aspx');
+                var crumb = $('<span>').addClass('crumb').text('Grades');
+
+                bc.append(home).append(' > ').append(crumb);
+            }
+            else if (window.location.href.indexOf("Messages") > -1) {
+                var home = $('<a>').addClass('crumb').text('Home').attr('href', '/Home.aspx');
+
+                if (getParameterByName('msgId') != '') {
+                    var crumb = $('<a>').addClass('crumb').text('Messages').attr('href', '/Messages.aspx');
+                    bc.append(home).append(' > ').append(crumb);
+                }
+                else {
+                    var crumb = $('<span>').addClass('crumb').text('Messages');
+                    bc.append(home).append(' > ').append(crumb);
+                }
+            }
+            else if (window.location.href.indexOf("NewMessage") > -1) {
+                var home = $('<a>').addClass('crumb').text('Home').attr('href', '/Home.aspx');
+                var msg = $('<a>').addClass('crumb').text('Messages').attr('href', '/Messages.aspx');
+                var crumb = $('<span>').addClass('crumb').text('New Message');
+
+                bc.append(home).append(' > ').append(msg).append(' > ').append(crumb);
+            }
+            else if (window.location.href.indexOf("Clubs") > -1) {
+                var home = $('<a>').addClass('crumb').text('Home').attr('href', '/Home.aspx');
+                var crumb = $('<span>').addClass('crumb').text('Clubs');
+
+                bc.append(home).append(' > ').append(crumb);
+            }
+            else if (window.location.href.indexOf("Classes") > -1) {
+                var home = $('<a>').addClass('crumb').text('Home').attr('href', '/Home.aspx');
+                var crumb = $('<span>').addClass('crumb').text('Classes');
+
+                bc.append(home).append(' > ').append(crumb);
+            }
+            else if (window.location.href.indexOf("Threads") > -1) {
+                var home = $('<a>').addClass('crumb').text('Home').attr('href', '/Home.aspx');
+                var cls = $('<a>').addClass('crumb').text('Classes').attr('href', '/Classes.aspx');
+
+                var secId = getParameterByName('secId');
+                var threadId = getParameterByName('threadId');
+
+                if (threadId != '') {
+                    var crumb = $('<a>').addClass('crumb').text('Threads').attr('href', '/Threads.aspx?secId=' + secId);
+                    bc.append(home).append(' > ').append(cls).append(' > ').append(crumb);
+                }
+                else {
+                    var crumb = $('<span>').addClass('crumb').text('Threads');
+                    bc.append(home).append(' > ').append(cls).append(' > ').append(crumb);
+                }
+            }
+            else if (window.location.href.indexOf("NewThread") > -1) {
+                var home = $('<a>').addClass('crumb').text('Home').attr('href', '/Home.aspx');
+                var cls = $('<a>').addClass('crumb').text('Classes').attr('href', '/Classes.aspx');
+
+                var secId = getParameterByName('secId');
+
+                var thread = $('<a>').addClass('crumb').text('Threads').attr('href', '/Threads.aspx?secId=' + secId);
+                var crumb = $('<span>').addClass('crumb').text('New Thread');
+                bc.append(home).append(' > ').append(cls).append(' > ').append(thread).append(' > ').append(crumb);
+            }
+        }
 
         function ValidateData() {
             var valid = true;
@@ -188,7 +272,7 @@
                 buttons: {
                     save: {
                         label: 'Save',
-                        className: 'saveBtn',
+                        className: 'btn btn-success',
                         callback: function () {
                             if (ValidateData()) {
 
@@ -222,7 +306,7 @@
                     },
                     cancel: {
                         label: 'Cancel',
-                        className: 'cancelBtn',
+                        className: 'btn btn-danger',
                         callback: function () {
                             return true;
                         }

@@ -26,7 +26,7 @@ namespace SMAC
             var schoolId = int.Parse(Request.Cookies["SmacCookie"]["SchoolId"]);
             var userId = Request.Cookies["SmacCookie"]["UserId"];
 
-            ThreadEntity.CreateThread(userId, this.threadTitle.Text, secId, this.threadInput.Text, null);
+            ThreadEntity.CreatePost(userId, this.threadTitle.Text, secId, this.threadInput.Text, null);
 
             Response.Redirect("/Threads.aspx?secId=" + secId.ToString());
         }

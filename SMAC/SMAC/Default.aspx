@@ -63,7 +63,7 @@
                         <div class="loginText">Please enter your credentials to log in:</div>
                         <div class="loginInput"><span>Username:</span><input type="text" id="username" name="username" placeholder="Please enter your username" /></div>
                         <div class="loginInput"><span>Password:</span><input type="password" id="password" name="password" placeholder="Please enter your password" /></div>
-                        <div class="loginInput"><asp:Button ID="Submit" runat="server" Text="I'm Feeling Lucky Punk" OnClick="Submit_Click" OnClientClick="return validateFields()" /></div>
+                        <div class="loginInput"><asp:Button ID="Submit" runat="server" Text="I'm Feeling Lucky Punk" OnClick="Submit_Click" OnClientClick="return validateFields()" ClientIDMode="Static" CssClass="btn btn-primary" /></div>
                         <div><asp:Label ID="loginStatus" runat="server"></asp:Label></div>
                     </div>
                 </div>

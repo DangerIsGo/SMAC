@@ -20,9 +20,50 @@
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=@color2, endColorstr=@color1);
 }
 
-#Submit {
-    .border-radius-mixin(5px);
+#replySubmit {
+    margin-top: 5px;
+}
+
+.searchButton {
+    margin-left: 20px;
+}
+
+#breadCrumbs {
+    text-align: left;
+    margin-left: 48px;
+    margin-top: 10px;
+}
+
+.threadReply {
+    width: 750px;
     border: 1px solid lightslategrey;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    padding: 5px 0px;
+
+    div {
+        width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+
+        span {
+            font-size: 12px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100%;
+        }
+
+        &:nth-child(2) {
+            background-color: #E1E1E2;
+            padding:10px;
+            padding-top: 30px;
+            height: 140px;
+        }
+    }
 }
 
 html,
@@ -37,6 +78,40 @@ body {
         margin-left: auto;
         margin-right: auto;
         padding-top: 20px;
+
+        .threadBlock {
+            margin-top: 5px;
+            background-color: white;
+            width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+            border: 1px solid lightslategrey;
+
+            .threadPostDate {
+                background-color: skyblue;
+                margin-bottom: 1px;
+                font-size: 12px;
+                line-height: 22px;
+                padding-left: 5px;
+                border-bottom: 1px solid lightslategrey;
+            }
+
+            .threadAuthor {
+                background-color: lightyellow;
+                margin-bottom: 1px;
+                padding-left: 5px;
+                font-size: 12px;
+                line-height: 22px;
+                border-bottom: 1px solid lightslategrey;
+            }
+
+            .threadContent {
+                background-color:aliceblue;
+                min-height: 50px;
+                padding-left: 5px;
+            }
+        }
 
         .newThreadHeader {
             margin-top: 10px;
@@ -60,7 +135,7 @@ body {
         }
 
         #submitNewThread {
-            .border-radius-mixin(5px);
+            .border-radius-mixin(3px);
             border: 1px solid lightgrey;
 
             &:disabled {
@@ -76,7 +151,7 @@ body {
         .newThreadContainer {
             width: 900px;
             border: 1px solid lightslategrey;
-            .border-radius-mixin(5px);
+            .border-radius-mixin(3px);
             margin: 10px auto 10px auto;
             padding: 5px 0px;
 
@@ -89,7 +164,7 @@ body {
                 input {
                     width: 100%;
                     font-size: 12px;
-                    .border-radius-mixin(5px);
+                    .border-radius-mixin(3px);
                     border: 1px solid lightgrey;
                     padding-left: 2px;
                 }
@@ -110,7 +185,7 @@ body {
                     width: 100%;
                     height: 200px;
                     font-size: 12px;
-                    .border-radius-mixin(5px);
+                    .border-radius-mixin(3px);
                     border: 1px solid lightgrey;
                 }
 
@@ -121,22 +196,22 @@ body {
         }
 
         .newThread {
-            width: 911px;
+            width: 900px;
             text-align: right;
             margin-left: auto;
             margin-right: auto;
 
-            .newThreadClick {
-                border: 1px solid lightslategrey;
-                padding: 1px 3px;
-                .border-radius-mixin(5px);
-                cursor: pointer;
-                background-color: lightyellow;
-
-                i {
-                    margin-right: 5px;
-                }
+            i {
+                margin-right: 5px;
             }
+        }
+
+        .threadTitle {
+            font-weight: bold;
+            text-align: left;
+            padding-left: 98px;
+            margin-bottom: 20px;
+            font-size: 16px;
         }
 
         #threadTable {
@@ -145,6 +220,7 @@ body {
             margin-right: auto;
             background-color: white;
             margin-top: 3px;
+            width: 900px;
 
             tr {
                 th {
@@ -159,7 +235,7 @@ body {
                     text-align: center;
 
                     &:nth-child(1) {
-                        width: 600px;
+                        width: 590px;
                         text-align: left;
                         padding-left: 8px;
                     }
@@ -198,13 +274,12 @@ body {
         }
 
         .classBlock {
-            border: 1px solid lightslategrey;
-            .border-radius-mixin(5px);
-            width: 534px;
-            margin-top: 20px;
-            padding: 3px;
-            cursor: pointer;
+            display: block;
+            text-align: left;
+            width: 500px;
             .gradient-mixin(lightgrey, white);
+            margin-top: 20px;
+            border: 1px solid lightslategrey;
 
             .classHeader {
                 font-size: 10px;
@@ -234,12 +309,11 @@ body {
 
         .newMsgBlock {
             border: 1px solid lightslategrey;
-            .border-radius-mixin(5px);
-            width: 800px;
+            width: 750px;
             margin-left: auto;
             margin-right: auto;
             padding-bottom: 8px;
-            margin-top: 10px;
+            margin-top: 30px;
 
             .filters {
                 text-align: center;
@@ -257,7 +331,7 @@ body {
 
             select {
                 width: 300px;
-                .border-radius-mixin(5px);
+                .border-radius-mixin(3px);
                 height: 30px;
             }
 
@@ -288,7 +362,7 @@ body {
             margin: 20px auto 0 auto;
             border: 1px solid lightslategrey;
             padding: 10px 0 10px 10px;
-            .border-radius-mixin(5px);
+            .border-radius-mixin(3px);
 
             .dayBlock {
                 &:not(:nth-child(1)) {
@@ -316,7 +390,7 @@ body {
                 width: 300px;
                 margin: 20px auto 0 auto;
                 cursor: pointer;
-                .border-radius-mixin(5px);
+                .border-radius-mixin(3px);
 
                 &.selected {
                     background-color: lightyellow;
@@ -349,14 +423,8 @@ body {
             font-size: 12px;
         }
 
-        #pmBreadCrumbs {
-            text-align: left;
-            margin-left: 50px;
-            margin-top: 10px;
-        }
-
         .convoBlock {
-            width: 800px;
+            width: 900px;
             text-align: left;
             margin-left: auto;
             margin-right: auto;
@@ -425,22 +493,13 @@ body {
         }
 
         .privMsgBlock {
-            margin-top: 20px;
-            border: 1px solid lightslategrey;
-            text-align: left;
             width: 600px;
             margin-left: auto;
             margin-right: auto;
-            .border-radius-mixin(5px);
-            padding-left: 5px;
-            padding-bottom: 2px;
-            cursor: pointer;
-            background-color: white;
-
-            &.unread {
-                background-color: lightyellow;
-            }        
-            
+            text-align: left;
+            margin-top: 10px;
+            color: black;
+            border: 1px solid black;
 
             .privMsgBlkUsr {
 
@@ -451,10 +510,6 @@ body {
 
                     i {
                         color: red;
-                    }
-
-                    span {
-
                     }
                 }
 
@@ -474,7 +529,7 @@ body {
             .privMsgBlkSnip {
                 font-size: 10px;
                 margin-top: 5px;
-                padding-left: 16px;
+                padding-left: 8px;
             }
         }
 
@@ -549,13 +604,7 @@ body {
                     .headerOption {
                         display: inline-block;
                         width: 240px;
-                        text-align: center;
-                        font-size: 18px;
-                        background-color: skyblue;
-                        border: 1px solid black;
-                        .border-radius-mixin(5px);
-                        cursor: pointer;
-                        .user-select-mixin(none);
+                        color: black;
 
                         &.active {
                             background-color: silver;
@@ -600,18 +649,15 @@ body {
                                 background-color: transparent;
                             }
                         }
-
-                        &:hover {
-                            background-color: skyblue + #222222;
-                        }
                     }
                 }
             }
 
             .mainBody {
                 text-align: center;
-                height: 600px;
+                min-height: 600px;
                 position: relative;
+                padding-bottom: 20px;
 
                 .gradeBody {
                     text-align: left;
@@ -620,6 +666,7 @@ body {
 
                     .gradeHeader {
                         margin-top: 25px;
+                        font-size: 12px;
                     }
 
                     .gradeSelect {
@@ -627,12 +674,12 @@ body {
                         display: inline-block;
 
                         &:nth-child(2) {
-                            margin-left: 30px;
+                            margin-left: 20px;
                         }
 
                         select {
-                            .border-radius-mixin(5px);
-                            height: 30px;
+                            .border-radius-mixin(3px);
+                            height: 34px;
                         }
                     }
 
@@ -701,7 +748,7 @@ body {
                         border: 1px solid #d3d3d3;
                         display: inline-block;
                         text-align: center;
-                        .border-radius-mixin(5px);
+                        .border-radius-mixin(3px);
                         position: absolute;
 
                         .blockHeader {
@@ -819,7 +866,7 @@ body {
     }
 }
 
-.saveBtn {
+/*.saveBtn {
     background-color:  forestgreen + #222;
     color: white;
 
@@ -837,12 +884,11 @@ body {
         background-color:  skyblue + #222222;
         color: black;
     }
-}
+}*/
 
-.sendButton {
-    .gradient-mixin(forestgreen + #222 + #222, forestgreen);
-    color: white;
-    .border-radius-mixin(5px);
+/*.sendButton {
+    //.gradient-mixin(forestgreen + #222 + #222, forestgreen);
+    color: black;
     width: 90px;
     height: 30px;
     cursor: pointer;
@@ -857,14 +903,10 @@ body {
         box-sizing: border-box;
         font-size: 14px;
         text-align: center;
-        border: 1px solid grey;
         bottom: 2px;
     }
 
-    &:hover {
-    .gradient-mixin(forestgreen + #222 + #222 + #222, forestgreen + #222);
-        color: white;
-    }
+    
 
     &:active {
         top: 1px;
@@ -872,11 +914,10 @@ body {
     }
 
     &:disabled {
-        .gradient-mixin(#D2D2D2, #D2D2D2);
-        color: white;
+        .gradient-mixin(darkgray, darkgray);
         cursor: default;
     }
-}
+}*/
 
 .ctrlPanel {
     position: relative;
@@ -896,7 +937,7 @@ body {
     }    
 
     input[type="text"], input[type="password"], select {
-        .border-radius-mixin(5px);
+        .border-radius-mixin(3px);
         border: 1px solid #d3d3d3;
         padding-left: 2px;
         width: 90%;

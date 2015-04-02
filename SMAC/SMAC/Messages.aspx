@@ -2,35 +2,32 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ScriptContent" runat="server">
     <script>
         $(document).ready(function () {
-            $('[data-unread="true"]').addClass('unread');
+            $('[data-unread="true"]').addClass('btn-warning');
 
             var msgId = getParameterByName('msgId');
 
+            $('#replySubmit').attr('disabled', 'disabled');
+
             if (msgId != '') {
-                $('#pmBreadCrumbs').show();
                 $('#messageList').hide();
-                $('#convoList').show();
-                $('#messageInput').show();
-                $('#errMsg').show();
                 $('#newMessage').hide();
 
                 $('.msgSend').attr('disabled', 'disabled');
-                $('#text-input').keyup(function () {
-                    if ($('#text-input').val() != '') {
-                        $('.msgSend').removeAttr('disabled');
+                $('#replyInput').keyup(function () {
+                    if ($('#replyInput').val() != '') {
+                        $('#replySubmit').removeAttr('disabled');
                     }
                     else {
-                        $('.msgSend').attr('disabled', 'disabled');
+                        $('#replySubmit').attr('disabled', 'disabled');
                     }
                 });
             }
             else {
                 $('#convoList').hide();
-                $('#messageList').show();
-                $('#pmBreadCrumbs').hide();
-                $('#messageInput').hide();
+                $('.threadReply').hide();
                 $('#errMsg').hide();
-                $('#newMessage').show();
+                $('#replySubmit').hide();
+                $('.threadTitle').hide();
             }
 
             $('.privMsgBlock').on('click', function () {
@@ -39,10 +36,7 @@
                 window.location.href = baseUrl + "?msgId=" + $(this).attr('data-msgid');
             });
 
-            $('.msgSend').on('click', function () {
-                //Send message!
-                SendMessage();
-            });
+            $('#replySubmit').on('click', SendMessage);
 
             $('#newMessage').on('click', function () {
                 window.location.href = '/NewMessage.aspx'
@@ -64,8 +58,6 @@
 
             convBlk.append(contentBlk);
 
-            console.log(convBlk);
-
             $('#convoList').append(convBlk);
         }
 
@@ -80,12 +72,12 @@
 
         function SendMessage() {
             var msgId = getParameterByName('msgId');
-            var message = $('#text-input').val();
+            var message = $('#replyInput').val();
 
             //Disable button
             //Disable inputbox
-            $('#text-input').attr('disabled', 'disabled');
-            $('.msgSend').attr('disabled', 'disabled');
+            $('#replyInput').attr('disabled', 'disabled');
+            $('#replySubmit').attr('disabled', 'disabled');
             $('#errMsg').text('');
 
             if (message.trim() != '') {
@@ -100,9 +92,7 @@
 
                         if (res.data == 'success') {
                             // Append onto MessageList.  clear input box
-                            CreateMessageBlock('You', res.date, message);
-
-                            $('#text-input').val('');
+                            window.location.reload();
                         }
                         else {
                             // Show error message
@@ -113,22 +103,17 @@
                         $('#errMsg').text('An internal error has occurred.  Message not sent.');
                     },
                     complete: function (jqXHR, textStatus ) {
-                        $('#text-input').removeAttr('disabled');
+                        $('#replyInput').removeAttr('disabled');
                         $('.msgSend').removeAttr('disabled');
                     }
                 });
-            }
-            else {
-                console.log('empty message');
             }
         }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-
-    <div id="pmBreadCrumbs"><i class="fa fa-arrow-circle-left"></i><a href="Messages.aspx" class="bread"> Back to messages</a></div>
     <div id="messageList">
-        <div class="privMsgBlock" id="newMessage">
+        <div class="btn privMsgBlock" id="newMessage">
             <div class="privMsgBlkUsr newMsg">
                 <i class="fa fa-plus-circle"></i>
                 <span>New Message</span>
@@ -137,7 +122,7 @@
         </div>
         <asp:ListView ID="messageListView" runat="server">
             <ItemTemplate>
-                <div class="privMsgBlock" data-msgId="<%#Eval("Id")%>" data-unread="<%#Eval("UnRead")%>">
+                <div class="btn privMsgBlock" data-msgId="<%#Eval("Id")%>" data-unread="<%#Eval("UnRead")%>">
                     <div class="privMsgBlkUsr">
                         <span class="privMsgUsr"><%#Eval("Name")%></span>
                         <span class="privMsgSent"><%#Eval("Date")%></span>
@@ -150,15 +135,18 @@
             </LayoutTemplate>
         </asp:ListView>
     </div>
+
+    <div class="threadTitle">
+            <i class="fa fa-caret-down"></i>
+            <asp:Label ID="threadTitle" runat="server" ClientIDMode="Static"></asp:Label>
+        </div>
     <div id="convoList">
-        <asp:ListView ID="convoListView" runat="server">
+        <asp:ListView ID="convoListView" runat="server" ClientIDMode="Static">
             <ItemTemplate>
-                <div class="convoBlock">
-                    <span class="convoInfo">
-                        <span class="convoDate">On <%#Eval("Date")%>,</span>
-                        <span class="convoSender"><%#Eval("Author")%> said:</span>
-                    </span>
-                    <span class="convoContent"><%#Eval("Content")%></span>
+                <div class="threadBlock">
+                    <div class="threadPostDate"><%#Eval("Date")%></div>
+                    <div class="threadAuthor"><%#Eval("Author")%></div>
+                    <div class="threadContent"><%#Eval("Content")%></div>
                 </div>
             </ItemTemplate>
             <LayoutTemplate>
@@ -166,12 +154,11 @@
             </LayoutTemplate>
         </asp:ListView>
     </div>
-    <div id="messageInput">
-        <div class="convoBlock input">
-            <textarea class="convoInput" id="text-input"></textarea>
-            <input type="button" class="msgSend" value="Send">
-        </div>
+    <div class="threadReply">
+        <div><span>Message:</span></div>
+        <div><textarea id="replyInput"></textarea></div>
     </div>
+    <input type="button" id="replySubmit" value="Send Reply" class="btn btn-xs btn-primary" />
     <div><span id="errMsg"></span></div>
     <form runat="server">
         <asp:HiddenField ID="toUserId" runat="server" ClientIDMode="Static" />

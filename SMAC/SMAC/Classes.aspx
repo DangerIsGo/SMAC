@@ -89,7 +89,7 @@
             $('#classList').empty();
 
             $.each(data, function (i, el) {
-                var block = $('<div>').addClass('classBlock');
+                var block = $('<div>').addClass('classBlock').addClass('btn');
                 block.attr('data-section', el.sectionid);
                 var subBlock1 = $('<div>').addClass('classHeader').text(el.subjectname);
                 var subBlock2 = $('<div>').addClass('classBody').text(el.classname + " - " + el.sectionname);
@@ -118,7 +118,7 @@
                 <div class="gradeHeader" id="mpLbl">Select Marking Period:</div>
                 <select id="periodList"></select>
             </div>
-            <input type="button" id="searchButton" class="sendButton inline" value="Search" />
+            <input type="button" id="searchButton" class="btn btn-primary searchButton" value="Search" />
             <span><asp:Image ImageUrl="~/Images/ajax-loader-white.gif" runat="server" ID="spinner" ClientIDMode="Static" /></span>
             <div id="classList"></div>
         </div>

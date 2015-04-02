@@ -41,7 +41,7 @@ namespace SMAC.Database
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    return (from a in context.PrivateMessages where a.PrivateMessageId == id select a).FirstOrDefault();
+                    return (from a in context.PrivateMessages where a.PrivateMessageId == id select a).Include(t=>t.UserSentFrom).Include(t=>t.UserSentTo).FirstOrDefault();
                 }
             }
             catch (Exception ex)
@@ -50,19 +50,19 @@ namespace SMAC.Database
             }
         }
 
-        public static void MarkAllConvosAsRead(string userId1, string userId2)
+        public static void MarkAllConvosAsRead(string userId, string otherUserId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
                     var msgs = (from a in context.PrivateMessages
-                                where (a.FromUser == userId1 && a.ToUser == userId2) || (a.FromUser == userId2 && a.ToUser == userId1)
-                                select a).Include(a => a.UserSentFrom).Include(a => a.UserSentTo).ToList();
+                                where (a.FromUser == userId && a.ToUser == otherUserId) || (a.FromUser == otherUserId && a.ToUser == userId)
+                                select a).ToList();
 
                     foreach (var pm in msgs)
                     {
-                        if (pm.DateRead == null)
+                        if (pm.DateRead == null && pm.FromUser != userId)
                         {
                             pm.DateRead = DateTime.Now;
                             context.Entry(pm).State = EntityState.Modified;
