@@ -606,6 +606,17 @@ body {
                         width: 240px;
                         color: black;
 
+                        &.invalid {
+                            background:repeating-linear-gradient(
+                                  45deg,
+                                  #fff,
+                                  #fff 10px,
+                                  #d2d2d2 10px,
+                                  #d2d2d2 20px
+                                );
+                            cursor: default;
+                        }
+
                         &.active {
                             background-color: silver;
                             cursor: default;

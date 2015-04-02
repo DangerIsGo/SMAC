@@ -100,34 +100,32 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <form runat="server">
-        <div class="newMsgBlock">
-            <div class="filters">
-                <span>Filter:&nbsp;</span>
-                <input type="radio" class="userFilter" id="allusersFilter" name="filter" data-type="all" /><label for="allusersFilter" class="filterLabel">All Users</label>
-                <input type="radio" class="userFilter" id="studentFilter" name="filter" data-type="student" /><label for="studentFilter" class="filterLabel">Students</label>
-                <input type="radio" class="userFilter" id="teacherFilter" name="filter" data-type="teacher" /><label for="teacherFilter" class="filterLabel">Teachers</label>
-                <input type="radio" class="userFilter" id="staffFilter" name="filter"  data-type="staff" /><label for="staffFilter" class="filterLabel">Staff</label>
-                <input type="radio" class="userFilter" id="adminFilter" name="filter" data-type="admin" /><label for="adminFilter" class="filterLabel">Admins</label>
-            </div>
-            <select id="ddl_AllUsers">
-                <asp:ListView ID="receiverListView" runat="server">
-                    <ItemTemplate>
-                        <option value="<%#Eval("Id")%>" data-role="<%#Eval("Role")%>"><%#Eval("Name")%></option>
-                    </ItemTemplate>
-                    <LayoutTemplate>
-                        <asp:PlaceHolder runat="server" ID="itemPlaceHolder"></asp:PlaceHolder>
-                    </LayoutTemplate>
-                </asp:ListView>
-            </select>
+    <div class="newMsgBlock">
+        <div class="filters">
+            <span>Filter:&nbsp;</span>
+            <input type="radio" class="userFilter" id="allusersFilter" name="filter" data-type="all" /><label for="allusersFilter" class="filterLabel">All Users</label>
+            <input type="radio" class="userFilter" id="studentFilter" name="filter" data-type="student" /><label for="studentFilter" class="filterLabel">Students</label>
+            <input type="radio" class="userFilter" id="teacherFilter" name="filter" data-type="teacher" /><label for="teacherFilter" class="filterLabel">Teachers</label>
+            <input type="radio" class="userFilter" id="staffFilter" name="filter"  data-type="staff" /><label for="staffFilter" class="filterLabel">Staff</label>
+            <input type="radio" class="userFilter" id="adminFilter" name="filter" data-type="admin" /><label for="adminFilter" class="filterLabel">Admins</label>
         </div>
-        <div class="threadReply">
-            <div><span>Message:</span></div>
-            <div><textarea id="replyInput"></textarea></div>
-        </div>
-        <input type="button" id="replySubmit" class="btn btn-primary btn-xs" value="Send Private Message" />
-        <div><label id="sendStatus"></label></div>
-        <span><asp:Image ImageUrl="~/Images/ajax-loader-white.gif" runat="server" ID="spinner" ClientIDMode="Static" /></span>
-        <asp:HiddenField ID="toUserId" runat="server" ClientIDMode="Static" />
-    </form>
+        <select id="ddl_AllUsers">
+            <asp:ListView ID="receiverListView" runat="server">
+                <ItemTemplate>
+                    <option value="<%#Eval("Id")%>" data-role="<%#Eval("Role")%>"><%#Eval("Name")%></option>
+                </ItemTemplate>
+                <LayoutTemplate>
+                    <asp:PlaceHolder runat="server" ID="itemPlaceHolder"></asp:PlaceHolder>
+                </LayoutTemplate>
+            </asp:ListView>
+        </select>
+    </div>
+    <div class="threadReply">
+        <div><span>Message:</span></div>
+        <div><textarea id="replyInput"></textarea></div>
+    </div>
+    <input type="button" id="replySubmit" class="btn btn-primary btn-xs" value="Send Private Message" />
+    <div><label id="sendStatus"></label></div>
+    <span><asp:Image ImageUrl="~/Images/ajax-loader-white.gif" runat="server" ID="spinner" ClientIDMode="Static" /></span>
+    <asp:HiddenField ID="toUserId" runat="server" ClientIDMode="Static" />
 </asp:Content>

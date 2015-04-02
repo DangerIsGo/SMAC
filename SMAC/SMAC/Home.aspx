@@ -1,6 +1,13 @@
 ﻿<%@ Page Title="Dashboard" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Home.aspx.cs" Inherits="SMAC.Home" %>
 
 <asp:Content ID="ScriptContent" ContentPlaceHolderID="ScriptContent" runat="server">
+    <script>
+        $(document).ready(function () {
+            if ($('#userRole').val() == 'Staff' || $('#userRole').val() == 'Admin') {
+                $('#khanBlock').hide();
+            }
+        });
+    </script>
 </asp:Content>
 
 <asp:Content ID="MainContent" ContentPlaceHolderID="MainContent" runat="server">

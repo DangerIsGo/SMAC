@@ -71,6 +71,8 @@ namespace SMAC
                 FormsAuthentication.RedirectToLoginPage();
             }
 
+            this.userRole.Value = Database.Helpers.GetUserRole(Request.Cookies["SmacCookie"]["UserId"]).ToString();
+
             if (Session["UpdateCookie"] != null && Session["UpdateCookie"].ToString() == "yes")
             {
                 FormsAuthenticationTicket tkt;

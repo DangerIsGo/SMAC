@@ -31,17 +31,15 @@
         <span>Post new thread</span>
         <asp:Label runat="server" ID="threadHeader" ClientIDMode="Static"></asp:Label>
     </div>
-    <form runat="server">
-        <div class="newThreadContainer">
-            <div class="newThreadTitle">
-                <div>Title:</div>
-                <div><asp:TextBox ID="threadTitle" runat="server" ClientIDMode="Static"></asp:TextBox></div>
-            </div>
-            <div class="newThreadBody">
-                <div>Message:</div>
-                <asp:TextBox ClientIDMode="Static" ID="threadInput" runat="server" TextMode="MultiLine"></asp:TextBox>
-            </div>
+    <div class="newThreadContainer">
+        <div class="newThreadTitle">
+            <div>Title:</div>
+            <div><asp:TextBox ID="threadTitle" runat="server" ClientIDMode="Static"></asp:TextBox></div>
         </div>
-        <asp:Button ID="submitNewThread" runat="server" ClientIDMode="Static" CssClass="btn btn-xs btn-primary" Text="Post New Thread" OnClick="submitNewThread_Click" />
-    </form>
+        <div class="newThreadBody">
+            <div>Message:</div>
+            <asp:TextBox ClientIDMode="Static" ID="threadInput" runat="server" TextMode="MultiLine"></asp:TextBox>
+        </div>
+    </div>
+    <asp:Button ID="submitNewThread" runat="server" ClientIDMode="Static" CssClass="btn btn-xs btn-primary" Text="Post New Thread" OnClick="submitNewThread_Click" />
 </asp:Content>

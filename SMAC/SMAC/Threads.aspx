@@ -68,54 +68,52 @@
             <span>New Thread</span>
         </span>
     </div>
-    <form runat="server">
-        <div class="threadTitle">
-            <i class="fa fa-caret-down"></i>
-            <asp:Label ID="threadTitle" runat="server" ClientIDMode="Static"></asp:Label>
-        </div>
-        <asp:ListView ID="convoListView" runat="server" ClientIDMode="Static">
-            <ItemTemplate>
-                <div class="threadBlock">
-                    <div class="threadPostDate"><%#Eval("Date")%></div>
-                    <div class="threadAuthor"><%#Eval("Author")%></div>
-                    <div class="threadContent"><%#Eval("Content")%></div>
-                </div>
-            </ItemTemplate>
-            <LayoutTemplate>
-                <asp:PlaceHolder runat="server" ID="itemPlaceHolder"></asp:PlaceHolder>
-            </LayoutTemplate>
-        </asp:ListView>
-        <div class="threadReply">
-            <div><span>Message:</span></div>
-            <div><textarea id="replyInput"></textarea></div>
-        </div>
-        <input type="button" id="replySubmit" value="Post Reply" class="btn btn-xs btn-primary" />
-        <span><asp:Image ImageUrl="~/Images/ajax-loader-white.gif" runat="server" ID="spinner" ClientIDMode="Static" /></span>
+    <div class="threadTitle">
+        <i class="fa fa-caret-down"></i>
+        <asp:Label ID="threadTitle" runat="server" ClientIDMode="Static"></asp:Label>
+    </div>
+    <asp:ListView ID="convoListView" runat="server" ClientIDMode="Static">
+        <ItemTemplate>
+            <div class="threadBlock">
+                <div class="threadPostDate"><%#Eval("Date")%></div>
+                <div class="threadAuthor"><%#Eval("Author")%></div>
+                <div class="threadContent"><%#Eval("Content")%></div>
+            </div>
+        </ItemTemplate>
+        <LayoutTemplate>
+            <asp:PlaceHolder runat="server" ID="itemPlaceHolder"></asp:PlaceHolder>
+        </LayoutTemplate>
+    </asp:ListView>
+    <div class="threadReply">
+        <div><span>Message:</span></div>
+        <div><textarea id="replyInput"></textarea></div>
+    </div>
+    <input type="button" id="replySubmit" value="Post Reply" class="btn btn-xs btn-primary" />
+    <span><asp:Image ImageUrl="~/Images/ajax-loader-white.gif" runat="server" ID="spinner" ClientIDMode="Static" /></span>
         
-        <table id="threadTable">
-            <thead>
-                <tr>
-                    <th>Thread Title</th>
-                    <th>Author</th>
-                    <th>Last Post</th>
-                    <th>Replies</th>
-                </tr>
-            </thead>
-            <tbody>
-                <asp:ListView ID="threadTableBody" runat="server">
-                    <ItemTemplate>
-                        <tr>
-                            <td><a href="/Threads.aspx?secId=<%#Eval("SecId")%>&threadId=<%#Eval("Id")%>"><%#Eval("Title")%></a></td>
-                            <td><%#Eval("Author")%></td>
-                            <td><div>At <%#Eval("LastPostAt")%></div><div>By <%#Eval("LastPostBy")%></div></td>
-                            <td><%#Eval("Replies")%></td>
-                        </tr>
-                    </ItemTemplate>
-                    <LayoutTemplate>
-                        <asp:PlaceHolder runat="server" ID="itemPlaceHolder"></asp:PlaceHolder>
-                    </LayoutTemplate>
-                </asp:ListView>
-            </tbody>
-        </table>
-    </form>
+    <table id="threadTable">
+        <thead>
+            <tr>
+                <th>Thread Title</th>
+                <th>Author</th>
+                <th>Last Post</th>
+                <th>Replies</th>
+            </tr>
+        </thead>
+        <tbody>
+            <asp:ListView ID="threadTableBody" runat="server">
+                <ItemTemplate>
+                    <tr>
+                        <td><a href="/Threads.aspx?secId=<%#Eval("SecId")%>&threadId=<%#Eval("Id")%>"><%#Eval("Title")%></a></td>
+                        <td><%#Eval("Author")%></td>
+                        <td><div>At <%#Eval("LastPostAt")%></div><div>By <%#Eval("LastPostBy")%></div></td>
+                        <td><%#Eval("Replies")%></td>
+                    </tr>
+                </ItemTemplate>
+                <LayoutTemplate>
+                    <asp:PlaceHolder runat="server" ID="itemPlaceHolder"></asp:PlaceHolder>
+                </LayoutTemplate>
+            </asp:ListView>
+        </tbody>
+    </table>
 </asp:Content>

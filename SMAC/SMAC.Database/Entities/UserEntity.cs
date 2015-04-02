@@ -89,7 +89,7 @@ namespace SMAC.Database
         {
             using (SmacEntities context = new SmacEntities())
             {
-                return (from a in context.Users where a.UserId == Id select a).FirstOrDefault();
+                return (from a in context.Users where a.UserId == Id select a).Include(t=>t.Schools).FirstOrDefault();
             }
         }
 

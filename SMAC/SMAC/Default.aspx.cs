@@ -45,6 +45,14 @@ namespace SMAC
                 ck.Values.Add("Gender", usr.GenderType);
                 ck.Values.Add("Genders", sb.ToString());
 
+                var school = SchoolEntity.GetUsersSchools(usr.UserId);
+
+                if (school.Count == 1)
+                {
+                    ck.Values.Add("SchoolName", school[0].SchoolName);
+                    ck.Values.Add("SchoolId", school[0].SchoolId.ToString());
+                }
+
                 Response.Cookies.Add(ck);
                 
                 FormsAuthentication.RedirectFromLoginPage(Request.Form["username"].Trim(), false);

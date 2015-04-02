@@ -117,19 +117,17 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <form runat="server">
-        <div class="gradeBody">
-            <div class="gradeSelect">
-                <div class="gradeHeader" id="yearLbl">Select School Year:</div>
-                <asp:DropDownList ID="yearList" runat="server" ClientIDMode="Static"></asp:DropDownList>
-            </div>
-            <div class="gradeSelect" id="periodCont">
-                <div class="gradeHeader" id="mpLbl">Select Marking Period:</div>
-                <select id="periodList"></select>
-            </div>
-            <input type="button" id="searchButton" class="btn btn-primary searchButton" value="Search" />
-            <span><asp:Image ImageUrl="~/Images/ajax-loader-white.gif" runat="server" ID="spinner" ClientIDMode="Static" /></span>
-            <div><table id="gradeTable" class=""></table></div>
+    <div class="gradeBody">
+        <div class="gradeSelect">
+            <div class="gradeHeader" id="yearLbl">Select School Year:</div>
+            <asp:DropDownList ID="yearList" runat="server" ClientIDMode="Static"></asp:DropDownList>
         </div>
-    </form>
+        <div class="gradeSelect" id="periodCont">
+            <div class="gradeHeader" id="mpLbl">Select Marking Period:</div>
+            <select id="periodList"></select>
+        </div>
+        <input type="button" id="searchButton" class="btn btn-primary searchButton" value="Search" />
+        <span><asp:Image ImageUrl="~/Images/ajax-loader-white.gif" runat="server" ID="spinner" ClientIDMode="Static" /></span>
+        <div><table id="gradeTable" class=""></table></div>
+    </div>
 </asp:Content>

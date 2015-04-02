@@ -110,8 +110,6 @@
     <div id="clubSchedule">
         <div id="clubScheduleSub"></div>
     </div>
-    <form runat="server">
-        <asp:HiddenField ID="clubScheduleHdn" runat="server" ClientIDMode="Static" />
-        <asp:HiddenField ID="myClubNames" runat="server" ClientIDMode="Static" />
-    </form>
+    <asp:HiddenField ID="clubScheduleHdn" runat="server" ClientIDMode="Static" />
+    <asp:HiddenField ID="myClubNames" runat="server" ClientIDMode="Static" />
 </asp:Content>

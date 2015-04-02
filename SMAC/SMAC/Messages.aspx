@@ -160,7 +160,5 @@
     </div>
     <input type="button" id="replySubmit" value="Send Reply" class="btn btn-xs btn-primary" />
     <div><span id="errMsg"></span></div>
-    <form runat="server">
-        <asp:HiddenField ID="toUserId" runat="server" ClientIDMode="Static" />
-    </form>
+    <asp:HiddenField ID="toUserId" runat="server" ClientIDMode="Static" />
 </asp:Content>

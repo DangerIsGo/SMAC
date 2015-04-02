@@ -75,14 +75,17 @@
                 <div class="headerRow">
                     <div class="btn btn-info headerOption" id="messages"><i class="fa fa-comment right"></i><span>Messages</span></div>
                     <div class="btn btn-info headerOption" id="classes"><i class="fa fa-bed right"></i><span>Classes</span></div>
-                    <div class="btn btn-info headerOption" id="grades"><i class="fa fa-list-alt right"></i><span>Grades</span></div>
                     <div class="btn btn-info headerOption" id="clubs"><i class="fa fa-camera right"></i><span>Clubs</span></div>
+                    <div class="btn btn-info headerOption" id="grades"><i class="fa fa-list-alt right"></i><span>Grades</span></div>
                 </div>
             </div>
-            <div class="mainBody">
-                <div id="breadCrumbs"></div>
-                <asp:ContentPlaceHolder ID="MainContent" runat="server" />
-            </div>
+            <form runat="server">
+                <div class="mainBody">
+                    <div id="breadCrumbs"></div>
+                    <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+                </div>
+                <asp:HiddenField runat="server" ID="userRole" ClientIDMode="Static" />
+            </form>
         </div>
     </div>
 
@@ -90,6 +93,8 @@
         $(document).ready(function () {
             var fName = '<%= Session["FirstName"] %>'
             var lName = '<%= Session["LastName"] %>'
+
+            SetClickHandlers();
             
             $('#greeting').text('Welcome back, ' + fName + ' ' + lName + '!');
 
@@ -110,6 +115,10 @@
                 (window.location.href.indexOf("Thread") > -1)) {
                 $('#classes').addClass('active');
             }
+            else if ((window.location.href.indexOf("Admin") > -1)) {
+                // using grades as admin replacement
+                $('#grades').addClass('active');
+            }
             else if (window.location.href.indexOf("SchoolSelection")) {
                 $('#classes').addClass('active');
                 $('#messages').addClass('active');
@@ -122,6 +131,30 @@
                 $('#clubs').off('click');
                 $('#home').off('click');
                 $('#grades').off('click');
+            }
+
+            if ($('#userRole').val() == 'Staff') {
+                $('#classes').attr('disabled', 'disabled');
+                $('#classes').addClass('invalid');
+                $('#classes').off('click');
+
+                $('#grades').attr('disabled', 'disabled');
+                $('#grades').off('click');
+                $('#grades').addClass('invalid');
+            }
+            else if ($('#userRole').val() == 'Admin') {
+                $('#classes').attr('disabled', 'disabled');
+                $('#classes').addClass('invalid');
+                $('#classes').off('click');
+
+                //Replace grades with admin
+                $('#grades span').text('Administration');
+                $('#grades').off('click');
+                $('#grades').on('click', function () {
+                    if (window.location.href.indexOf("Admin") == -1) {
+                        window.location.href = '/Admin.aspx';
+                    }
+                });
             }
 
             GenerateBreadCrumbs();
@@ -314,40 +347,44 @@
                 }
             });
         });
-        $('#home').on('click', function () {
-            if (window.location.href.indexOf("Home") == -1) {
-                window.location.href = '/Home.aspx';
-            }});
-        $('#logout').on('click', function () {
-            $.ajax({
-                type: "POST",
-                url: "Services.asmx/LogOut",
-                data: {},
-                success: function () {
-                    window.location.href = "/";
+        
+        function SetClickHandlers() {
+            $('#home').on('click', function () {
+                if (window.location.href.indexOf("Home") == -1) {
+                    window.location.href = '/Home.aspx';
                 }
             });
-        });
-        $('#messages').on('click', function () {
-            if (window.location.href.indexOf("Messages") == -1) {
-                window.location.href = '/Messages.aspx';
-            }
-        });
-        $('#grades').on('click', function () {
-            if (window.location.href.indexOf("Grades") == -1) {
-                window.location.href = '/Grades.aspx';
-            }
-        });
-        $('#classes').on('click', function () {
-            if (window.location.href.indexOf("Classes") == -1) {
-                window.location.href = '/Classes.aspx';
-            }
-        });
-        $('#clubs').on('click', function () {
-            if (window.location.href.indexOf("Clubs") == -1) {
-                window.location.href = '/Clubs.aspx';
-            }
-        });
+            $('#logout').on('click', function () {
+                $.ajax({
+                    type: "POST",
+                    url: "Services.asmx/LogOut",
+                    data: {},
+                    success: function () {
+                        window.location.href = "/";
+                    }
+                });
+            });
+            $('#messages').on('click', function () {
+                if (window.location.href.indexOf("Messages") == -1) {
+                    window.location.href = '/Messages.aspx';
+                }
+            });
+            $('#grades').on('click', function () {
+                if (window.location.href.indexOf("Grades") == -1) {
+                    window.location.href = '/Grades.aspx';
+                }
+            });
+            $('#classes').on('click', function () {
+                if (window.location.href.indexOf("Classes") == -1) {
+                    window.location.href = '/Classes.aspx';
+                }
+            });
+            $('#clubs').on('click', function () {
+                if (window.location.href.indexOf("Clubs") == -1) {
+                    window.location.href = '/Clubs.aspx';
+                }
+            });
+        }
 
         function OnPassClick() {
             var foo = $('#curPass').attr('disabled');

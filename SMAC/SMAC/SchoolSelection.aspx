@@ -18,9 +18,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <form runat="server">
-        <label class="">You are enrolled in multiple schools.  Please select a school</label><br /><br />
-        <asp:DropDownList ID="ddList_SchoolSelect" runat="server" CssClass="schoolSelectDdl" ClientIDMode="Static"></asp:DropDownList><br />
-        <asp:Button runat="server" ID="SchoolSelectSubmit" Text="Select" OnClick="SchoolSelectSubmit_Click" CssClass="btn btn-primary" ClientIDMode="Static"/>
-    </form>
+    <label class="">You are enrolled in multiple schools.  Please select a school</label><br /><br />
+    <asp:DropDownList ID="ddList_SchoolSelect" runat="server" CssClass="schoolSelectDdl" ClientIDMode="Static"></asp:DropDownList><br />
+    <asp:Button runat="server" ID="SchoolSelectSubmit" Text="Select" OnClick="SchoolSelectSubmit_Click" CssClass="btn btn-primary" ClientIDMode="Static"/>
 </asp:Content>

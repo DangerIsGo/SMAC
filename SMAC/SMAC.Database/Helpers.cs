@@ -18,7 +18,23 @@ namespace SMAC.Database
 
         public static Roles GetUserRole(string userId, SmacEntities context)
         {
-            using (context == null ? new SmacEntities() : context)
+            var user = (from a in context.Users where a.UserId == userId select a).FirstOrDefault();
+
+            if (user.Admin != null)
+                return Roles.Admin;
+            else if (user.Student != null)
+                return Roles.Student;
+            else if (user.Staff != null)
+                return Roles.Staff;
+            else if (user.Teacher != null)
+                return Roles.Teacher;
+            else
+                return Roles.None;
+        }
+
+        public static Roles GetUserRole(string userId)
+        {
+            using (SmacEntities context = new SmacEntities())
             {
                 var user = (from a in context.Users where a.UserId == userId select a).FirstOrDefault();
 

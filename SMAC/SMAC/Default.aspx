@@ -14,10 +14,6 @@
         <link href="/Content/Site.less" rel="stylesheet" /> 
 
         <script>
-            $(document).ready(function () {
-                $('#submit').on('click', testAuth)
-            });
-
             function validateFields() {
 
                 $('#loginStatus').text('');
@@ -38,19 +34,6 @@
                 }
                 else
                     return true;
-            }
-
-            function testAuth() {
-                $.ajax({
-                    type: "POST",
-                    contentType: 'application/json; charset=utf-8',
-                    data: "{'username': '" + $('#username').val() + "', 'password': '"+$('#password').val()+"'}",
-                    url: "Services.asmx/AuthUser",
-                    success: function (res) {
-                        var content = JSON.parse(res.d);
-                        window.location.href = content.redir;
-                    }
-                });
             }
         </script>
     </head>
