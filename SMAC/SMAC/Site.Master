@@ -85,6 +85,7 @@
                     <asp:ContentPlaceHolder ID="MainContent" runat="server" />
                 </div>
                 <asp:HiddenField runat="server" ID="userRole" ClientIDMode="Static" />
+                <asp:HiddenField runat="server" ID="newMessages" ClientIDMode="Static" />
             </form>
         </div>
     </div>
@@ -169,6 +170,11 @@
                         window.location.href = '/Admin.aspx';
                     }
                 });
+            }
+
+            if ($('#newMessages').val() > 0) {
+                $('#messages').removeClass('btn-info').addClass('btn-warning');
+                $('#messages span').append(' (' + $('#newMessages').val() + ')');
             }
 
             GenerateBreadCrumbs();

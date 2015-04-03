@@ -71,7 +71,10 @@ namespace SMAC
                 FormsAuthentication.RedirectToLoginPage();
             }
 
-            this.userRole.Value = Database.Helpers.GetUserRole(Request.Cookies["SmacCookie"]["UserId"]).ToString();
+            var userId = Request.Cookies["SmacCookie"]["UserId"];
+            this.userRole.Value = Database.Helpers.GetUserRole(userId).ToString();
+            this.newMessages.Value = PrivateMessageEntity.CheckForNewMessages(userId).ToString();
+
 
             if (Session["UpdateCookie"] != null && Session["UpdateCookie"].ToString() == "yes")
             {
