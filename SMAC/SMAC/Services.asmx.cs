@@ -36,6 +36,37 @@ namespace SMAC
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchEntityList(string entityName)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                var subjects = SubjectEntity.GetAllSubjects(int.Parse(schoolId));
+
+                var rtnObj = new object[subjects.Count];
+
+                for (int i = 0; i < subjects.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        name = subjects[i].SubjectName,
+                        id = subjects[i].SubjectId
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string PostNewThreadReply(string threadId, string sectionId, string content)
         {
             try

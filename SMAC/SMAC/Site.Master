@@ -101,24 +101,30 @@
 
             if (window.location.href.indexOf("Home") > -1) {
                 $('#home').addClass('active');
+                $('#home').off('click');
             }
             else if (window.location.href.indexOf("Grades") > -1) {
                 $('#grades').addClass('active');
+                $('#grades').off('click');
             }
             else if (window.location.href.indexOf("Clubs") > -1) {
                 $('#clubs').addClass('active');
+                $('#clubs').off('click');
             }
             else if ((window.location.href.indexOf("Messages") > -1) ||
                 (window.location.href.indexOf("NewMessage") > -1)){
                 $('#messages').addClass('active');
+                $('#messages').off('click');
             }
             else if ((window.location.href.indexOf("Classes") > -1)||
                 (window.location.href.indexOf("Thread") > -1)) {
                 $('#classes').addClass('active');
+                $('#classes').off('click');
             }
             else if ((window.location.href.indexOf("Admin") > -1)) {
                 // using grades as admin replacement
-                $('#grades').addClass('active');
+                $('#classes').addClass('active');
+                $('#classes').off('click');
             }
             else if (window.location.href.indexOf("SchoolSelection")) {
                 $('#classes').addClass('active');
@@ -245,6 +251,12 @@
                 var thread = $('<a>').addClass('crumb').text('Threads').attr('href', '/Threads.aspx?secId=' + secId);
                 var crumb = $('<span>').addClass('crumb').text('New Thread');
                 bc.append(home).append(' > ').append(cls).append(' > ').append(thread).append(' > ').append(crumb);
+            }
+            else if (window.location.href.indexOf("Admin") > -1) {
+                var home = $('<a>').addClass('crumb').text('Home').attr('href', '/Home.aspx');
+                var crumb = $('<span>').addClass('crumb').text('Administration');
+
+                bc.append(home).append(' > ').append(crumb);
             }
         }
 
