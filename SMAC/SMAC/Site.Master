@@ -74,8 +74,8 @@
                 </div>
                 <div class="headerRow">
                     <div class="btn btn-info headerOption" id="messages"><i class="fa fa-comment right"></i><span>Messages</span></div>
-                    <div class="btn btn-info headerOption" id="classes"><i class="fa fa-bed right"></i><span>Classes</span></div>
                     <div class="btn btn-info headerOption" id="clubs"><i class="fa fa-camera right"></i><span>Clubs</span></div>
+                    <div class="btn btn-info headerOption" id="classes"><i class="fa fa-bed right"></i><span>Classes</span></div>
                     <div class="btn btn-info headerOption" id="grades"><i class="fa fa-list-alt right"></i><span>Grades</span></div>
                 </div>
             </div>
@@ -138,19 +138,33 @@
                 $('#classes').addClass('invalid');
                 $('#classes').off('click');
 
+                $('#classes span').text('');
+                $('#classes span').html('&nbsp;')
+                $('#classes i').removeClass('fa').removeClass('fa-bed');
+
                 $('#grades').attr('disabled', 'disabled');
                 $('#grades').off('click');
                 $('#grades').addClass('invalid');
+
+                $('#grades span').text('');
+                $('#grades span').html('&nbsp;')
+                $('#grades i').removeClass('fa').removeClass('fa-list-alt');
             }
             else if ($('#userRole').val() == 'Admin') {
-                $('#classes').attr('disabled', 'disabled');
-                $('#classes').addClass('invalid');
-                $('#classes').off('click');
-
-                //Replace grades with admin
-                $('#grades span').text('Administration');
+                $('#grades').attr('disabled', 'disabled');
+                $('#grades').addClass('invalid');
                 $('#grades').off('click');
-                $('#grades').on('click', function () {
+
+                $('#grades span').text('');
+                $('#grades span').html('&nbsp;')
+                $('#grades i').removeClass('fa').removeClass('fa-list-alt');
+
+                //Replace classes with admin
+                $('#classes span').text('Administration');
+                $('#classes i').removeClass('fa-bed').addClass('fa fa-star');
+
+                $('#classes').off('click');
+                $('#classes').on('click', function () {
                     if (window.location.href.indexOf("Admin") == -1) {
                         window.location.href = '/Admin.aspx';
                     }
