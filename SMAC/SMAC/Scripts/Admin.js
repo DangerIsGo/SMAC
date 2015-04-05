@@ -193,7 +193,7 @@ function PopulateEntityList() {
         }
         else if (eType == 2) {
             //Club
-
+            DrawClubForm();
         }
         else if (eType == 3) {
             //Club Enrollment
@@ -373,4 +373,128 @@ function GetSubject(id, callback) {
             callback();
         }
     });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function DrawClubForm() {
+    var form = $('#entityGroup');
+
+    var group = $('<div>').addClass('form-group');
+
+    var club = list;
+
+    var lbl = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'clubLabel').text('Club Name');
+    var nameCont = $('<div>').addClass('col-md-3');
+    var name = $('<input>').attr('type', 'text').attr('id', 'clubName').addClass('form-control');
+    if (list != undefined) { name.val(club.name); }
+    name.appendTo(nameCont);
+
+    var lblDesc = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'clubDescLabel').text('Club Description');
+    var descCont = $('<div>').addClass('col-md-4');
+    var desc = $('<input>').attr('type', 'text').attr('id', 'clubDescription').addClass('form-control');
+    if (list != undefined) { name.val(club.description); }
+    desc.appendTo(descCont);
+
+    var btnCont = $('<div>').addClass('col-md-1');
+    var btn = $('<input>').attr('type', 'button').attr('id', 'createClubButton').attr('name', 'createClub').addClass('btn btn-success').click(CreateEditClub);
+    if (club != undefined) { btn.val('Update'); } else { btn.val('Create'); }
+    btn.appendTo(btnCont);
+    var clearer = $('<div>').addClass('clearer');
+    var statusCont = $('<div>');
+    var status = $('<label>').addClass('form-control admin').attr('id', 'subjectStatus');
+    status.appendTo(statusCont);
+
+    list = undefined;
+
+    group.append(lbl);
+    group.append(nameCont);
+    group.append(btnCont);
+    group.append(clearer);
+    group.append(lblDesc);
+    group.append(descCont);
+    group.append(clearer);
+    group.append(statusCont);
+    group.appendTo(form);
+    form.show();
+}
+
+function CreateEditClub() {
+    if ($('#clubName').val() != '') {
+        if ($('#createClubButton').val() == 'Create') {
+            CreateClub($('#clubName').val(), CreateClubCallback);
+        }
+        else {
+            UpdateClub($('#clubSelect option:checked').val(), $('#clubName').val(), UpdateClubCallback);
+        }
+    }
+}
+
+function SubmitClub() {
+    if ($('#clubSelect option:checked').val() != '-') {
+        if ($('#entityActionList option:checked').val() == 'delete') {
+            DeleteClub($('#clubSelect option:checked').val(), DeleteClubCallback);
+        }
+        else {
+            GetClub($('#clubSelect option:checked').val(), DrawClubForm);
+        }
+    }
+}
+
+function DeleteClubCallback() {
+    if (disposition == 'success') {
+        $('#clubStatus').text('Success!  Your club was successfully deleted');
+
+        GetClubList(DeleteClubRepopulate);
+    }
+    else {
+        $('#clubStatus').text(disposition);
+    }
+}
+
+function DeleteClubRepopulate() {
+    var clubList = $('#clubSelect');
+    clubList.empty();
+
+    clubList.append('<option value="-">-----------------------</option>');
+
+    $.each(list, function (i, el) {
+        clubList.append('<option value="' + el.id + '">' + el.name + '</option>')
+    });
+}
+
+function UpdateClubCallback() {
+    if (disposition == 'success') {
+        $('#clubStatus').text('Success!  Your club was successfully updated');
+    }
+    else {
+        $('#clubStatus').text(disposition);
+    }
+}
+
+function CreateClubCallback() {
+    if (disposition == 'success') {
+        $('#clubStatus').text('Success!  Your club was successfully created');
+    }
+    else {
+        $('#clubStatus').text(disposition);
+    }
 }
