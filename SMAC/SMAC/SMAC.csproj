@@ -165,6 +165,7 @@
     <Content Include="NewThread.aspx" />
     <Content Include="packages.config" />
     <Content Include="SchoolSelection.aspx" />
+    <Content Include="Scripts\Admin.js" />
     <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\Common.js" />
     <Content Include="Scripts\jquery.maskedinput.min.js" />

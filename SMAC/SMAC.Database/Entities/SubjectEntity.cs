@@ -11,9 +11,9 @@ namespace SMAC.Database
             CreateEditSubject("ADD", schoolId, subjName, null);
         }
 
-        public static void UpdateSubject(int schoolId, string subjName, string newSubjName)
+        public static void UpdateSubject(int schoolId, int subjectId, string subjName)
         {
-            CreateEditSubject("EDIT", schoolId, subjName, newSubjName);
+            CreateEditSubject("EDIT", schoolId, subjName, subjectId);
         }
 
         public static Subject GetSubject(int subjectId)
@@ -52,7 +52,9 @@ namespace SMAC.Database
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    return SchoolEntity.GetSchool(schoolId).Subjects.ToList();
+                    var school = (from a in context.Schools where a.SchoolId == schoolId select a).FirstOrDefault();
+
+                    return school.Subjects.OrderBy(t=>t.SubjectName).ToList();
                 }
             }
             catch (Exception ex)
@@ -61,13 +63,13 @@ namespace SMAC.Database
             }
         }
 
-        public static void DeleteSubject(int schoolId, string subjName)
+        public static void DeleteSubject(int subjectId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    var subject = GetSubject(schoolId, subjName);
+                    var subject = (from a in context.Subjects where a.SubjectId == subjectId select a).FirstOrDefault();
                     context.Subjects.Remove(subject);
                     context.SaveChanges();
                 }
@@ -78,7 +80,7 @@ namespace SMAC.Database
             }
         }
 
-        private static void CreateEditSubject(string op, int schoolId, string subjName, string newSubjName)
+        private static void CreateEditSubject(string op, int? schoolId, string subjName, int? subjectId)
         {
             try
             {
@@ -86,7 +88,7 @@ namespace SMAC.Database
                 {
                     if (op.Equals("ADD"))
                     {
-                        if (GetSubject(schoolId, subjName) != null)
+                        if ((from a in context.Subjects where a.SchoolId == schoolId.Value && a.SubjectName == subjName select a).FirstOrDefault() != null)
                         {
                             throw new Exception("Subject was not created.  Subject name already exists for this school.");
                         }
@@ -94,7 +96,7 @@ namespace SMAC.Database
                         {
                             Subject subject = new Subject()
                             {
-                                School = (from a in context.Schools where a.SchoolId == schoolId select a).FirstOrDefault(),
+                                School = (from a in context.Schools where a.SchoolId == schoolId.Value select a).FirstOrDefault(),
                                 SubjectName = subjName
                             };
 
@@ -104,19 +106,19 @@ namespace SMAC.Database
                     }
                     else if (op.Equals("EDIT"))
                     {
-                        if (GetSubject(schoolId, subjName) == null)
+                        if ((from a in context.Subjects where a.SubjectId == subjectId.Value select a).FirstOrDefault() == null)
                         {
                             throw new Exception("Subject was not updated.  Subject name not found.");
                         }
-                        else if (GetSubject(schoolId, newSubjName) != null)
+                        else if ((from a in context.Subjects where a.SchoolId == schoolId && a.SubjectName == subjName && a.SubjectId != subjectId.Value select a).FirstOrDefault() != null)
                         {
                             throw new Exception("Subject was not updated.  New subject name already exists in database.");
                         }
                         else
                         {
-                            var subject = GetSubject(schoolId, subjName);
+                            var subject = (from a in context.Subjects where a.SubjectId == subjectId select a).FirstOrDefault();
 
-                            subject.SubjectName = newSubjName;
+                            subject.SubjectName = subjName;
                             context.Entry(subject).State = System.Data.Entity.EntityState.Modified;
                             context.SaveChanges();
                         }

@@ -3,37 +3,48 @@
     <script>
         $(document).ready(function () {
             $('#spinner').hide();
-            $('#acceptAction').click(PopulateEntityList);
+
+            $('#acceptAction').click(ShowEntityTypes);
+            $('#acceptEntityType').click(PopulateEntityList);
+
+            $('#entityActionList').on('change', EnableActionButton);
+            $('#entityTypeList').on('change', EnableTypeButton);
+
+            $('#entityGroup').hide();
+            $('#entityTypeGroup').hide();
+
+            $('#acceptAction').attr('disabled', 'disabled');
+            $('#acceptEntityType').attr('disabled', 'disabled');
+            $('#acceptEntity').attr('disabled', 'disabled');
         });
-
-        function PopulateEntityList() {
-            $.ajax({
-                type: "POST",
-                url: "Services.asmx/FetchEntityList",
-                data: "{'entityName':'" + $('#entityTypeList').text() + "'}",
-                contentType: "application/json; charset=UTF-8",
-                beforeSend: function () {
-                    $('#spinner').show();
-                },
-                success: function (data) {
-                    $('#spinner').hide();
-                    var json = JSON.parse(data.d);
-
-                    $.each(json, function (i, el) {
-                        var option = '<option value="'+el.id+'">'+el.name+'</option>';
-                    });
-                }
-            });
-        }
     </script>
+    <script src="Scripts/Admin.js" type="text/javascript"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="adminPanel">
 
         <div class="form-group">
+            <label class="col-md-3 control-label admin" for="entityActionList">Select an action</label>
+            <div class="col-md-3">
+                <select id="entityActionList" name="entityActionList" class="form-control">
+                    <option value="-">--------------------</option>
+                    <option value="create">Create New</option>
+                    <option value="update">Update Existing</option>
+                    <option value="delete">Delete Existing</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <input type="button" id="acceptAction" name="acceptAction" value="OK" class="btn btn-primary" />
+                <span><asp:Image ImageUrl="~/Images/ajax-loader-white.gif" runat="server" ID="spinner" ClientIDMode="Static" /></span>
+            </div>
+            <div class="clearer"></div>
+        </div>
+
+        <div class="form-group" id="entityTypeGroup">
             <label class="col-md-3 control-label admin" for="entityTypeList">Select an entity type</label>
             <div class="col-md-3">
                 <select id="entityTypeList" name="entityTypeList" class="form-control">
+                    <option value="-">--------------------</option>
                     <option value="1">Class</option>
                     <option value="2">Club</option>
                     <option value="3">Club Enrollment</option>
@@ -50,36 +61,17 @@
                 </select>
             </div>
             <div class="col-md-1">
-                <input type="button" id="acceptType" name="acceptType" value="Accept" class="btn btn-primary" />
+                <input type="button" id="acceptEntityType" name="acceptEntityType" value="OK" class="btn btn-primary" />
             </div>
             <div class="clearer"></div>
         </div>
 
-        <div class="form-group">
-            <label class="col-md-3 control-label admin" for="entityActionList">Select an action</label>
-            <div class="col-md-3">
-                <select id="entityActionList" name="entityActionList" class="form-control">
-                    <option value="create">Create New</option>
-                    <option value="update">Update Existing</option>
-                    <option value="delete">Delete Existing</option>
-                </select>
-            </div>
-            <div class="col-md-1">
-                <input type="button" id="acceptAction" name="acceptAction" value="Accept" class="btn btn-primary" />
-                <span><asp:Image ImageUrl="~/Images/ajax-loader-white.gif" runat="server" ID="spinner" ClientIDMode="Static" /></span>
-            </div>
-            <div class="clearer"></div>
+        <div id="entitySelectGroup">
+
         </div>
 
-        <div class="form-group">
-            <label class="col-md-3 control-label admin" for="entityList">Select an entity</label>
-            <div class="col-md-3">
-                <select id="entityList" class="form-control"></select>
-            </div>
-            <div class="col-md-1">
-                <input type="button" id="acceptEntity" name="acceptEntity" value="Accept" class="btn btn-primary" />
-            </div>
-            <div class="clearer"></div>
+        <div id="entityGroup">
+
         </div>
     </div>
 </asp:Content>

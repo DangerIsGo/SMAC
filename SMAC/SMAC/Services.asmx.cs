@@ -34,9 +34,83 @@ namespace SMAC
             }
         }
 
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string DeleteSubject(string id)
+        {
+            try
+            {
+                SubjectEntity.DeleteSubject(int.Parse(id));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod(EnableSession=true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string UpdateSubject(string id, string name)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                SubjectEntity.UpdateSubject(int.Parse(schoolId), int.Parse(id), name);
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod(EnableSession=true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string CreateSubject(string name)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                SubjectEntity.CreateSubject(int.Parse(schoolId), name);
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchSubject(string subjectId)
+        {
+            try
+            {
+                var subject = SubjectEntity.GetSubject(int.Parse(subjectId));
+
+                var obj = new
+                {
+                    name = subject.SubjectName,
+                    id = subject.SubjectId
+                };
+
+                return JsonConvert.SerializeObject(obj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public string FetchEntityList(string entityName)
+        public string FetchSubjectList()
         {
             try
             {
