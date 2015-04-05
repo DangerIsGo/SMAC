@@ -6,14 +6,14 @@ namespace SMAC.Database
 {
     public class ClubEntity
     {
-        public static void CreateClub(int schoolId, string clubName)
+        public static void CreateClub(int schoolId, string clubName, string description)
         {
-            CreateEditClub("ADD", schoolId, clubName, null);
+            CreateEditClub("ADD", schoolId, clubName, description, null);
         }
 
-        public static void UpdateClub(int schoolId, string clubName, string newClubName)
+        public static void UpdateClub(int schoolId, string clubName, string description, string newClubName)
         {
-            CreateEditClub("EDIT", schoolId, clubName, newClubName);
+            CreateEditClub("EDIT", schoolId, clubName, description, newClubName);
         }
 
         public static bool ClubExists(string clubName)
@@ -93,7 +93,7 @@ namespace SMAC.Database
             }
         }
 
-        private static void CreateEditClub(string op, int schoolId, string clubName, string newClubName)
+        private static void CreateEditClub(string op, int schoolId, string clubName, string description, string newClubName)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace SMAC.Database
                 {
                     if (op.Equals("ADD"))
                     {
-                        if (ClubExists(clubName))
+                        if ((from a in context.Clubs where a.SchoolId == schoolId && a.ClubName == clubName select a).FirstOrDefault() != null)
                         {
                             throw new Exception("Club was not created.  Club name already exists for this school.");
                         }
@@ -109,7 +109,8 @@ namespace SMAC.Database
                         {
                             Club Club = new Club()
                             {
-                                School = SchoolEntity.GetSchool(schoolId),
+                                School = (from a in context.Schools where a.SchoolId == schoolId select a).FirstOrDefault(),
+                                Description = !string.IsNullOrWhiteSpace(description) ? description : null,
                                 ClubName = clubName
                             };
 
@@ -132,6 +133,7 @@ namespace SMAC.Database
                             var Club = GetClub(clubName, schoolId);
 
                             Club.ClubName = newClubName;
+                            Club.Description = !string.IsNullOrWhiteSpace(description) ? description : null;
                             context.Entry(Club).State = System.Data.Entity.EntityState.Modified;
                             context.SaveChanges();
                         }

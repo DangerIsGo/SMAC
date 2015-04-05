@@ -34,6 +34,24 @@ namespace SMAC
             }
         }
 
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string CreateClub(string name, string description)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                ClubEntity.CreateClub(int.Parse(schoolId), name, description);
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string DeleteSubject(string id)

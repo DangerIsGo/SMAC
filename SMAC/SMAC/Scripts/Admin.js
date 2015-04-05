@@ -398,7 +398,13 @@ function GetSubject(id, callback) {
 function DrawClubForm() {
     var form = $('#entityGroup');
 
-    var group = $('<div>').addClass('form-group');
+    var mainGroup = $('<div>').addClass('form-group');
+    var group1 = $('<div>').addClass('form-group');
+    var group2 = $('<div>').addClass('form-group');
+    var group3 = $('<div>').addClass('form-group');
+    mainGroup.append(group1);
+    mainGroup.append(group2);
+    mainGroup.append(group3);
 
     var club = list;
 
@@ -410,7 +416,7 @@ function DrawClubForm() {
 
     var lblDesc = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'clubDescLabel').text('Club Description');
     var descCont = $('<div>').addClass('col-md-4');
-    var desc = $('<input>').attr('type', 'text').attr('id', 'clubDescription').addClass('form-control');
+    var desc = $('<input>').attr('type', 'text').attr('id', 'clubDescription').addClass('form-control').attr('placeholder', 'Optional');
     if (list != undefined) { name.val(club.description); }
     desc.appendTo(descCont);
 
@@ -418,29 +424,32 @@ function DrawClubForm() {
     var btn = $('<input>').attr('type', 'button').attr('id', 'createClubButton').attr('name', 'createClub').addClass('btn btn-success').click(CreateEditClub);
     if (club != undefined) { btn.val('Update'); } else { btn.val('Create'); }
     btn.appendTo(btnCont);
-    var clearer = $('<div>').addClass('clearer');
+    var clearer1 = $('<div>').addClass('clearer');
+    var clearer2 = $('<div>').addClass('clearer');
+    var clearer3 = $('<div>').addClass('clearer');
     var statusCont = $('<div>');
-    var status = $('<label>').addClass('form-control admin').attr('id', 'subjectStatus');
+    var status = $('<label>').addClass('form-control admin').attr('id', 'clubStatus');
     status.appendTo(statusCont);
 
     list = undefined;
 
-    group.append(lbl);
-    group.append(nameCont);
-    group.append(btnCont);
-    group.append(clearer);
-    group.append(lblDesc);
-    group.append(descCont);
-    group.append(clearer);
-    group.append(statusCont);
-    group.appendTo(form);
+    group1.append(lbl);
+    group1.append(nameCont);
+    group1.append(btnCont);
+    group1.append(clearer1);
+    group2.append(lblDesc);
+    group2.append(descCont);
+    group2.append(clearer2);
+    group3.append(statusCont);
+    group3.append(clearer3);
+    mainGroup.appendTo(form);
     form.show();
 }
 
 function CreateEditClub() {
     if ($('#clubName').val() != '') {
         if ($('#createClubButton').val() == 'Create') {
-            CreateClub($('#clubName').val(), CreateClubCallback);
+            CreateClub($('#clubName').val(), $('#clubDescription').val(), CreateClubCallback);
         }
         else {
             UpdateClub($('#clubSelect option:checked').val(), $('#clubName').val(), UpdateClubCallback);
@@ -497,4 +506,21 @@ function CreateClubCallback() {
     else {
         $('#clubStatus').text(disposition);
     }
+}
+
+
+function CreateClub(name, desc, callback) {
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/CreateClub",
+        data: "{'name':'" + name + "', 'description':'"+desc+"'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            disposition = json;
+            callback();
+        }
+    });
 }
