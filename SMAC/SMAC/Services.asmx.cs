@@ -36,6 +36,393 @@ namespace SMAC
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string UpdateUser(string id, string fn, string mn, string ln, string em, string pn, string gender, string start, string end, string act, string un, string pw, string role)
+        {
+            try
+            {
+                DateTime endTemp = DateTime.Now;
+
+                if (DateTime.TryParse(end, out endTemp))
+                {
+                    UserEntity.UpdateUser(id, fn, mn, ln, em, pn, gender, bool.Parse(act), un, pw, DateTime.Parse(start), endTemp, role);
+                }
+                else
+                {
+                    UserEntity.UpdateUser(id, fn, mn, ln, em, pn, gender, bool.Parse(act), un, pw, DateTime.Parse(start), null, role);
+                }
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string CreateUser(string id, string fn, string mn, string ln, string em, string pn, string gender, string start, string end, string act, string un, string pw, string role)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                DateTime endTemp = DateTime.Now;
+
+                if (DateTime.TryParse(end, out endTemp)) 
+                {
+                    UserEntity.CreateUser(id, fn, mn, ln, em, pn, gender, bool.Parse(act), un, pw, DateTime.Parse(start), endTemp, role, int.Parse(schoolId));
+                }
+                else
+                {
+                    UserEntity.CreateUser(id, fn, mn, ln, em, pn, gender, bool.Parse(act), un, pw, DateTime.Parse(start), null, role, int.Parse(schoolId));
+                }
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        #region Latest News
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string DeleteLatestNews(string id)
+        {
+            try
+            {
+                LatestNewsEntity.DeleteLatestNews(int.Parse(id));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string UpdateLatestNews(string id, string content)
+        {
+            try
+            {
+                var userId = Session["UserId"].ToString();
+
+                LatestNewsEntity.UpdateLatestNews(int.Parse(id), content, userId);
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchLatestNews(string id)
+        {
+            try
+            {
+                var news = LatestNewsEntity.GetNews(int.Parse(id));
+
+                var obj = new
+                {
+                    id = news.LatestNewsId,
+                    content = news.Content
+                };
+
+                return JsonConvert.SerializeObject(obj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchLatestNewsList()
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                var news = LatestNewsEntity.GetLatestNews(int.Parse(schoolId), null);
+
+                var rtnObj = new object[news.Count];
+
+                for (int i = 0; i < news.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        id = news[i].LatestNewsId,
+                        content = news[i].Content,
+                        date = news[i].PostedAt.ToString("m/d/yyyy h:mm:ss tt")
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string CreateLatestNews(string content)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+                var userId = Session["UserId"].ToString();
+
+                LatestNewsEntity.CreateLatestNews(int.Parse(schoolId), content, userId);
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Time Slots
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string DeleteTimeSlot(string id)
+        {
+            try
+            {
+                TimeSlotEntity.DeleteTimeSlot(int.Parse(id));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception)
+            {
+                return JsonConvert.SerializeObject("School Year is currently in use and cannot be deleted.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string UpdateTimeSlot(string id, string start, string end)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                TimeSlotEntity.UpdateTimeSlot(int.Parse(schoolId), TimeSpan.Parse(start), TimeSpan.Parse(end), int.Parse(id));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchTimeSlot(string id)
+        {
+            try
+            {
+                var timeSlot = TimeSlotEntity.GetTimeSlot(int.Parse(id));
+
+                var obj = new
+                {
+                    id = timeSlot.TimeSlotId,
+                    start = DateTime.Today.Add(timeSlot.StartTime).ToString("HH:mm"),
+                    end = DateTime.Today.Add(timeSlot.EndTime).ToString("HH:mm")
+                };
+
+                return JsonConvert.SerializeObject(obj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchTimeSlotList()
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                var timeSlots = TimeSlotEntity.GetTimeSlots(int.Parse(schoolId));
+
+                var rtnObj = new object[timeSlots.Count];
+
+                for (int i = 0; i < timeSlots.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        id = timeSlots[i].TimeSlotId,
+                        start = DateTime.Today.Add(timeSlots[i].StartTime).ToString("HH:mm"),
+                        end = DateTime.Today.Add(timeSlots[i].EndTime).ToString("HH:mm")
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string CreateTimeSlot(string start, string end)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                TimeSlotEntity.CreateTimeSlot(int.Parse(schoolId), TimeSpan.Parse(start), TimeSpan.Parse(end));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region School Year
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string DeleteSchoolYear(string id)
+        {
+            try
+            {
+                SchoolYearEntity.DeleteSchoolYear(int.Parse(id));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception)
+            {
+                return JsonConvert.SerializeObject("School Year is currently in use and cannot be deleted.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string UpdateSchoolYear(string id, string name, string start, string end)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                SchoolYearEntity.UpdateSchoolYear(int.Parse(schoolId), int.Parse(id), name, DateTime.Parse(start), DateTime.Parse(end));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchSchoolYear(string id)
+        {
+            try
+            {
+                var year = SchoolYearEntity.GetSchoolYear(int.Parse(id));
+
+                var obj = new
+                {
+                    name = year.Year,
+                    id = year.SchoolYearId,
+                    start = year.StartDate.ToShortDateString(),
+                    end = year.EndDate.ToShortDateString()
+                };
+
+                return JsonConvert.SerializeObject(obj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchSchoolYearList()
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                var years = SchoolYearEntity.GetSchoolYears(int.Parse(schoolId));
+
+                var rtnObj = new object[years.Count];
+
+                for (int i = 0; i < years.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        name = years[i].Year,
+                        id = years[i].SchoolYearId
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string CreateSchoolYear(string name, string start, string end)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                SchoolYearEntity.CreateSchoolYear(int.Parse(schoolId), name, DateTime.Parse(start), DateTime.Parse(end));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Club
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string DeleteClub(string id)
         {
             try
@@ -136,6 +523,8 @@ namespace SMAC
                 return JsonConvert.SerializeObject(ex.Message);
             }
         }
+
+        #endregion
 
         #region Subject
 
@@ -388,7 +777,7 @@ namespace SMAC
                 }
 
                 UserCredentialEntity.UpdateUserCred(userId, uName, !string.IsNullOrWhiteSpace(nPass) ? nPass : null);
-                UserEntity.UpdateUser(userId, fName, mName, lName, email, phone, gender, null, null, null);
+                UserEntity.UpdateUser(userId, fName, mName, lName, email, phone, gender, null, uName, nPass, null, null, null);
 
                 Session["UserId"] = userId;
                 Session["FirstName"] = fName;

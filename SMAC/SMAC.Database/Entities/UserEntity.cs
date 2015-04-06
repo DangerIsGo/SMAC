@@ -8,20 +8,17 @@ namespace SMAC.Database
 {
     public class UserEntity
     {
-        public static void CreateUser(string Id, string fName, string mName, string lName, string email, string phone, 
-                                        string gender, bool? isActive, DateTime? startDate, DateTime? endDate)
+        public static void CreateUser(string Id, string fName, string mName, string lName, string email, string phone, string gender, bool isActive, string userName, string password, DateTime startDate, DateTime? endDate, string role, int schoolId)
         {
-            CreateEditUser("ADD", Id, fName, mName, lName, email, phone, gender, isActive, startDate, endDate);
+            CreateEditUser("ADD", Id, fName, mName, lName, email, phone, gender, isActive, userName, password, startDate, endDate, role, schoolId);
         }
 
-        public static void UpdateUser(string Id, string fName, string mName, string lName, string email, string phone, 
-                                        string gender, bool? isActive, DateTime? startDate, DateTime? endDate)
+        public static void UpdateUser(string Id, string fName, string mName, string lName, string email, string phone, string gender, bool? isActive, string userName, string password, DateTime? startDate, DateTime? endDate, string role)
         {
-            CreateEditUser("EDIT", Id, fName, mName, lName, email, phone, gender, isActive, startDate, endDate);
+            CreateEditUser("EDIT", Id, fName, mName, lName, email, phone, gender, isActive, userName, password, startDate, endDate, role, null);
         }
 
-        private static void CreateEditUser(string op, string Id, string fName, string mName, string lName, string email, string phone,
-                                        string gender, bool? isActive, DateTime? startDate, DateTime? endDate)
+        private static void CreateEditUser(string op, string Id, string fName, string mName, string lName, string email, string phone, string gender, bool? isActive, string userName, string password, DateTime? startDate, DateTime? endDate, string role, int? schoolId)
         {
             try
             {
@@ -43,14 +40,54 @@ namespace SMAC.Database
                                 LastName = lName,
                                 EmailAddress = !string.IsNullOrWhiteSpace(email) ? email : null,
                                 PhoneNumber = !string.IsNullOrWhiteSpace(phone) ? phone : null,
-                                GenderType = gender,
-                                StartDate = startDate.HasValue ? startDate.Value : DateTime.Now,
+                                Gender = (from a in context.Genders where a.GenderType == gender select a).FirstOrDefault(),
+                                StartDate = startDate.Value,
                                 EndDate = endDate,
-                                IsActive = isActive.HasValue ? isActive.Value : true
+                                IsActive = isActive.Value,
+                                UserCredential = new UserCredential()
+                                {
+                                    Password = UserCredentialEntity.GetSHA256Hash(password),
+                                    UserName = userName
+                                }
                             };
+
+                            if (schoolId.HasValue)
+                            {
+                                usr.Schools.Add((from a in context.Schools where a.SchoolId == schoolId.Value select a).FirstOrDefault());
+                            }
 
                             context.Users.Add(usr);
                             context.SaveChanges();
+
+                            if (role == "admin")
+                            {
+                                Admin newRole = new Admin();
+                                newRole.User = usr;
+                                context.Admins.Add(newRole);
+                                context.SaveChanges();
+                            }
+                            else if (role == "student")
+                            {
+                                Student newRole = new Student();
+                                newRole.User = usr;
+                                context.Students.Add(newRole);
+                                context.SaveChanges();
+
+                            }
+                            else if (role == "staff")
+                            {
+                                Staff newRole = new Staff();
+                                newRole.User = usr;
+                                context.Staffs.Add(newRole);
+                                context.SaveChanges();
+                            }
+                            else if (role == "teacher")
+                            {
+                                Teacher newRole = new Teacher();
+                                newRole.User = usr;
+                                context.Teachers.Add(newRole);
+                                context.SaveChanges();
+                            }
                         }
                     }
                     else if (op.Equals("EDIT"))
@@ -73,6 +110,7 @@ namespace SMAC.Database
                             user.StartDate = startDate.HasValue ? startDate.Value : user.StartDate;
                             user.EndDate = endDate;
                             user.IsActive = isActive.HasValue ? isActive.Value : user.IsActive;
+
                             context.Entry(user).State = System.Data.Entity.EntityState.Modified;
                             context.SaveChanges();
                         }
