@@ -63,19 +63,6 @@ namespace SMAC.Database
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetLatestPrivateMessages_Result>("usp_GetLatestPrivateMessages", userIDParameter);
         }
     
-        public virtual ObjectResult<usp_GetClubSchedule_Result> usp_GetClubSchedule(Nullable<int> schoolId, string clubName)
-        {
-            var schoolIdParameter = schoolId.HasValue ?
-                new ObjectParameter("schoolId", schoolId) :
-                new ObjectParameter("schoolId", typeof(int));
-    
-            var clubNameParameter = clubName != null ?
-                new ObjectParameter("clubName", clubName) :
-                new ObjectParameter("clubName", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetClubSchedule_Result>("usp_GetClubSchedule", schoolIdParameter, clubNameParameter);
-        }
-    
         public virtual ObjectResult<usp_GetUsersInSchool_Result> usp_GetUsersInSchool(Nullable<int> schoolId, string userId)
         {
             var schoolIdParameter = schoolId.HasValue ?
@@ -96,6 +83,15 @@ namespace SMAC.Database
                 new ObjectParameter("sectionId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetSectionThreads_Result>("usp_GetSectionThreads", sectionIdParameter);
+        }
+    
+        public virtual ObjectResult<usp_GetClubSchedule_Result> usp_GetClubSchedule(Nullable<int> clubId)
+        {
+            var clubIdParameter = clubId.HasValue ?
+                new ObjectParameter("clubId", clubId) :
+                new ObjectParameter("clubId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetClubSchedule_Result>("usp_GetClubSchedule", clubIdParameter);
         }
     }
 }

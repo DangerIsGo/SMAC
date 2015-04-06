@@ -8,7 +8,7 @@ namespace SMAC.Database
 {
     public class ClubScheduleEntity
     {
-        public static void CreateSchedule(string clubName, int schoolId, int tsId, string day)
+        public static void CreateSchedule(int clubId, int tsId, string day)
         {
             try
             {
@@ -16,9 +16,9 @@ namespace SMAC.Database
                 {
                     ClubSchedule sch = new ClubSchedule()
                     {
-                        Club = ClubEntity.GetClub(clubName, schoolId),
+                        Club = (from a in context.Clubs where a.ClubId == clubId select a).FirstOrDefault(),
                         DayValue = day,
-                        TimeSlot = TimeSlotEntity.GetTimeSlot(tsId)
+                        TimeSlot = (from a in context.TimeSlots where a.TimeSlotId == tsId select a).FirstOrDefault()
                     };
 
                     context.ClubSchedules.Add(sch);
@@ -31,14 +31,14 @@ namespace SMAC.Database
             }
         }
 
-        public static void DeleteSchedule(string clubName, int schoolId, int tsId, string day)
+        public static void DeleteSchedule(int clubId, int tsId, string day)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
                     var sch = (from a in context.ClubSchedules
-                               where a.ClubName == clubName && a.SchoolId == schoolId && a.TimeSlotId == tsId && a.DayValue == day
+                               where a.ClubId == clubId && a.TimeSlotId == tsId && a.DayValue == day
                                select a).FirstOrDefault();
 
                     if (sch != null)
@@ -54,13 +54,13 @@ namespace SMAC.Database
             }
         }
 
-        public static List<usp_GetClubSchedule_Result> GetClubSchedule(string clubName, int schoolId)
+        public static List<usp_GetClubSchedule_Result> GetClubSchedule(int clubId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    return context.usp_GetClubSchedule(schoolId, clubName).ToList();
+                    return context.usp_GetClubSchedule(clubId).ToList();
                 }
             }
             catch (Exception ex)
@@ -76,7 +76,8 @@ namespace SMAC.Database
                 using (SmacEntities context = new SmacEntities())
                 {
                     return (from a in context.ClubSchedules
-                            where a.SchoolId == schoolId && a.DayValue == day
+                            where a.DayValue == day
+                            && a.Club.SchoolId == schoolId
                             select a).ToList();
                 }
             }

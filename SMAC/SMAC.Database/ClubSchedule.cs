@@ -14,8 +14,7 @@ namespace SMAC.Database
     
     public partial class ClubSchedule
     {
-        public string ClubName { get; set; }
-        public int SchoolId { get; set; }
+        public int ClubId { get; set; }
         public int TimeSlotId { get; set; }
         public string DayValue { get; set; }
         public int SchoolYearId { get; set; }

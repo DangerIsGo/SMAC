@@ -51,7 +51,7 @@
             $('.clubBlock').show();
         }
 
-        function LoadClubSchedule(clubName) {
+        function LoadClubSchedule(clubId) {
             $('#clubScheduleSub').empty();
 
             var hdnVal = $('#clubScheduleHdn').val();
@@ -59,7 +59,7 @@
             var schedules = JSON.parse(hdnVal);
 
             $.each(schedules, function (i, el) {
-                if (el.name == clubName) {
+                if (el.id == clubId) {
 
                     if (el.schedule.length == 0) {
                         $('#clubScheduleSub').append("This club does not have a schedule yet.");
@@ -96,7 +96,7 @@
     <div id="clubList">
         <asp:ListView runat="server" ID="clubListView">
             <ItemTemplate>
-                <div class="clubBlock" data-name="<%#Eval("DataName")%>">
+                <div class="clubBlock" data-name="<%#Eval("ClubId")%>">
                     <div class="clubName"><%#Eval("ClubName")%></div>
                     <div class="clubDesc"><%#Eval("ClubDesc")%></div>
                 </div>

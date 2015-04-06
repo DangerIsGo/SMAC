@@ -29,13 +29,13 @@ namespace SMAC.Database
             }
         }
 
-        public static void DeleteEnrollment(string sId, string clubName, int schoolId)
+        public static void DeleteEnrollment(string userId, int clubId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    var enroll = GetEnrollment(clubName, schoolId, sId);
+                    var enroll = GetEnrollment(clubId, userId);
                     if (enroll != null)
                     {
                         context.ClubEnrollments.Remove(enroll);
@@ -49,13 +49,13 @@ namespace SMAC.Database
             }
         }
 
-        public static ClubEnrollment GetEnrollment(string clubName, int schoolId, string sId)
+        public static ClubEnrollment GetEnrollment(int clubId, string sId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    return (from a in context.ClubEnrollments where a.SchoolId == schoolId && a.ClubName == clubName && a.UserId == sId select a).FirstOrDefault();
+                    return (from a in context.ClubEnrollments where a.ClubId == clubId && a.UserId == sId select a).FirstOrDefault();
                 }
             }
             catch (Exception ex)

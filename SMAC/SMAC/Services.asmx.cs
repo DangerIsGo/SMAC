@@ -34,6 +34,22 @@ namespace SMAC
             }
         }
 
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string DeleteClub(string id)
+        {
+            try
+            {
+                ClubEntity.DeleteClub(int.Parse(id));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string CreateClub(string name, string description)
@@ -51,6 +67,77 @@ namespace SMAC
                 return JsonConvert.SerializeObject(ex.Message);
             }
         }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchClubList()
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                var clubs = ClubEntity.GetAllClubs(int.Parse(schoolId));
+
+                var rtnObj = new object[clubs.Count];
+
+                for (int i = 0; i < clubs.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        name = clubs[i].ClubName,
+                        id = clubs[i].ClubId
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchClub(string id)
+        {
+            try
+            {
+                var club = ClubEntity.GetClub(int.Parse(id));
+
+                var obj = new
+                {
+                    name = club.ClubName,
+                    desc = club.Description
+                };
+
+                return JsonConvert.SerializeObject(obj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string UpdateClub(string id, string name, string description)
+        {
+            try
+            {
+                ClubEntity.UpdateClub(name, description, int.Parse(id));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        #region Subject
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
@@ -156,6 +243,8 @@ namespace SMAC
                 return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
             }
         }
+
+        #endregion
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]

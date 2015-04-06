@@ -14,12 +14,11 @@ namespace SMAC.Database
     
     public partial class ClubEnrollment
     {
-        public string ClubName { get; set; }
-        public int SchoolId { get; set; }
+        public int ClubId { get; set; }
         public string UserId { get; set; }
         public bool IsLeader { get; set; }
     
-        public virtual User User { get; set; }
         public virtual Club Club { get; set; }
+        public virtual User User { get; set; }
     }
 }

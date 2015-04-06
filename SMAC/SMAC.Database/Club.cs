@@ -20,6 +20,7 @@ namespace SMAC.Database
             this.ClubSchedules = new HashSet<ClubSchedule>();
         }
     
+        public int ClubId { get; set; }
         public string ClubName { get; set; }
         public int SchoolId { get; set; }
         public string Description { get; set; }

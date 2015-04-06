@@ -33,7 +33,7 @@ namespace SMAC
 
                 for (int i = 0; i < clubs.Count; ++i)
                 {
-                    var scheds = ClubScheduleEntity.GetClubSchedule(clubs[i].ClubName, schoolId);
+                    var scheds = ClubScheduleEntity.GetClubSchedule(clubs[i].ClubId);
 
                     scheds.Sort(new DayOfWeekComparer());
 
@@ -52,6 +52,7 @@ namespace SMAC
 
                     var Cobj = new
                     {
+                        id = clubs[i].ClubId,
                         name = clubs[i].ClubName,
                         desc = clubs[i].Description,
                         schedule = schdObj
@@ -62,7 +63,7 @@ namespace SMAC
 
                 this.clubScheduleHdn.Value = JsonConvert.SerializeObject(clubObj);
 
-                var list = new List<string> { "DataName", "ClubName", "ClubDesc" };
+                var list = new List<string> { "ClubId", "ClubName", "ClubDesc" };
 
                 DataTable table = new DataTable();
 
@@ -72,7 +73,7 @@ namespace SMAC
                 //Now add some rows(which will be repeated in the ItemTemplate)
                 foreach (var club in clubs)
                 {
-                    table.Rows.Add(club.ClubName, club.ClubName, club.Description);
+                    table.Rows.Add(club.ClubId.ToString(), club.ClubName, club.Description);
                 }
 
                 clubListView.DataSource = table;

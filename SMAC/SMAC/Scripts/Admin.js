@@ -26,6 +26,8 @@ function ShowEntityTypes() {
         $('#acceptAction').attr('disabled', 'disabled');
         $('#entityTypeGroup').show();
 
+        list = undefined;
+
         $('#entityGroup').hide();
         $('#entityGroup').empty();
 
@@ -249,6 +251,7 @@ function PopulateEntityList() {
         }
         else if (eType == 2) {
             //Club
+            GetClubList(DrawClubSelect);
 
         }
         else if (eType == 3) {
@@ -417,7 +420,7 @@ function DrawClubForm() {
     var lblDesc = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'clubDescLabel').text('Club Description');
     var descCont = $('<div>').addClass('col-md-4');
     var desc = $('<input>').attr('type', 'text').attr('id', 'clubDescription').addClass('form-control').attr('placeholder', 'Optional');
-    if (list != undefined) { name.val(club.description); }
+    if (list != undefined) { desc.val(club.desc); }
     desc.appendTo(descCont);
 
     var btnCont = $('<div>').addClass('col-md-1');
@@ -446,13 +449,59 @@ function DrawClubForm() {
     form.show();
 }
 
+function DrawClubSelect() {
+
+    var selectGroup = $('<div>').addClass('form-group');
+
+    var lbl = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'clubSelectLabel').text('Select a Club');
+    var subjCont = $('<div>').addClass('col-md-3');
+    var clubList = $('<select>').addClass('form-control').attr('id', 'clubSelect').on('change', function () {
+        if ($('#clubSelect option:checked').val() != '-') {
+            $('#acceptClub').removeAttr('disabled');
+        }
+        else {
+            $('#acceptClub').attr('disabled', 'disabled');
+        }
+    });
+
+    clubList.append('<option value="-">-----------------------</option>');
+
+    $.each(list, function (i, el) {
+        clubList.append('<option value="' + el.id + '">' + el.name + '</option>')
+    });
+
+    list = undefined;
+
+    clubList.appendTo(subjCont);
+    var selCont = $('<div>').addClass('col-md-1');
+    var select = $('<input>').attr('type', 'button').attr('id', 'acceptClub').attr('disabled', 'disabled').addClass('btn btn-primary').click(SubmitClub);
+    if ($('#entityActionList option:checked').val() != 'delete') { select.val('OK') } else { select.val('Delete') }
+    select.appendTo(selCont);
+    var clearer = $('<div>').addClass('clearer');
+    var statusCont = $('<div>');
+    var status = $('<label>').addClass('form-control admin').attr('id', 'clubStatus');
+    status.appendTo(statusCont);
+
+    selectGroup.append(lbl);
+    selectGroup.append(subjCont);
+    selectGroup.append(selCont);
+    selectGroup.append(clearer);
+
+    if ($('#entityActionList option:checked').val() == 'delete') {
+        selectGroup.append(statusCont);
+    }
+
+    $('#entitySelectGroup').append(selectGroup);
+    $('#entitySelectGroup').show();
+}
+
 function CreateEditClub() {
     if ($('#clubName').val() != '') {
         if ($('#createClubButton').val() == 'Create') {
             CreateClub($('#clubName').val(), $('#clubDescription').val(), CreateClubCallback);
         }
         else {
-            UpdateClub($('#clubSelect option:checked').val(), $('#clubName').val(), UpdateClubCallback);
+            UpdateClub($('#clubSelect option:checked').val(), $('#clubName').val(), $('#clubDescription').val(), UpdateClubCallback);
         }
     }
 }
@@ -515,6 +564,69 @@ function CreateClub(name, desc, callback) {
         type: "POST",
         url: "Services.asmx/CreateClub",
         data: "{'name':'" + name + "', 'description':'"+desc+"'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            disposition = json;
+            callback();
+        }
+    });
+}
+
+function GetClubList(callback) {
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchClubList",
+        data: "{}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+            list = json;
+            callback();
+        }
+    });
+}
+
+function GetClub(id, callback) {
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchClub",
+        data: "{'id':'" + id + "'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            list = json;
+            callback();
+        }
+    });
+}
+
+function UpdateClub(id, name, description, callback) {
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/UpdateClub",
+        data: "{'id':'" + id + "', 'name':'" + name + "', 'description':'"+description+"'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            disposition = json;
+            callback();
+        }
+    });
+}
+
+function DeleteClub(id, callback) {
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/DeleteClub",
+        data: "{'id':'" + id + "'}",
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
             var json = JSON.parse(data.d);
