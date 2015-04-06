@@ -127,7 +127,14 @@ namespace SMAC.Database
         {
             using (SmacEntities context = new SmacEntities())
             {
-                return (from a in context.Users where a.UserId == Id select a).Include(t=>t.Schools).FirstOrDefault();
+                return (from a in context.Users where a.UserId == Id select a)
+                    .Include(t=>t.Schools)
+                    .Include(t=>t.Admin)
+                    .Include(t=>t.Student)
+                    .Include(t=>t.UserCredential)
+                    .Include(t=>t.Staff)
+                    .Include(t=>t.Teacher)
+                    .FirstOrDefault();
             }
         }
 

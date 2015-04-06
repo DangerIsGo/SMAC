@@ -155,7 +155,7 @@ function PopulateEntityList() {
         }
         else if (eType == 13) {
             //User
-
+            GetUserList(DrawUserSelect);
         }
     }
 }
@@ -1424,7 +1424,51 @@ function GetLatestNews(id, callback) {
 
 
 
+function DrawUserSelect() {
 
+    var selectGroup = $('<div>').addClass('form-group');
+
+    var lbl = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'userSelectLabel').text('Select a User');
+    var subjCont = $('<div>').addClass('col-md-3');
+    var userList = $('<select>').addClass('form-control').attr('id', 'userSelect').on('change', function () {
+        if ($('#userSelect option:checked').val() != '-') {
+            $('#acceptUser').removeAttr('disabled');
+        }
+        else {
+            $('#acceptUser').attr('disabled', 'disabled');
+        }
+    });
+
+    userList.append('<option value="-">-----------------------</option>');
+
+    $.each(list, function (i, el) {
+        userList.append('<option value="' + el.id + '">' + el.id + ' - ' + el.fName + ' ' + el.lName + '</option>')
+    });
+
+    list = undefined;
+
+    userList.appendTo(subjCont);
+    var selCont = $('<div>').addClass('col-md-1');
+    var select = $('<input>').attr('type', 'button').attr('id', 'acceptUser').attr('disabled', 'disabled').addClass('btn btn-primary').click(SubmitUser);
+    if ($('#entityActionList option:checked').val() != 'delete') { select.val('OK') } else { select.val('Delete') }
+    select.appendTo(selCont);
+    var clearer = $('<div>').addClass('clearer');
+    var statusCont = $('<div>');
+    var status = $('<label>').addClass('form-control admin').attr('id', 'userStatus');
+    status.appendTo(statusCont);
+
+    selectGroup.append(lbl);
+    selectGroup.append(subjCont);
+    selectGroup.append(selCont);
+    selectGroup.append(clearer);
+
+    if ($('#entityActionList option:checked').val() == 'delete') {
+        selectGroup.append(statusCont);
+    }
+
+    $('#entitySelectGroup').append(selectGroup);
+    $('#entitySelectGroup').show();
+}
 
 function DrawUserForm() {
     var form = $('#entityGroup');
@@ -1498,30 +1542,30 @@ function DrawUserForm() {
 
     //Controls
     var id = $('<input>').attr('type', 'text').attr('id', 'userId').addClass('form-control');
-    if (list != undefined) { id.val(name.id); }
+    if (user != undefined) { id.val(user.id); }
     var start = $('<input>').attr('type', 'text').attr('id', 'startDate').addClass('form-control');
     start.datepicker();
-    if (list != undefined) { start.val(name.start); }
+    if (user != undefined) { start.val(user.start); }
     var end = $('<input>').attr('type', 'text').attr('id', 'endDate').addClass('form-control');
     end.datepicker();
-    if (list != undefined) { end.val(name.end); }
+    if (user != undefined) { end.val(user.end); }
 
 
     var fName = $('<input>').attr('type', 'text').attr('id', 'firstName').addClass('form-control');
-    if (list != undefined) { fName.val(name.first); }
+    if (user != undefined) { fName.val(user.first); }
     var mName = $('<input>').attr('type', 'text').attr('id', 'middleName').addClass('form-control');
-    if (list != undefined) { mName.val(name.middle); }
+    if (user != undefined) { mName.val(user.middle); }
     var lName = $('<input>').attr('type', 'text').attr('id', 'lastName').addClass('form-control');
-    if (list != undefined) { lName.val(name.last); }
+    if (user != undefined) { lName.val(user.last); }
 
 
     var email = $('<input>').attr('type', 'text').attr('id', 'emailAddress').addClass('form-control');
-    if (list != undefined) { email.val(name.email); }
+    if (user != undefined) { email.val(user.email); }
 
 
     var phone = $('<input>').attr('type', 'text').attr('id', 'phoneNumber').addClass('form-control');
     phone.mask("(999) 999-9999");
-    if (list != undefined) { phone.val(name.phone); }
+    if (user != undefined) { phone.val(user.phone); }
     var gender = $('<select>').attr('id', 'genderList').addClass('form-control');
     var male = $('<option>').val('male').text('Male');
     var female = $('<option>').val('female').text('Female');
@@ -1529,22 +1573,26 @@ function DrawUserForm() {
     gender.append(blankGender);
     gender.append(female);
     gender.append(male);
-    if (list != undefined) { gender.val(name.gender); }
+    if (user != undefined) { gender.val(user.gender); }
     var active = $('<input>').attr('type', 'checkbox').attr('id', 'isActive').addClass('form-control');
-    if (list != undefined) { if (name.active) { active.attr('checked', 'checked'); } }
+    if (user != undefined) { if (user.active) { active.attr('checked', 'checked'); } }
 
 
     var uName = $('<input>').attr('type', 'text').attr('id', 'userName').addClass('form-control');
-    if (list != undefined) { uName.val(name.username); }
+    if (user != undefined) { uName.val(user.username); }
     var pass = $('<input>').attr('type', 'text').attr('id', 'password').addClass('form-control');
-    if (list != undefined) { pass.val(name.password); }
-    var role = $('<select>').attr('id', 'roleList').addClass('form-control');
-    var blankRole = $('<option value="-">----------</option>');
-    var adminRole = $('<option value="admin">Admin</option>');
-    var staffRole = $('<option value="staff">Staff</option>');
-    var studentRole = $('<option value="student">Student</option>');
-    var teacherRole = $('<option value="teacher">Teacher</option>');
-    if (list != undefined) { role.val(name.role); }
+    var roleList = $('<select>').attr('id', 'roleList').addClass('form-control');
+    var blankRole = $('<option>').val('-').text('----------');
+    var adminRole = $('<option>').val('admin').text('Admin');
+    var staffRole = $('<option>').val('staff').text('Staff');
+    var studentRole = $('<option>').val('student').text('Student');
+    var teacherRole = $('<option>').val('teacher').text('Teacher');
+    blankRole.appendTo(roleList);
+    adminRole.appendTo(roleList);
+    staffRole.appendTo(roleList);
+    studentRole.appendTo(roleList);
+    teacherRole.appendTo(roleList);
+    if (user != undefined) { roleList.val(user.role); }
 
     var btnCont = $('<div>').addClass('col-md-12');
     var btn = $('<input>').attr('type', 'button').attr('id', 'createUserButton').attr('name', 'createUserButton').addClass('btn btn-success').click(CreateEditUser);
@@ -1555,11 +1603,6 @@ function DrawUserForm() {
     var status = $('<label>').addClass('form-control admin').attr('id', 'userStatus');
     status.appendTo(statusCont);
 
-    blankRole.appendTo(role);
-    adminRole.appendTo(role);
-    staffRole.appendTo(role);
-    studentRole.appendTo(role);
-    teacherRole.appendTo(role);
 
     fNameCont.append(fName);
     mNameCont.append(mName);
@@ -1577,7 +1620,7 @@ function DrawUserForm() {
 
     uNameCont.append(uName);
     passCont.append(pass);
-    roleCont.append(role);
+    roleCont.append(roleList);
 
     group1.append(idLbl);
     group1.append(idCont);
@@ -1638,6 +1681,17 @@ function CreateEditUser() {
     }
 }
 
+function SubmitUser() {
+    if ($('#userSelect option:checked').val() != '-') {
+        if ($('#entityActionList option:checked').val() == 'delete') {
+            DeleteUser($('#userSelect option:checked').val(), DeleteUserCallback);
+        }
+        else {
+            GetUser($('#userSelect option:checked').val(), DrawUserForm);
+        }
+    }
+}
+
 function DeleteUserCallback() {
     if (disposition == 'success') {
         $('#userStatus').text('Success!  Your user was successfully deleted');
@@ -1691,6 +1745,36 @@ function CreateUser(id, fn, mn, ln, em, ph, gender, active, start, end, un, pw, 
             var json = JSON.parse(data.d);
 
             disposition = json;
+            callback();
+        }
+    });
+}
+
+function GetUserList(callback) {
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchUserList",
+        data: "{}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+            list = json;
+            callback();
+        }
+    });
+}
+
+function GetUser(id, callback) {
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchUser",
+        data: "{'id':'" + id + "'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            list = json;
             callback();
         }
     });

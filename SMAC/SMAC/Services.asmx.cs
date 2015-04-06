@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Script.Services;
-using System.Web.Services;
+﻿using Newtonsoft.Json;
 using SMAC.Database;
-using Newtonsoft.Json;
-using System.Web.SessionState;
-using System.Text;
+using System;
+using System.Web.Script.Services;
 using System.Web.Security;
+using System.Web.Services;
 
 namespace SMAC
 {
@@ -31,6 +26,70 @@ namespace SMAC
             }
             catch (Exception)
             {
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchUser(string id)
+        {
+            try
+            {
+                var user = UserEntity.GetUser(id);
+
+                var obj = new
+                {
+                    id = user.UserId,
+                    start = user.StartDate.ToShortDateString(),
+                    end = user.EndDate.HasValue ? user.EndDate.Value.ToShortDateString() : string.Empty,
+                    first = user.FirstName,
+                    middle = user.MiddleName,
+                    last = user.LastName,
+                    email = user.EmailAddress,
+                    phone = user.PhoneNumber,
+                    gender = user.GenderType.ToLower(),
+                    active = user.IsActive.ToString(),
+                    username = user.UserCredential.UserName,
+                    role = user.Admin != null ? "admin" : user.Staff != null ? "staff" : user.Student != null ? "student" : user.Teacher != null ? "teacher" : ""
+                };
+
+                return JsonConvert.SerializeObject(obj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchUserList()
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                var users = UserEntity.GetAllUsersInSchool(int.Parse(schoolId), string.Empty);
+
+                var rtnObj = new object[users.Count];
+
+                for (int i = 0; i < users.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        id = users[i].UserId,
+                        fName = users[i].FirstName,
+                        lName = users[i].LastName
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
             }
         }
 
