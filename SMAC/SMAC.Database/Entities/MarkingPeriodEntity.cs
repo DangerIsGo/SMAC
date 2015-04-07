@@ -7,14 +7,14 @@ namespace SMAC.Database
 {
     public class MarkingPeriodEntity
     {
-        public static void CreateMarkingPeriod(string period, bool fullYear, int schoolYearId)
+        public static void CreateMarkingPeriod(string period, bool fullYear, int schoolYearId, DateTime start, DateTime end)
         {
-            CreateEditMarkingPeriod("ADD", null, period, fullYear, schoolYearId);
+            CreateEditMarkingPeriod("ADD", null, period, fullYear, schoolYearId, start, end);
         }
 
-        public static void UpdateMarkingPeriod(int markingPeriodId, string period, bool fullYear, int schoolYearId)
+        public static void UpdateMarkingPeriod(int markingPeriodId, string period, bool fullYear, int schoolYearId, DateTime start, DateTime end)
         {
-            CreateEditMarkingPeriod("EDIT", markingPeriodId, period, fullYear, schoolYearId);
+            CreateEditMarkingPeriod("EDIT", markingPeriodId, period, fullYear, schoolYearId, start, end);
         }
 
         public static MarkingPeriod GetMarkingPeriod(int markingPeriodId)
@@ -34,18 +34,15 @@ namespace SMAC.Database
             }
         }
 
-        public static MarkingPeriod GetMarkingPeriod(string period, bool fullYear, int schoolYearId)
+        public static MarkingPeriod GetMarkingPeriod(string period, bool fullYear, int schoolYearId, SmacEntities context)
         {
             try
             {
-                using (SmacEntities context = new SmacEntities())
-                {
-                    return (from a in context.MarkingPeriods
-                            where a.Period == period &&
-                            a.FullYear == fullYear &&
-                            a.SchoolYearId == schoolYearId
-                            select a).FirstOrDefault();
-                }
+                return (from a in context.MarkingPeriods
+                        where a.Period == period &&
+                        a.FullYear == fullYear &&
+                        a.SchoolYearId == schoolYearId
+                        select a).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -68,7 +65,7 @@ namespace SMAC.Database
             }
         }
 
-        private static void CreateEditMarkingPeriod(string op, int? markingPeriodId, string period, bool fullYear, int schoolYearId)
+        private static void CreateEditMarkingPeriod(string op, int? markingPeriodId, string period, bool fullYear, int schoolYearId, DateTime start, DateTime end)
         {
             try
             {
@@ -76,42 +73,45 @@ namespace SMAC.Database
                 {
                     if (op.Equals("ADD"))
                     {
-                        if (GetMarkingPeriod(period, fullYear, schoolYearId) != null)
+                        if (GetMarkingPeriod(period, fullYear, schoolYearId, context) != null)
                         {
                             throw new Exception("Marking period was not created.  Marking period already exists for this school year.");
                         }
-                        else
-                        {
-                            MarkingPeriod MarkingPeriod = new MarkingPeriod()
-                            {
-                                SchoolYear = SchoolYearEntity.GetSchoolYear(schoolYearId),
-                                Period = fullYear ? null : period,
-                                FullYear = fullYear
-                            };
 
-                            context.MarkingPeriods.Add(MarkingPeriod);
-                            context.SaveChanges();
-                        }
+                        MarkingPeriod MarkingPeriod = new MarkingPeriod()
+                        {
+                            SchoolYear = (from a in context.SchoolYears where a.SchoolYearId == schoolYearId select a).FirstOrDefault(),
+                            Period = fullYear ? null : period,
+                            FullYear = fullYear,
+                            StartDate = start,
+                            EndDate = end
+                        };
+
+                        context.MarkingPeriods.Add(MarkingPeriod);
+                        context.SaveChanges();
                     }
                     else if (op.Equals("EDIT"))
                     {
-                        if (GetMarkingPeriod(markingPeriodId.Value) == null)
+                        var mPeriod = (from a in context.MarkingPeriods where a.MarkingPeriodId == markingPeriodId.Value select a).FirstOrDefault();
+
+                        if (mPeriod == null)
                         {
                             throw new Exception("Marking period was not updated.  Marking period not found.");
                         }
-                        else if (GetMarkingPeriod(period, fullYear, schoolYearId) != null)
+                        
+                        if (GetMarkingPeriod(period, fullYear, schoolYearId, context) != null)
                         {
                             throw new Exception("Marking period was not updated.  New marking period values already exist.");
                         }
-                        else
-                        {
-                            var mPeriod = GetMarkingPeriod(markingPeriodId.Value);
 
-                            mPeriod.Period = period;
-                            mPeriod.FullYear = fullYear;
-                            context.Entry(mPeriod).State = System.Data.Entity.EntityState.Modified;
-                            context.SaveChanges();
-                        }
+                        mPeriod.Period = fullYear ? null : period;
+                        mPeriod.FullYear = fullYear;
+                        mPeriod.StartDate = start;
+                        mPeriod.EndDate = end;
+                        mPeriod.SchoolYear = (from a in context.SchoolYears where a.SchoolYearId == schoolYearId select a).FirstOrDefault();
+
+                        context.Entry(mPeriod).State = System.Data.Entity.EntityState.Modified;
+                        context.SaveChanges();
                     }
                 }
             }

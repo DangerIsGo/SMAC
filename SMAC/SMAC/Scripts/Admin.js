@@ -1,4 +1,7 @@
 ﻿var list;
+var subjects;
+var classes;
+var sections;
 var disposition;
 
 //Enables the Accept action button when item is selected
@@ -51,7 +54,7 @@ function PopulateEntityList() {
 
         if (eType == 1) {
             //Class
-
+            DrawClassForm();
         }
         else if (eType == 2) {
             //Club
@@ -66,7 +69,7 @@ function PopulateEntityList() {
         }
         else if (eType == 5) {
             //Marking Period
-
+            DrawMarkingPeriodForm();
         }
         else if (eType == 6) {
             //News 
@@ -107,7 +110,7 @@ function PopulateEntityList() {
 
         if (eType == 1) {
             //Class
-
+            GetSubjectList(DrawClassSubjectSelect);
         }
         else if (eType == 2) {
             //Club
@@ -284,6 +287,8 @@ function DeleteSubjectRepopulate() {
     $.each(list, function (i, el) {
         subjectList.append('<option value="' + el.id + '">' + el.name + '</option>')
     });
+
+    $('#acceptSubject').attr('disabled', 'disabled');
 }
 
 function UpdateSubjectCallback() {
@@ -541,6 +546,8 @@ function DeleteClubRepopulate() {
     $.each(list, function (i, el) {
         clubList.append('<option value="' + el.id + '">' + el.name + '</option>')
     });
+
+    $('#acceptClub').attr('disabled', 'disabled');
 }
 
 function UpdateClubCallback() {
@@ -844,6 +851,8 @@ function DeleteSchoolYearRepopulate() {
     $.each(list, function (i, el) {
         schoolYearList.append('<option value="' + el.id + '">' + el.name + '</option>')
     });
+
+    $('#acceptSchoolYear').attr('disabled', 'disabled');
 }
 
 
@@ -957,7 +966,7 @@ function DrawTimeSlotSelect() {
     timeSlotList.append('<option value="-">-----------------------</option>');
 
     $.each(list, function (i, el) {
-        timeSlotList.append('<option value="' + el.id + '">' + el.start + ' - ' + el.end + '</option>')
+        timeSlotList.append('<option value="' + el.id + '">' + el.start + ' - ' + el.end + '</option>');
     });
 
     list = undefined;
@@ -1099,6 +1108,19 @@ function DeleteTimeSlotCallback() {
     else {
         $('#timeSlotStatus').text(disposition);
     }
+}
+
+function DeleteTimeSlotRepopulate() {
+    var timeSlotList = $('#timeSlotSelect');
+    timeSlotList.empty();
+
+    timeSlotList.append('<option value="-">-----------------------</option>');
+
+    $.each(list, function (i, el) {
+        timeSlotList.append('<option value="' + el.id + '">' + el.start + ' - ' + el.end + '</option>');
+    });
+
+    $('#acceptTimeSlot').attr('disabled', 'disabled');
 }
 
 
@@ -1321,6 +1343,8 @@ function DeleteLatestNewsRepopulate() {
     $.each(list, function (i, el) {
         latestNewsList.append('<option value="' + el.id + '">' + el.date + ' - ' + el.content + '</option>')
     });
+
+    $('#acceptLatestNews').attr('disabled', 'disabled');
 }
 
 function UpdateLatestNewsCallback() {
@@ -1675,8 +1699,8 @@ function CreateEditUser() {
             $('#startDate').val(), $('#endDate').val(), $('#userName').val(), $('#password').val(), $('#roleList option:checked').val(), CreateUserCallback);
     }
     else {
-        UpdateLatestNews($('#userSelect option:checked').val(), $('#firstName').val(), $('#middleName').val(), $('#lastName').val(),
-            $('#emailAddress').val(), $('#phoneNumber').val(), $('#genderList option:checked').val(), $('#isActive').attr('checked'),
+        UpdateUser($('#userSelect option:checked').val(), $('#userId').val(), $('#firstName').val(), $('#middleName').val(), $('#lastName').val(),
+            $('#emailAddress').val(), $('#phoneNumber').val(), $('#genderList option:checked').val(), $('#isActive').is(':checked'),
             $('#startDate').val(), $('#endDate').val(), $('#userName').val(), $('#password').val(), $('#roleList option:checked').val(), UpdateUserCallback);
     }
 }
@@ -1710,8 +1734,10 @@ function DeleteUserRepopulate() {
     userList.append('<option value="-">-----------------------</option>');
 
     $.each(list, function (i, el) {
-        userList.append('<option value="' + el.id + '">' + el.date + ' - ' + el.content + '</option>')
+        userList.append('<option value="' + el.id + '">' + el.id + ' - ' + el.fName + ' ' + el.lName + '</option>')
     });
+
+    $('#acceptUser').attr('disabled', 'disabled');
 }
 
 function UpdateUserCallback() {
@@ -1738,6 +1764,24 @@ function CreateUser(id, fn, mn, ln, em, ph, gender, active, start, end, un, pw, 
         type: "POST",
         url: "Services.asmx/CreateUser",
         data: "{'id':'" + id + "', 'fn':'" + fn + "', 'mn':'" + mn + "', 'ln':'" + ln + "', 'em':'" + em +
+            "', 'pn':'" + ph + "', 'gender':'" + gender + "', 'start':'" + start + "', 'end':'" + end +
+            "', 'act':'" + active + "', 'un':'" + un + "', 'pw':'" + pw + "', 'role':'" + role + "'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            disposition = json;
+            callback();
+        }
+    });
+}
+
+function UpdateUser(id, newId, fn, mn, ln, em, ph, gender, active, start, end, un, pw, role, callback) {
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/UpdateUser",
+        data: "{'id':'" + id + "', 'newId':'" + newId + "', 'fn':'" + fn + "', 'mn':'" + mn + "', 'ln':'" + ln + "', 'em':'" + em +
             "', 'pn':'" + ph + "', 'gender':'" + gender + "', 'start':'" + start + "', 'end':'" + end +
             "', 'act':'" + active + "', 'un':'" + un + "', 'pw':'" + pw + "', 'role':'" + role + "'}",
         contentType: "application/json; charset=UTF-8",
@@ -1778,4 +1822,537 @@ function GetUser(id, callback) {
             callback();
         }
     });
+}
+
+function DeleteUser(id, callback) {
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/DeleteUser",
+        data: "{'id':'" + id + "'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            disposition = json;
+            callback();
+        }
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function DrawClassSubjectSelect() {
+
+    var selectGroup = $('<div>').addClass('form-group');
+
+    var lbl = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'subjectSelectLabel').text('Select a Subject');
+    var subjCont = $('<div>').addClass('col-md-3');
+    var subjectList = $('<select>').addClass('form-control').attr('id', 'subjectSelectSearch').on('change', DrawClassSelect);
+
+    subjectList.append('<option value="-">-----------------------</option>');
+
+    $.each(list, function (i, el) {
+        subjectList.append('<option value="' + el.id + '">' + el.name + '</option>')
+    });
+
+    list = undefined;
+
+    var clearer = $('<div>').addClass('clearer');
+
+    subjCont.append(subjectList);
+    
+    selectGroup.append(lbl);
+    selectGroup.append(subjCont);
+    selectGroup.append(clearer);
+
+    $('#entitySelectGroup').append(selectGroup);
+    $('#entitySelectGroup').show();
+}
+
+function DrawClassSelect() {
+    if ($('#subjectSelectSearch option:checked').val() != '-') {
+        GetClassList($('#subjectSelectSearch option:checked').val(), DrawClassSelectCallback);
+    }
+}
+
+function DrawClassSelectCallback() {
+
+    var selectGroup = $('<div>').addClass('form-group');
+
+    $($($('#classSelect').parent()).parent()).remove();
+
+    var lbl = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'subjectSelectLabel').text('Select a Class');
+    var classCont = $('<div>').addClass('col-md-3');
+    var classList = $('<select>').addClass('form-control').attr('id', 'classSelect').on('change', function () {
+        if ($('#classSelect option:checked').val() != '') {
+            $('#acceptClass').removeAttr('disabled');
+        }
+        else {
+            $('#acceptClass').attr('disabled', 'disabled');
+        }
+    });
+
+    classList.append('<option value="-">-----------------------</option>');
+
+    $.each(list, function (i, el) {
+        classList.append('<option value="' + el.id + '">' + el.name + '</option>')
+    });
+
+    list = undefined;
+
+    var clearer1 = $('<div>').addClass('clearer');
+
+    var selCont = $('<div>').addClass('col-md-1');
+    var select = $('<input>').attr('type', 'button').attr('id', 'acceptClass').attr('disabled', 'disabled').addClass('btn btn-primary').click(SubmitClass);
+    if ($('#entityActionList option:checked').val() != 'delete') { select.val('OK') } else { select.val('Delete') }
+    select.appendTo(selCont);
+
+    var clearer2 = $('<div>').addClass('clearer');
+    var statusCont = $('<div>').addClass('col-md-12');
+    var status = $('<label>').addClass('form-control admin').attr('id', 'classStatus');
+    status.appendTo(statusCont);
+
+    classCont.append(classList);
+
+    selectGroup.append(lbl);
+    selectGroup.append(classCont);
+    selectGroup.append(selCont);
+    selectGroup.append(clearer1);
+
+    if ($('#entityActionList option:checked').val() == 'delete') {
+        selectGroup.append(statusCont);
+    }
+
+    $('#entitySelectGroup').append(selectGroup);
+    $('#entitySelectGroup').show();
+}
+
+function DrawClassForm() {
+    GetSubjectListForClass(DrawClassFormCallback);
+}
+
+function DrawClassFormCallback() {
+    var form = $('#entityGroup');
+
+    var mClass = list;
+
+    var mainGroup = $('<div>').addClass('form-group');
+    var group1 = $('<div>').addClass('form-group'); //Subject List
+    var group2 = $('<div>').addClass('form-group'); //Class Name
+    var group3 = $('<div>').addClass('form-group'); //Description
+    var group4 = $('<div>').addClass('form-group'); //Save
+    var group5 = $('<div>').addClass('form-group'); //Status Label
+
+    var clearer1 = $('<div>').addClass('clearer');
+    var clearer2 = $('<div>').addClass('clearer');
+    var clearer3 = $('<div>').addClass('clearer');
+    var clearer4 = $('<div>').addClass('clearer');
+    var clearer5 = $('<div>').addClass('clearer');
+
+    mainGroup.append(group1);
+    mainGroup.append(group2);
+    mainGroup.append(group3);
+    mainGroup.append(group4);
+    mainGroup.append(group5);
+
+    // Containers
+    var subjectCont = $('<div>').addClass('col-md-3');
+    var nameCont = $('<div>').addClass('col-md-4');
+    var descCont = $('<div>').addClass('col-md-8');
+
+    //Labels
+    var SubjectLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'subjectLabel').text('Subject');
+    var classNameLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'classNameLabel').text('Class Name');
+    var descriptionLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'descriptionLabel').text('Description');
+
+    group1.append(SubjectLabel);
+    group2.append(classNameLabel);
+    group3.append(descriptionLabel);
+
+
+    var subjectList = $('<select>').addClass('form-control').attr('id', 'subjectList');
+
+    subjectList.append('<option value="-">-----------------------</option>');
+
+    $.each(subjects, function (i, el) {
+        subjectList.append('<option value="' + el.id + '">' + el.name + '</option>');
+    });
+    if (mClass != undefined) { subjectList.val(mClass.subjId); subjectList.attr('disabled', 'disabled').css('background-color', 'lightgrey'); }
+
+    var name = $('<input>').attr('type', 'text').attr('id', 'className').addClass('form-control');
+    if (mClass != undefined) { name.val(mClass.name); }
+
+    var desc = $('<input>').attr('type', 'text').attr('id', 'classDescription').addClass('form-control');
+    if (mClass != undefined) { desc.val(mClass.desc); }
+
+    subjectCont.append(subjectList);
+    nameCont.append(name);
+    descCont.append(desc);
+
+    group1.append(subjectCont);
+    group1.append(clearer1);
+
+    group2.append(nameCont);
+    group2.append(clearer2);
+
+    group3.append(descCont);
+    group3.append(clearer3);
+
+    var btnCont = $('<div>').addClass('col-md-12');
+    var btn = $('<input>').attr('type', 'button').attr('id', 'createClassButton').attr('name', 'createClassButton').addClass('btn btn-success').click(CreateEditClass);
+    if (mClass != undefined) { btn.val('Update'); } else { btn.val('Create'); }
+    btn.appendTo(btnCont);
+
+    var statusCont = $('<div>');
+    var status = $('<label>').addClass('form-control admin').attr('id', 'classStatus');
+    status.appendTo(statusCont);
+
+    mClass = undefined;
+
+    group4.append(btnCont);
+    group4.append(clearer4);
+
+    group5.append(statusCont);
+    group5.append(clearer5);
+
+    mainGroup.appendTo(form);
+    form.show();
+}
+
+function SubmitClass() {
+    if ($('#classSelect option:checked').val() != '-') {
+        if ($('#entityActionList option:checked').val() == 'delete') {
+            DeleteClass($('#classSelect option:checked').val(), DeleteClassCallback);
+        }
+        else {
+            GetClass($('#classSelect option:checked').val(), DrawClassForm);
+        }
+    }
+}
+
+function CreateEditClass() {
+    if ($('#className').val() != '') {
+        if ($('#createClassButton').val() == 'Create') {
+            CreateClass($('#subjectList option:checked').val(), $('#className').val(), $('#classDescription').val(), CreateClassCallback);
+        }
+        else {
+            UpdateClass($('#classSelect option:checked').val(), $('#subjectList option:checked').val(), $('#className').val(), $('#classDescription').val(), UpdateClassCallback);
+        }
+    }
+}
+
+function DeleteClassCallback() {
+    if (disposition == 'success') {
+        $('#classStatus').text('Success!  Your class was successfully deleted');
+
+        GetClassList($('#subjectSelectSearch option:checked').val(), DeleteClassRepopulate);
+    }
+    else {
+        $('#classStatus').text(disposition);
+    }
+}
+
+function DeleteClassRepopulate() {
+    var classList = $('#classSelect');
+    classList.empty();
+
+    classList.append('<option value="-">-----------------------</option>');
+
+    $.each(list, function (i, el) {
+        classList.append('<option value="' + el.id + '">' + el.name + '</option>')
+    });
+
+    $('#acceptClass').attr('disabled', 'disabled');
+}
+
+function CreateClassCallback() {
+    if (disposition == 'success') {
+        $('#classStatus').text('Success!  Your class was successfully created');
+    }
+    else {
+        $('#classStatus').text(disposition);
+    }
+}
+
+function UpdateClassCallback() {
+    if (disposition == 'success') {
+        $('#classStatus').text('Success!  Your class was successfully updated');
+    }
+    else {
+        $('#classStatus').text(disposition);
+    }
+}
+
+function UpdateClass(id, subjectId, name, desc, callback) {
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/UpdateClass",
+        data: "{'id':'" + id + "', 'subjectId':'" + subjectId + "', 'name':'" + name + "', 'description':'" + desc + "'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            disposition = json;
+            callback();
+        }
+    });
+}
+
+function CreateClass(subjectId, name, desc, callback) {
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/CreateClass",
+        data: "{'subjectId':'" + subjectId + "', 'name':'" + name + "', 'description':'" + desc + "'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            disposition = json;
+            callback();
+        }
+    });
+}
+
+function GetSubjectListForClass(callback) {
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchSubjectList",
+        data: "{}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+            subjects = json;
+            callback();
+        }
+    });
+}
+
+function GetClassList(subjectId, callback) {
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchClassList",
+        data: "{'subjectId':'" + subjectId + "'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+            list = json;
+            callback();
+        }
+    });
+}
+
+function GetClass(id, callback) {
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchClass",
+        data: "{'id':'" + id + "'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            list = json;
+            callback();
+        }
+    });
+}
+
+function DeleteClass(id, callback) {
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/DeleteClass",
+        data: "{'id':'" + id + "'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            disposition = json;
+            callback();
+        }
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function DrawMarkingPeriodForm() {
+
+    var form = $('#entityGroup');
+
+    var mPeriod = list;
+
+    var mainGroup = $('<div>').addClass('form-group');
+
+    var group1 = $('<div>').addClass('form-group'); //School Year Select
+    var group2 = $('<div>').addClass('form-group'); //Period // Full Year
+    var group3 = $('<div>').addClass('form-group'); //Start/End Dates
+    var group4 = $('<div>').addClass('form-group'); //Button
+    var group5 = $('<div>').addClass('form-group'); //Status
+
+    var clearer1 = $('<div>').addClass('clearer');
+    var clearer2 = $('<div>').addClass('clearer');
+    var clearer3 = $('<div>').addClass('clearer');
+    var clearer4 = $('<div>').addClass('clearer');
+    var clearer5 = $('<div>').addClass('clearer');
+
+    mainGroup.append(group1);
+    mainGroup.append(group2);
+    mainGroup.append(group3);
+    mainGroup.append(group4);
+    mainGroup.append(group5);
+
+    // Containers for controls
+    var yearCont = $('<div>').addClass('col-md-3');
+    var periodCont = $('<div>').addClass('col-md-3');
+    var fullYearCont = $('<div>').addClass('col-md-3');
+    var startCont = $('<div>').addClass('col-md-3');
+    var endCont = $('<div>').addClass('col-md-3');
+
+    //Labels
+    var yearLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'periodLabel').text('School Year');
+    
+    var periodLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'periodLabel').text('Marking Period');
+    var fullYearLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'fullYearLabel').text('All Year');
+
+    var startDateLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'startDateLabel').text('Start Date');
+    var endDateLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'endDateLabel').text('End Date');
+
+    var period = $('<input>').attr('type', 'text').attr('id', 'periodName').addClass('form-control');
+    if (mPeriod != undefined) { period.val(mPeriod.period); }
+    var allyear = $('<input>').attr('type', 'checkbox').attr('id', 'allyear').addClass('form-control');
+    if (mPeriod != undefined) { if (mPeriod.allyear) { allyear.attr('checked', 'checked'); } }
+
+    allyear.on('click', function () {
+        if ($('#allyear').is(':checked')) {
+            $('#periodName').val('');
+            $('#periodName').attr('disabled', 'disabled');
+            $('#periodName').css('cursor', 'default');
+        }
+        else {
+            $('#periodName').val('');
+            $('#periodName').removeAttr('disabled');
+        }
+    });
+
+    var start = $('<input>').attr('type', 'text').attr('id', 'startDate').addClass('form-control');
+    start.datepicker();
+    if (mPeriod != undefined) { start.val(mPeriod.start); }
+    var end = $('<input>').attr('type', 'text').attr('id', 'endDate').addClass('form-control');
+    end.datepicker();
+    if (mPeriod != undefined) { end.val(mPeriod.end); }
+
+    var yearList = $('<select>').addClass('form-control').attr('id', 'yearList');
+    yearList.append($('<option>').val('-').text('-----------------------'));
+    yearList.appendTo(yearCont);
+
+    periodCont.append(period);
+    fullYearCont.append(allyear);
+    startCont.append(start);
+    endCont.append(end);
+
+    group1.append(yearLabel);
+    group1.append(yearCont);
+    group1.append(clearer1);
+
+    group2.append(periodLabel);
+    group2.append(periodCont);
+    group2.append(fullYearLabel);
+    group2.append(fullYearCont);
+    group2.append(clearer2);
+
+    group3.append(startDateLabel);
+    group3.append(startCont);
+    group3.append(endDateLabel);
+    group3.append(endCont);
+    group3.append(clearer3);
+
+    var btnCont = $('<div>').addClass('col-md-12');
+    var btn = $('<input>').attr('type', 'button').attr('id', 'createMarkingPeriodButton').attr('name', 'createMarkingPeriodButton').addClass('btn btn-success').click(CreateEditMarkingPeriod);
+    if (mPeriod != undefined) { btn.val('Update'); } else { btn.val('Create'); }
+    btn.appendTo(btnCont);
+
+    var statusCont = $('<div>');
+    var status = $('<label>').addClass('form-control admin').attr('id', 'markingPeriodStatus');
+    status.appendTo(statusCont);
+
+    group4.append(btnCont);
+    group4.append(clearer4);
+    group5.append(statusCont);
+    group5.append(clearer5);
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchSchoolYearList",
+        data: "{}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            $.each(json, function (i, el) {
+                yearList.append($('<option>').val(el.id).text(el.name));
+            });
+            if (mPeriod != undefined) { yearList.val(mPeriod.subjId); yearList.attr('disabled', 'disabled').css('background-color', 'lightgrey'); }
+
+            mPeriod == undefined;
+
+            mainGroup.appendTo(form);
+            form.show();
+        }
+    });
+}
+
+function CreateEditMarkingPeriod() {
+    if ($('#markingPeriodName').val() != '') {
+        if ($('#createMarkingPeriodButton').val() == 'Create') {
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/CreateMarkingPeriod",
+                data: "{'yearId':'" + $('#yearList option:checked').val() + "', 'name':'" + $('#periodName').val() + "', 'allyear':'" + $('#allyear').is(':checked') + "', 'start':'" + $('#startDate').val() + "', 'end':'" + $('#endDate').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var json = JSON.parse(data.d);
+
+                    if (json == 'success') {
+                        $('#markingPeriodStatus').text('Success!  Your marking period was successfully created');
+                    }
+                    else {
+                        $('#markingPeriodStatus').text(disposition);
+                    }
+                }
+            });
+        }
+        else {
+            //UpdateClass($('#classSelect option:checked').val(), $('#subjectList option:checked').val(), $('#className').val(), $('#classDescription').val(), UpdateClassCallback);
+        }
+    }
 }

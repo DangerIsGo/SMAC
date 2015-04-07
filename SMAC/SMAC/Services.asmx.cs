@@ -31,6 +31,150 @@ namespace SMAC
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string CreateMarkingPeriod(string yearId, string name, string allyear, string start, string end)
+        {
+            try
+            {
+                MarkingPeriodEntity.CreateMarkingPeriod(name, bool.Parse(allyear), int.Parse(yearId), DateTime.Parse(start), DateTime.Parse(end));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        #region Class
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchClass(string id)
+        {
+            try
+            {
+                var mClass = ClassEntity.GetClass(int.Parse(id));
+
+                var obj = new
+                {
+                    name = mClass.ClassName,
+                    desc = mClass.Description,
+                    subjId = mClass.SubjectId
+                };
+
+                return JsonConvert.SerializeObject(obj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchClassList(string subjectId)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                var classes = ClassEntity.GetClassesForSubject(int.Parse(subjectId));
+
+                var rtnObj = new object[classes.Count];
+
+                for (int i = 0; i < classes.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        id = classes[i].ClassId,
+                        name = classes[i].ClassName                      
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string CreateClass(string subjectId, string name, string description)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                ClassEntity.CreateClass(int.Parse(schoolId), int.Parse(subjectId), name, description);
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string UpdateClass(string id, string subjectId, string name, string description)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                ClassEntity.UpdateClass(int.Parse(schoolId), int.Parse(subjectId), name, description, int.Parse(id));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string DeleteClass(string id)
+        {
+            try
+            {
+                ClassEntity.DeleteClass(int.Parse(id));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region User
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string DeleteUser(string id)
+        {
+            try
+            {
+                UserEntity.DeleteUser(id);
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string FetchUser(string id)
         {
             try
@@ -95,7 +239,7 @@ namespace SMAC
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public string UpdateUser(string id, string fn, string mn, string ln, string em, string pn, string gender, string start, string end, string act, string un, string pw, string role)
+        public string UpdateUser(string id, string newId, string fn, string mn, string ln, string em, string pn, string gender, string start, string end, string act, string un, string pw, string role)
         {
             try
             {
@@ -103,11 +247,11 @@ namespace SMAC
 
                 if (DateTime.TryParse(end, out endTemp))
                 {
-                    UserEntity.UpdateUser(id, fn, mn, ln, em, pn, gender, bool.Parse(act), un, pw, DateTime.Parse(start), endTemp, role);
+                    UserEntity.UpdateUser(id, newId, fn, mn, ln, em, pn, gender, bool.Parse(act), un, pw, DateTime.Parse(start), endTemp, role);
                 }
                 else
                 {
-                    UserEntity.UpdateUser(id, fn, mn, ln, em, pn, gender, bool.Parse(act), un, pw, DateTime.Parse(start), null, role);
+                    UserEntity.UpdateUser(id, newId, fn, mn, ln, em, pn, gender, bool.Parse(act), un, pw, DateTime.Parse(start), null, role);
                 }
 
                 return JsonConvert.SerializeObject("success");
@@ -144,6 +288,8 @@ namespace SMAC
                 return JsonConvert.SerializeObject(ex.Message);
             }
         }
+
+        #endregion
 
         #region Latest News
 
@@ -836,7 +982,7 @@ namespace SMAC
                 }
 
                 UserCredentialEntity.UpdateUserCred(userId, uName, !string.IsNullOrWhiteSpace(nPass) ? nPass : null);
-                UserEntity.UpdateUser(userId, fName, mName, lName, email, phone, gender, null, uName, nPass, null, null, null);
+                UserEntity.UpdateUser(userId, null, fName, mName, lName, email, phone, gender, null, uName, nPass, null, null, null);
 
                 Session["UserId"] = userId;
                 Session["FirstName"] = fName;

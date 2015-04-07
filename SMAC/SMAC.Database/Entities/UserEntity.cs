@@ -10,15 +10,15 @@ namespace SMAC.Database
     {
         public static void CreateUser(string Id, string fName, string mName, string lName, string email, string phone, string gender, bool isActive, string userName, string password, DateTime startDate, DateTime? endDate, string role, int schoolId)
         {
-            CreateEditUser("ADD", Id, fName, mName, lName, email, phone, gender, isActive, userName, password, startDate, endDate, role, schoolId);
+            CreateEditUser("ADD", Id, null, fName, mName, lName, email, phone, gender, isActive, userName, password, startDate, endDate, role, schoolId);
         }
 
-        public static void UpdateUser(string Id, string fName, string mName, string lName, string email, string phone, string gender, bool? isActive, string userName, string password, DateTime? startDate, DateTime? endDate, string role)
+        public static void UpdateUser(string Id, string newId, string fName, string mName, string lName, string email, string phone, string gender, bool? isActive, string userName, string password, DateTime? startDate, DateTime? endDate, string role)
         {
-            CreateEditUser("EDIT", Id, fName, mName, lName, email, phone, gender, isActive, userName, password, startDate, endDate, role, null);
+            CreateEditUser("EDIT", Id, newId, fName, mName, lName, email, phone, gender, isActive, userName, password, startDate, endDate, role, null);
         }
 
-        private static void CreateEditUser(string op, string Id, string fName, string mName, string lName, string email, string phone, string gender, bool? isActive, string userName, string password, DateTime? startDate, DateTime? endDate, string role, int? schoolId)
+        private static void CreateEditUser(string op, string Id, string newId, string fName, string mName, string lName, string email, string phone, string gender, bool? isActive, string userName, string password, DateTime? startDate, DateTime? endDate, string role, int? schoolId)
         {
             try
             {
@@ -92,15 +92,19 @@ namespace SMAC.Database
                     }
                     else if (op.Equals("EDIT"))
                     {
-                        if (GetUser(Id) == null)
+                        if ((from a in context.Users where a.UserId == Id select a).FirstOrDefault() == null)
                         {
                             throw new Exception("User was not updated.  User ID not found.");
                         }
+                        else if (!string.IsNullOrWhiteSpace(newId) && newId != Id && (from a in context.Users where a.UserId == newId select a).FirstOrDefault() != null)
+                        {
+                            throw new Exception("User was not updated.  User ID already exists");
+                        }
                         else
                         {
-                            var user = GetUser(Id);
+                            var user = (from a in context.Users where a.UserId == Id select a).FirstOrDefault();
 
-                            user.UserId = Id;
+                            user.UserId = string.IsNullOrWhiteSpace(newId) ? Id : newId;
                             user.FirstName = fName;
                             user.MiddleName = !string.IsNullOrWhiteSpace(mName) ? mName : null;
                             user.LastName = lName;
@@ -243,13 +247,13 @@ namespace SMAC.Database
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    if (GetUser(Id) == null)
+                    if ((from a in context.Users where a.UserId == Id select a).FirstOrDefault() == null)
                     {
                         throw new Exception("User was not deleted.  User ID not found.");
                     }
                     else
                     {
-                        var user = GetUser(Id);
+                        var user = (from a in context.Users where a.UserId == Id select a).FirstOrDefault();
 
                         context.Users.Remove(user);
 

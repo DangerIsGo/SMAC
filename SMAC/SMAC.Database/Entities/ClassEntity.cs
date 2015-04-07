@@ -16,13 +16,13 @@ namespace SMAC.Database
             CreateEditClass("EDIT", schoolId, subjectId, classId, description, className);
         }
 
-        public static List<Class> GetAllClasses(int schoolId, string subjName)
+        public static List<Class> GetClassesForSubject(int subjectId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    return SubjectEntity.GetSubject(schoolId, subjName).Classes.ToList();
+                    return (from a in context.Classes where a.SubjectId == subjectId select a).ToList();
                 }
             }
             catch (Exception ex)
@@ -92,7 +92,7 @@ namespace SMAC.Database
                 {
                     if (op.Equals("ADD"))
                     {
-                        if (GetClass(schoolId, subjectId, className) != null)
+                        if ((from a in context.Classes where a.ClassName == className && a.SchoolId == schoolId && a.SubjectId == subjectId select a).FirstOrDefault() != null)
                         {
                             throw new Exception("Class was not created.  Class name already exists for this school/subject.");
                         }
@@ -101,8 +101,8 @@ namespace SMAC.Database
                             Class Class = new Class()
                             {
                                 ClassName = className,
-                                Subject = SubjectEntity.GetSubject(subjectId),
-                                Description = description
+                                Subject = (from a in context.Subjects where a.SubjectId == subjectId select a).FirstOrDefault(),
+                                Description = string.IsNullOrWhiteSpace(description) ? null : description
                             };
 
                             context.Classes.Add(Class);
@@ -111,19 +111,24 @@ namespace SMAC.Database
                     }
                     else if (op.Equals("EDIT"))
                     {
-                        if (GetClass(classId.Value) == null)
+                        var mClass = (from a in context.Classes where a.ClassId == classId.Value select a).FirstOrDefault();
+
+                        if (mClass == null)
                         {
                             throw new Exception("Class was not updated.  Class name not found.");
                         }
-                        else
+                        
+                        if ((from a in context.Classes where a.ClassName == className && a.SubjectId == mClass.SubjectId && a.ClassId != classId.Value select a).FirstOrDefault() != null)
                         {
-                            var mClass = GetClass(classId.Value);
-
-                            mClass.ClassName = className;
-                            mClass.Description = description;
-                            context.Entry(mClass).State = System.Data.Entity.EntityState.Modified;
-                            context.SaveChanges();
+                            throw new Exception("Class was not updated.  Class name already exists for subject/school.");
                         }
+                        
+                        mClass.ClassName = className;
+                        mClass.Subject = (from a in context.Subjects where a.SubjectId == subjectId select a).FirstOrDefault();
+                        mClass.Description = string.IsNullOrWhiteSpace(description) ? null : description;
+
+                        context.Entry(mClass).State = System.Data.Entity.EntityState.Modified;
+                        context.SaveChanges();
                     }
                 }
             }
@@ -139,7 +144,7 @@ namespace SMAC.Database
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    var Class = GetClass(classId);
+                    var Class = (from a in context.Classes where a.ClassId == classId select a).FirstOrDefault();
                     context.Classes.Remove(Class);
                     context.SaveChanges();
                 }

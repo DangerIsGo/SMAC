@@ -61,6 +61,8 @@
             $.each(schedules, function (i, el) {
                 if (el.id == clubId) {
 
+                    console.log(el);
+
                     if (el.schedule.length == 0) {
                         $('#clubScheduleSub').append("This club does not have a schedule yet.");
                         return;
