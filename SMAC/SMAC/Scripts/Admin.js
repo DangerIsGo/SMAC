@@ -126,7 +126,7 @@ function PopulateEntityList() {
         }
         else if (eType == 5) {
             //Marking Period
-
+            GetSchoolYearList(DrawMarkingPeriodSelect);
         }
         else if (eType == 6) {
             //News 
@@ -2201,13 +2201,123 @@ function DeleteClass(id, callback) {
 
 
 
+function DrawMarkingPeriodSelect() {
 
+    var selectGroup = $('<div>').addClass('form-group').attr('id', 'mPeriodSelectGroup');
 
+    var group1 = $('<div>').addClass('form-group');
+    var group2 = $('<div>').addClass('form-group').attr('id', 'mPeriodGroup2');
 
+    var clearer1 = $('<div>').addClass('clearer');
+    var clearer2 = $('<div>').addClass('clearer');
+
+    var yearCont = $('<div>').addClass('col-md-3');
+
+    selectGroup.append(group1);
+    selectGroup.append(group2);
+    group1.append(yearCont);
+
+    var yearLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'periodLabel').text('Select a School Year');
+
+    var yearList = $('<select>').addClass('form-control').attr('id', 'yearListSelect').on('change', function () {
+        if ($('#yearList option:checked').val() != '-') {
+
+            $('#entityGroup').empty();
+            $($($('#acceptPeriod').parent()).parent()).remove();
+
+            var mPeriodGroup2 = $('#mPeriodGroup2');
+            var mPeriodSelectGroup = $('#mPeriodSelectGroup');
+            mPeriodGroup2.empty();
+
+            var mPeriodLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'mPeriodLabel').text('Select a Marking Period');
+
+            var periodCont = $('<div>').addClass('col-md-4');
+
+            var mpList = $('<select>').addClass('form-control').attr('id', 'markingPeriodSelect');
+            mpList.append($('<option>').val('-').text('-----------------------'));
+            mpList.on('change', function () {
+                if ($('#markingPeriodSelect option:checked').val() != '-') {
+                    $('#acceptPeriod').removeAttr('disabled');
+                }
+                else {
+                    $('#acceptPeriod').attr('disabled', 'disabled');
+                }
+            });
+
+            var selCont = $('<div>').addClass('col-md-1');
+            var select = $('<input>').attr('type', 'button').attr('id', 'acceptPeriod').attr('disabled', 'disabled').addClass('btn btn-primary').click(SubmitMarkingPeriod);
+            if ($('#entityActionList option:checked').val() != 'delete') { select.val('OK') } else { select.val('Delete') }
+            select.appendTo(selCont);
+
+            var statusCont = $('<div>').addClass('col-md-12');
+            var status = $('<label>').addClass('form-control admin').attr('id', 'markingPeriodStatus');
+            status.appendTo(statusCont);
+
+            var group3 = $('<div>').addClass('form-group');
+            var group4 = $('<div>').addClass('form-group');
+
+            var clearer3 = $('<div>').addClass('clearer');
+            var clearer4 = $('<div>').addClass('clearer');
+            
+            group3.append(selCont);
+            group3.append(clearer3);
+            group4.append(statusCont);
+            group4.append(clearer4);
+
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchMarkingPeriodList",
+                data: "{'yearId':'" + $('#yearListSelect option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var json = JSON.parse(data.d);
+
+                    $.each(json, function (i, el) {
+                        mpList.append($('<option>').val(el.id).text((el.name == null ? 'All Year' : el.name) + ': ' + el.start + ' - ' + el.end));
+                    });
+
+                    mPeriodGroup2.append(mPeriodLabel);
+                    mPeriodGroup2.append(periodCont);
+                    periodCont.append(mpList);
+                    mPeriodSelectGroup.append(group3);
+
+                    if ($('#entityActionList option:checked').val() == 'delete') {
+                        mPeriodSelectGroup.append(group4);
+                    }
+                }
+            });
+        }
+    });
+
+    yearList.append($('<option>').val('-').text('-----------------------'));
+
+    group1.append(yearLabel);
+    group1.append(yearCont);
+    yearCont.append(yearList);
+    group1.append(clearer1);
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchSchoolYearList",
+        data: "{}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            $.each(json, function (i, el) {
+                yearList.append($('<option>').val(el.id).text(el.name));
+            });
+
+            $('#entitySelectGroup').append(selectGroup);
+            $('#entitySelectGroup').show();
+        }
+    });
+}
 
 function DrawMarkingPeriodForm() {
 
     var form = $('#entityGroup');
+    form.empty();
 
     var mPeriod = list;
 
@@ -2248,7 +2358,7 @@ function DrawMarkingPeriodForm() {
     var endDateLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'endDateLabel').text('End Date');
 
     var period = $('<input>').attr('type', 'text').attr('id', 'periodName').addClass('form-control');
-    if (mPeriod != undefined) { period.val(mPeriod.period); }
+    if (mPeriod != undefined) { period.val(mPeriod.period); if (mPeriod.allyear) { period.attr('disabled', 'disabled'); } }
     var allyear = $('<input>').attr('type', 'checkbox').attr('id', 'allyear').addClass('form-control');
     if (mPeriod != undefined) { if (mPeriod.allyear) { allyear.attr('checked', 'checked'); } }
 
@@ -2256,7 +2366,6 @@ function DrawMarkingPeriodForm() {
         if ($('#allyear').is(':checked')) {
             $('#periodName').val('');
             $('#periodName').attr('disabled', 'disabled');
-            $('#periodName').css('cursor', 'default');
         }
         else {
             $('#periodName').val('');
@@ -2321,7 +2430,7 @@ function DrawMarkingPeriodForm() {
             $.each(json, function (i, el) {
                 yearList.append($('<option>').val(el.id).text(el.name));
             });
-            if (mPeriod != undefined) { yearList.val(mPeriod.subjId); yearList.attr('disabled', 'disabled').css('background-color', 'lightgrey'); }
+            if (mPeriod != undefined) { yearList.val(mPeriod.yearId); }
 
             mPeriod == undefined;
 
@@ -2329,6 +2438,63 @@ function DrawMarkingPeriodForm() {
             form.show();
         }
     });
+}
+
+function SubmitMarkingPeriod() {
+    if ($('#markingPeriodSelect option:checked').val() != '-') {
+        if ($('#entityActionList option:checked').val() == 'delete') {
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/DeleteMarkingPeriod",
+                data: "{'id':'" + $('#markingPeriodSelect option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var json = JSON.parse(data.d);
+
+                    if (json == 'success') {
+                        $('#markingPeriodStatus').text('Success!  Your marking period was successfully deleted');
+                    }
+                    else {
+                        $('#markingPeriodStatus').text(json);
+                    }
+
+                    var mpList = $('#markingPeriodSelect');
+                    mpList.empty();
+                    mpList.append($('<option>').val('-').text('-----------------------'));
+                    
+
+
+                    $.ajax({
+                        type: "POST",
+                        url: "Services.asmx/FetchMarkingPeriodList",
+                        data: "{'yearId':'" + $('#yearListSelect option:checked').val() + "'}",
+                        contentType: "application/json; charset=UTF-8",
+                        success: function (periods) {
+                            var periodJson = JSON.parse(periods.d);
+
+                            $.each(periodJson, function (i, el) {
+                                mpList.append($('<option>').val(el.id).text((el.name == null ? 'All Year' : el.name) + ': ' + el.start + ' - ' + el.end));
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchMarkingPeriod",
+                data: "{'id':'" + $('#markingPeriodSelect option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var json = JSON.parse(data.d);
+
+                    list = json;
+                    DrawMarkingPeriodForm();
+                }
+            });
+        }
+    }
 }
 
 function CreateEditMarkingPeriod() {
@@ -2352,7 +2518,23 @@ function CreateEditMarkingPeriod() {
             });
         }
         else {
-            //UpdateClass($('#classSelect option:checked').val(), $('#subjectList option:checked').val(), $('#className').val(), $('#classDescription').val(), UpdateClassCallback);
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/UpdateMarkingPeriod",
+                data: "{'id':'" + $('#markingPeriodSelect option:checked').val() + "', 'yearId':'" + $('#yearList option:checked').val() +
+                    "', 'name':'" + $('#periodName').val() + "', 'allyear':'" + $('#allyear').is(':checked') + "', 'start':'" + $('#startDate').val() + "', 'end':'" + $('#endDate').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var json = JSON.parse(data.d);
+
+                    if (json == 'success') {
+                        $('#markingPeriodStatus').text('Success!  Your marking period was successfully created');
+                    }
+                    else {
+                        $('#markingPeriodStatus').text(json);
+                    }
+                }
+            });
         }
     }
 }

@@ -31,6 +31,94 @@ namespace SMAC
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string DeleteMarkingPeriod(string id)
+        {
+            try
+            {
+                MarkingPeriodEntity.DeleteMarkingPeriod(int.Parse(id));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject("Marking period cannot be deleted as it is currently in use");
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string UpdateMarkingPeriod(string id, string yearId, string name, string allyear, string start, string end)
+        {
+            try
+            {
+                MarkingPeriodEntity.UpdateMarkingPeriod(int.Parse(id), name, bool.Parse(allyear), int.Parse(yearId), DateTime.Parse(start), DateTime.Parse(end));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchMarkingPeriod(string id)
+        {
+            try
+            {
+                var period = MarkingPeriodEntity.GetMarkingPeriod(int.Parse(id));
+
+                var obj = new
+                {
+                    period = period.Period,
+                    allyear = period.FullYear,
+                    start = period.StartDate.ToShortDateString(),
+                    end = period.EndDate.ToShortDateString(),
+                    yearId = period.SchoolYearId
+                };
+
+                return JsonConvert.SerializeObject(obj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchMarkingPeriodList(string yearId)
+        {
+            try
+            {
+                var periods = MarkingPeriodEntity.GetMarkingPeriods(int.Parse(yearId));
+
+                var rtnObj = new object[periods.Count];
+
+                for (int i = 0; i < periods.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        id = periods[i].MarkingPeriodId,
+                        name = periods[i].Period,
+                        start = periods[i].StartDate.ToShortDateString(),
+                        end = periods[i].EndDate.ToShortDateString()
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string CreateMarkingPeriod(string yearId, string name, string allyear, string start, string end)
         {
             try
@@ -787,11 +875,11 @@ namespace SMAC
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public string FetchSubject(string subjectId)
+        public string FetchSubject(string id)
         {
             try
             {
-                var subject = SubjectEntity.GetSubject(int.Parse(subjectId));
+                var subject = SubjectEntity.GetSubject(int.Parse(id));
 
                 var obj = new
                 {
