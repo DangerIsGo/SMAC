@@ -65,7 +65,7 @@ function PopulateEntityList() {
         }
         else if (eType == 4) {
             //Club Schedule
-
+            DrawClubScheduleForm_Pre();
         }
         else if (eType == 5) {
             //Marking Period
@@ -122,7 +122,7 @@ function PopulateEntityList() {
         }
         else if (eType == 4) {
             //Club Schedule
-
+            DrawClubScheduleSelect();
         }
         else if (eType == 5) {
             //Marking Period
@@ -2537,4 +2537,338 @@ function CreateEditMarkingPeriod() {
             });
         }
     }
+}
+
+
+
+
+
+
+
+
+
+function DrawClubScheduleSelect() {
+
+    if ($('#entityActionList option:checked').val() == 'update') {
+        var noUpdate = $('<label>').addClass('col-md-12 control-label').attr('id', 'noUpdate').text('Only create and delete actions are available for club schedule.');
+        $('#entitySelectGroup').append(noUpdate);
+        $('#entitySelectGroup').show();
+        return;
+    }
+
+    var selectGroup = $('<div>').addClass('form-group').attr('id', 'clubSchSelectGroup');
+
+    var group1 = $('<div>').addClass('form-group');
+    var group2 = $('<div>').addClass('form-group').attr('id', 'clubSchGroup2');
+    var group3 = $('<div>').addClass('form-group').attr('id', 'clubSchGroup3');
+
+    var clearer1 = $('<div>').addClass('clearer');
+
+    selectGroup.append(group1);
+    selectGroup.append(group2);
+    selectGroup.append(group3);
+
+    var yearCont = $('<div>').addClass('col-md-3');
+
+    var yearLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'periodLabel').text('Select a School Year');
+
+    var yearList = $('<select>').addClass('form-control').attr('id', 'yearListSelect').on('change', function () {
+        if ($('#yearList option:checked').val() != '-') {
+
+            $('#entityGroup').empty();
+            $($($('#acceptPeriod').parent()).parent()).remove();
+            var clearer2 = $('<div>').addClass('clearer');
+
+            var clubSchGroup2 = $('#clubSchGroup2');
+            var clubSchSelectGroup = $('#clubSchSelectGroup');
+            clubSchGroup2.empty();
+
+            var clubLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'clubLabel').text('Select a Club');
+
+            var clubCont = $('<div>').addClass('col-md-4');
+
+            var clubList = $('<select>').addClass('form-control').attr('id', 'clubSelect')
+                .append($('<option>').val('-').text('-----------------------'))
+                .on('change', function () {
+                    var clubSchGroup3 = $('#clubSchGroup3');
+                    clubSchGroup3.empty();
+
+                    var schedLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'schedLabel').text('Select a Schedule');
+                    var schedCont = $('<div>').addClass('col-md-4');
+                    var schedList = $('<select>').addClass('form-control').attr('id', 'schedSelect')
+                        .append($('<option>').val('-').text('-----------------------')).on('change', function () {
+                        if ($('#schedSelect option:checked').val() != '-') {
+                            $('#acceptClubSchedule').removeAttr('disabled');
+                        }
+                        else {
+                            $('#acceptClubSchedule').attr('disabled', 'disabled');
+                        }
+                    });
+                    schedList.appendTo(schedCont);
+
+                    var selCont = $('<div>').addClass('col-md-1');
+                    var select = $('<input>').attr('type', 'button').attr('id', 'acceptClubSchedule').attr('disabled', 'disabled').addClass('btn btn-primary').val('Delete').click(function () {
+                        //Delete Club Schedule
+                        var ids = $('#schedSelect option:checked').val().split(':');
+                        $.ajax({
+                            type: "POST",
+                            url: "Services.asmx/DeleteClubSchedule",
+                            data: "{'id':'" + $('#clubSelect option:checked').val() + "', 'yearId':'" + $('#yearListSelect option:checked').val() + "', 'day':'" + ids[1] + "', 'tsId':'" + ids[0] + "'}",
+                            contentType: "application/json; charset=UTF-8",
+                            success: function (data) {
+                                var json = JSON.parse(data.d);
+
+                                if (json == 'success') {
+                                    $('#clubScheduleStatus').text('Success!  Your club schedule was successfully deleted');
+                                }
+                                else {
+                                    $('#clubScheduleStatus').text(disposition);
+                                }
+                            }
+                        });
+                    });
+                    select.appendTo(selCont);
+
+                    var statusCont = $('<div>').addClass('col-md-12');
+                    var status = $('<label>').addClass('form-control admin').attr('id', 'clubScheduleStatus');
+                    status.appendTo(statusCont);
+
+                    var group3 = $('<div>').addClass('form-group');
+                    var group4 = $('<div>').addClass('form-group');
+
+                    var clearer3 = $('<div>').addClass('clearer');
+                    var clearer4 = $('<div>').addClass('clearer');
+
+
+                    $.ajax({
+                        type: "POST",
+                        url: "Services.asmx/FetchClubSchedule",
+                        data: "{'id':'" + $('#clubSelect option:selected').val() + "', 'yearId':'" + $('#yearListSelect option:selected').val() + "'}",
+                        contentType: "application/json; charset=UTF-8",
+                        success: function (data) {
+                            var json = JSON.parse(data.d);
+
+                            $.each(json, function (i, el) {
+                                schedList.append($('<option>').val(el.id + ':' + el.day).text(el.day + ': ' + el.start + ' - ' + el.end));
+                            });
+
+                            clubSchGroup3.append(schedLabel);
+                            clubSchGroup3.append(schedCont);
+                            clubSchGroup3.append(selCont);
+                            clubSchGroup3.append(clearer3);
+
+                            group4.append(statusCont);
+                            group4.append(clearer4);
+
+                            clubSchSelectGroup.append(group4);
+                        }
+                    });
+                });
+
+            clubList.appendTo(clubCont);
+
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchClubList",
+                data: "{}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var json = JSON.parse(data.d);
+
+                    clubSchGroup2.append(clubLabel);
+                    clubSchGroup2.append(clubCont);
+                    clubSchGroup2.append(clearer2);
+
+                    $.each(json, function (i, el) {
+                        clubList.append($('<option>').val(el.id).text(el.name));
+                    });
+                }
+            });
+
+        }
+    });
+    yearList.append($('<option>').val('-').text('-----------------------'));
+
+    group1.append(yearLabel);    
+    group1.append(yearCont);
+    yearList.appendTo(yearCont);
+    group1.append(clearer1);
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchSchoolYearList",
+        data: "{}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            $.each(json, function (i, el) {
+                yearList.append($('<option>').val(el.id).text(el.name));
+            });
+
+            $('#entitySelectGroup').append(selectGroup);
+            $('#entitySelectGroup').show();
+        }
+    });
+}
+
+
+function DrawClubScheduleForm_Pre() {
+    var clubs;
+    var timeslots;
+    var years;
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchClubList",
+        data: "{}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+            clubs = json;
+
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchTimeSlotList",
+                data: "{}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (ts) {
+                    var json = JSON.parse(ts.d);
+                    timeslots = json;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "Services.asmx/FetchSchoolYearList",
+                        data: "{}",
+                        contentType: "application/json; charset=UTF-8",
+                        success: function (ts) {
+                            var json = JSON.parse(ts.d);
+                            years = json;
+
+                            DrawClubScheduleForm(clubs, timeslots, years);
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function DrawClubScheduleForm(clubs, timeslots, years) {
+    var form = $('#entityGroup');
+    form.empty();
+
+    var mPeriod = list;
+
+    var mainGroup = $('<div>').addClass('form-group');
+
+    var group1 = $('<div>').addClass('form-group'); //Selects
+    var group1a = $('<div>').addClass('form-group');//Selects
+    var group2 = $('<div>').addClass('form-group'); //Create
+    var group3 = $('<div>').addClass('form-group'); //Status
+
+    var clearer1 = $('<div>').addClass('clearer');
+    var clearer1a = $('<div>').addClass('clearer');
+    var clearer2 = $('<div>').addClass('clearer');
+    var clearer3 = $('<div>').addClass('clearer');
+
+    mainGroup.append(group1);
+    mainGroup.append(group1a);
+    mainGroup.append(group2);
+    mainGroup.append(group3);
+
+    // Containers for controls
+    var clubCont = $('<div>').addClass('col-md-3');
+    var dayCont = $('<div>').addClass('col-md-3');
+    var timeCont = $('<div>').addClass('col-md-3');
+    var yearCont = $('<div>').addClass('col-md-3');
+
+    //Labels
+    var clubLabel = $('<label>').addClass('col-md-2 control-label admin').attr('id', 'clubLabel').text('Club');
+    var timeLabel = $('<label>').addClass('col-md-2 control-label admin').attr('id', 'timeLabel').text('Time Slot');
+    var dayLabel = $('<label>').addClass('col-md-2 control-label admin').attr('id', 'dayLabel').text('Day');
+    var yearLabel = $('<label>').addClass('col-md-2 control-label admin').attr('id', 'yearLabel').text('School Year');
+
+    var clubList = $('<select>').addClass('form-control').attr('id', 'clubSelect');
+    var timeList = $('<select>').addClass('form-control').attr('id', 'timeSelect');
+    var dayList = $('<select>').addClass('form-control').attr('id', 'daySelect');
+    var yearList = $('<select>').addClass('form-control').attr('id', 'yearSelect');
+
+    dayList.append($('<option>').val('-').text('-----------------------'));
+    timeList.append($('<option>').val('-').text('-----------------------'));
+    clubList.append($('<option>').val('-').text('-----------------------'));
+    yearList.append($('<option>').val('-').text('-----------------------'));
+
+    dayList.append($('<option>').val('Monday').text('Monday'));
+    dayList.append($('<option>').val('Tuesday').text('Tuesday'));
+    dayList.append($('<option>').val('Wednesday').text('Wednesday'));
+    dayList.append($('<option>').val('Thursday').text('Thursday'));
+    dayList.append($('<option>').val('Friday').text('Friday'));
+    dayList.append($('<option>').val('Saturday').text('Saturday'));
+    dayList.append($('<option>').val('Sunday').text('Sunday'));
+
+    $.each(clubs, function (i, el) {
+        clubList.append($('<option>').val(el.id).text(el.name));
+    });
+
+    $.each(timeslots, function (i, el) {
+        timeList.append($('<option>').val(el.id).text(el.start + ' - ' + el.end));
+    });
+
+    $.each(years, function (i, el) {
+        yearList.append($('<option>').val(el.id).text(el.name));
+    });
+
+    var btnCont = $('<div>').addClass('col-md-12');
+    var btn = $('<input>').attr('type', 'button').attr('id', 'createClubScheduleButton').attr('name', 'createClubScheduleButton').addClass('btn btn-success').click(CreateClubSchedule).val('Create');
+    btn.appendTo(btnCont);
+
+    var statusCont = $('<div>');
+    var status = $('<label>').addClass('form-control admin').attr('id', 'clubScheduleStatus');
+    status.appendTo(statusCont);
+
+    group2.append(btnCont);
+    group2.append(clearer2);
+
+    group3.append(statusCont);
+    group3.append(clearer3);
+
+    clubList.appendTo(clubCont);
+    timeList.appendTo(timeCont);
+    dayList.appendTo(dayCont);
+    yearList.appendTo(yearCont);
+
+    group1.append(yearLabel);
+    group1.append(yearCont);
+    group1.append(clubLabel);
+    group1.append(clubCont);
+    group1.append(clearer1);
+
+    group1a.append(timeLabel);
+    group1a.append(timeCont);
+    group1a.append(dayLabel);
+    group1a.append(dayCont);
+    group1a.append(clearer1a);
+
+    mainGroup.appendTo(form);
+    form.show();
+}
+
+function CreateClubSchedule() {
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/CreateClubSchedule",
+        data: "{'clubId':'" + $('#clubSelect option:checked').val() + "', 'timeId':'" + $('#timeSelect option:checked').val() + "', 'day':'" + $('#daySelect option:checked').val() + "', 'yearId':'" + $('#yearSelect option:checked').val() + "'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            if (json == 'success') {
+                $('#clubScheduleStatus').text('Success!  Your club schedule was successfully created');
+            }
+            else {
+                $('#clubScheduleStatus').text(json);
+            }
+        }
+    });
 }

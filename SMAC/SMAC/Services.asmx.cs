@@ -31,6 +31,71 @@ namespace SMAC
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string DeleteClubSchedule(string id, string yearId, string day, string tsId)
+        {
+            try
+            {
+                ClubScheduleEntity.DeleteSchedule(int.Parse(id), int.Parse(tsId), day, int.Parse(yearId));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchClubSchedule(string id, string yearId)
+        {
+            try
+            {
+                var schedules = ClubScheduleEntity.GetClubScheduleAlt(int.Parse(id), int.Parse(yearId));
+
+                var rtnObj = new object[schedules.Count];
+
+                for (int i = 0; i < schedules.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        id = schedules[i].TimeSlotId,
+                        start = DateTime.Today.Add(schedules[i].TimeSlot.StartTime).ToString("hh:mm tt"),
+                        end = DateTime.Today.Add(schedules[i].TimeSlot.EndTime).ToString("hh:mm tt"),
+                        day = schedules[i].DayValue,
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string CreateClubSchedule(string clubId, string timeId, string day, string yearId)
+        {
+            try
+            {
+                ClubScheduleEntity.CreateSchedule(int.Parse(clubId), int.Parse(timeId), day, int.Parse(yearId));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        #region Marking Period
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string DeleteMarkingPeriod(string id)
         {
             try
@@ -39,7 +104,7 @@ namespace SMAC
 
                 return JsonConvert.SerializeObject("success");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return JsonConvert.SerializeObject("Marking period cannot be deleted as it is currently in use");
             }
@@ -132,6 +197,8 @@ namespace SMAC
                 return JsonConvert.SerializeObject(ex.Message);
             }
         }
+
+        #endregion
 
         #region Class
 
