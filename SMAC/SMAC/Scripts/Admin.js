@@ -77,7 +77,7 @@ function PopulateEntityList() {
         }
         else if (eType == 7) {
             //Section
-
+            CreateSectionForm_Pre();
         }
         else if (eType == 8) {
             //Section Schedule
@@ -134,7 +134,7 @@ function PopulateEntityList() {
         }
         else if (eType == 7) {
             //Section
-
+            CreateSectionSelect();
         }
         else if (eType == 8) {
             //Section Schedule
@@ -2871,4 +2871,385 @@ function CreateClubSchedule() {
             }
         }
     });
+}
+
+
+
+
+
+
+
+
+
+
+function CreateSectionSelect() {
+    var selectGroup = $('<div>').addClass('form-group').attr('id', 'sectionSelectGroup');
+
+    var group1 = $('<div>').addClass('form-group');
+    var group2 = $('<div>').addClass('form-group').attr('id', 'sectionGroup2');
+    var group3 = $('<div>').addClass('form-group').attr('id', 'sectionGroup3');
+    var group4 = $('<div>').addClass('form-group').attr('id', 'sectionGroup4');
+    var group5 = $('<div>').addClass('form-group').attr('id', 'sectionGroup5');
+    var group6 = $('<div>').addClass('form-group').attr('id', 'sectionGroup6');
+
+    var clearer1 = $('<div>').addClass('clearer');
+    var clearer2 = $('<div>').addClass('clearer');
+    var clearer3 = $('<div>').addClass('clearer');
+    var clearer4 = $('<div>').addClass('clearer');
+
+    selectGroup.append(group1);
+    selectGroup.append(group2);
+    selectGroup.append(group3);
+    selectGroup.append(group4);
+    selectGroup.append(group5);
+    selectGroup.append(group6);
+
+    var subjCont = $('<div>').addClass('col-md-3');
+    var classCont = $('<div>').addClass('col-md-3');
+    var sectionCont = $('<div>').addClass('col-md-3');
+    var nameCont = $('<div>').addClass('col-md-3');
+    var descCont = $('<div>').addClass('col-md-3');
+
+    var subjectSelectLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'subjectSelectLabel').text('Select a Subject');
+    var classSelectLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'classSelectLabel').text('Select a Class');
+    var sectionSelectLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'sectionSelectLabel').text('Select a Section');
+    var nameLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'nameLabel').text('Section Name');
+    var descriptionLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'descriptionLabel').text('Description');
+
+    var sectionName = $('<input>').attr('type', 'text').attr('id', 'sectionName').addClass('form-control');
+    var description = $('<input>').attr('type', 'text').attr('id', 'description').addClass('form-control');
+
+    var sectionList = $('<select>').addClass('form-control').attr('id', 'sectionList').on('change', function () {
+        if ($('#sectionList option:checked').val() != '-') {
+            $('#acceptSection').removeAttr('disabled');
+        }
+        else {
+            $('#acceptSection').attr('disabled', 'disabled');
+        }
+    });
+    sectionList.appendTo(sectionCont);
+
+    var statusCont = $('<div>').addClass('col-md-12');
+    var status = $('<label>').addClass('form-control admin').attr('id', 'sectionStatus');
+    status.appendTo(statusCont);
+
+    var selCont = $('<div>').addClass('col-md-1');
+    var select = $('<input>').attr('type', 'button').attr('id', 'acceptSection').attr('disabled', 'disabled').addClass('btn btn-primary').click(function () {
+
+        if ($('#entityActionList option:checked').val() == 'delete') {
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/DeleteSection",
+                data: "{'id':'" + $('#sectionList option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var json = JSON.parse(data.d);
+
+                    var sectionGroup4 = $('#sectionGroup4');
+                    statusCont.appendTo(sectionGroup4);
+
+                    if (json == 'success') {
+                        $('#sectionStatus').text('Success!  Your section was successfully deleted');
+                        $('#sectionList option[value="' + $('#sectionList option:checked').val() + '"]').remove();
+                        $('#sectionList').prop('selectedIndex', 0);
+                    }
+                    else {
+                        $('#sectionStatus').text(json);
+                    }
+                }
+            });
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchSection",
+                data: "{'id':'" + $('#sectionList option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var json = JSON.parse(data.d);
+
+                    var sectionGroup4 = $('#sectionGroup4');
+                    var sectionGroup5 = $('#sectionGroup5');
+                    var sectionGroup6 = $('#sectionGroup6');
+                    var clearer5 = $('<div>').addClass('clearer');
+                    var clearer6 = $('<div>').addClass('clearer');
+
+                    sectionName.val(json.name);
+                    description.val(json.desc);
+
+                    sectionGroup4.append(nameLabel);
+                    sectionGroup4.append(nameCont);
+                    nameCont.append(sectionName);
+                    sectionGroup4.append(descriptionLabel);
+                    sectionGroup4.append(descCont);
+                    descCont.append(description);
+                    sectionGroup4.append(clearer4);
+
+                    var btnCont = $('<div>').addClass('col-md-12');
+                    var btn = $('<input>').attr('type', 'button').attr('id', 'updateSectionButton').attr('name', 'updateSectionButton').addClass('btn btn-success').val('Update').click(function () {
+                        $.ajax({
+                            type: "POST",
+                            url: "Services.asmx/UpdateSection",
+                            data: "{'subjectId':'" + $('#subjList option:checked').val() + "', 'classId':'" + $('#classList option:checked').val() + "', 'id':'" + $('#sectionList option:checked').val() +
+                                "', 'name':'" + $('#sectionName').val() + "', 'desc':'" + $('#description').val() + "'}",
+                            contentType: "application/json; charset=UTF-8",
+                            success: function (data) {
+                                var json = JSON.parse(data.d);
+
+                                if (json == 'success') {
+                                    $('#sectionStatus').text('Success!  Your section was successfully created');
+                                }
+                                else {
+                                    $('#sectionStatus').text(json);
+                                }
+                            }
+                        });
+                    });
+                    btn.appendTo(btnCont);
+
+                    var statusCont = $('<div>');
+                    var status = $('<label>').addClass('form-control admin').attr('id', 'sectionStatus');
+                    status.appendTo(statusCont);
+
+                    btnCont.appendTo(sectionGroup5);
+                    clearer5.appendTo(sectionGroup5);
+
+                    statusCont.appendTo(sectionGroup6);
+                    clearer6.appendTo(sectionGroup6);
+                }
+            });
+        }
+    });
+    if ($('#entityActionList option:checked').val() != 'delete') { select.val('OK') } else { select.val('Delete') }
+    select.appendTo(selCont);
+    
+
+    var classList = $('<select>').addClass('form-control').attr('id', 'classList').append($('<option>').val('-').text('-----------------------')).on('change', function () {
+        if ($('#classList option:checked').val() != '-') {
+
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchSectionList",
+                data: "{'classId':'" + $('#classList option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var json = JSON.parse(data.d);
+
+                    sectionList.empty();
+                    sectionList.append($('<option>').val('-').text('-----------------------'));
+
+                    $.each(json, function (i, el) {
+                        sectionList.append($('<option>').val(el.id).text(el.name));
+                    });
+
+                    group3.append(sectionSelectLabel);
+                    group3.append(sectionCont);
+                    group3.append(selCont);
+                    group3.append(clearer3);
+                }
+            });
+        }
+    });
+    classList.appendTo(classCont);
+
+    var subjList = $('<select>').addClass('form-control').attr('id', 'subjList').append($('<option>').val('-').text('-----------------------')).on('change', function () {
+        if ($('#subjList option:checked').val() != '-') {
+
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchClassList",
+                data: "{'subjectId':'" + $('#subjList option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var json = JSON.parse(data.d);
+
+                    sectionList.empty();
+                    sectionList.append($('<option>').val('-').text('-----------------------'));
+
+                    classList.empty();
+                    classList.append($('<option>').val('-').text('-----------------------'));
+
+                    $.each(json, function (i, el) {
+                        classList.append($('<option>').val(el.id).text(el.name));
+                    });
+
+                    group2.append(classSelectLabel);
+                    group2.append(classCont);
+                    group2.append(clearer2);
+                }
+            });
+        }
+    });
+
+    group1.append(subjectSelectLabel);
+    group1.append(subjCont);
+    subjList.appendTo(subjCont);
+    group1.append(clearer1);
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchSubjectList",
+        data: "{}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            $.each(json, function (i, el) {
+                subjList.append($('<option>').val(el.id).text(el.name));
+            });
+
+            $('#entitySelectGroup').append(selectGroup);
+            $('#entitySelectGroup').show();
+        }
+    });
+}
+
+
+function CreateSectionForm_Pre() {
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchSubjectList",
+        data: "{}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            CreateSectionForm(json);
+        }
+    });
+}
+
+function CreateSectionForm(sections) {
+
+    var form = $('#entityGroup');
+    form.empty();
+
+    var mPeriod = list;
+
+    var mainGroup = $('<div>').addClass('form-group');
+
+    var group1 = $('<div>').addClass('form-group'); //Class Select
+    var group2 = $('<div>').addClass('form-group'); //Name/Description
+    var group3 = $('<div>').addClass('form-group'); //Button
+    var group4 = $('<div>').addClass('form-group'); //Status
+
+    var clearer1 = $('<div>').addClass('clearer');
+    var clearer2 = $('<div>').addClass('clearer');
+    var clearer3 = $('<div>').addClass('clearer');
+    var clearer4 = $('<div>').addClass('clearer');
+
+    mainGroup.append(group1);
+    mainGroup.append(group2);
+    mainGroup.append(group3);
+    mainGroup.append(group4);
+
+    // Containers for controls
+    var subjectCont = $('<div>').addClass('col-md-3');
+    var classCont = $('<div>').addClass('col-md-3');
+    var nameCont = $('<div>').addClass('col-md-3');
+    var descCont = $('<div>').addClass('col-md-3');
+
+    //Labels
+    var subjectLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'subjectLabel').text('Subject');
+    var classLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'classLabel').text('Class');
+    var nameLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'nameLabel').text('Section Name');
+    var descLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'descLabel').text('Description');
+
+    group1.append(subjectLabel);
+    group1.append(subjectCont);
+    group1.append(classLabel);
+    group1.append(classCont);
+    group1.append(clearer1);
+
+    group2.append(nameLabel);
+    group2.append(nameCont);
+    group2.append(descLabel);
+    group2.append(descCont);
+    group2.append(clearer2);
+
+    var btnCont = $('<div>').addClass('col-md-12');
+    var btn = $('<input>').attr('type', 'button').attr('id', 'createSectionButton').attr('name', 'createSectionButton').addClass('btn btn-success').click(CreateEditSection);
+    if (mPeriod != undefined) { btn.val('Update'); } else { btn.val('Create'); }
+    btn.appendTo(btnCont);
+
+    var statusCont = $('<div>');
+    var status = $('<label>').addClass('form-control admin').attr('id', 'sectionStatus');
+    status.appendTo(statusCont);
+
+    group3.append(btnCont);
+    group3.append(clearer3);
+    group4.append(statusCont);
+    group4.append(clearer4);
+
+    var sectionName = $('<input>').attr('type', 'text').attr('id', 'sectionName').addClass('form-control');
+    var description = $('<input>').attr('type', 'text').attr('id', 'description').addClass('form-control');
+
+    nameCont.append(sectionName);
+    descCont.append(description);
+
+    var subjectSelect = $('<select>').addClass('form-control').attr('id', 'subjectSelect');
+    var classSelect = $('<select>').addClass('form-control').attr('id', 'classSelect').attr('disabled', 'disabled').css('background-color', 'lightgrey');
+
+    subjectSelect.append($('<option>').val('-').text('-----------------------'));
+    classSelect.append($('<option>').val('-').text('-----------------------'));
+
+    $.each(sections, function (i, el) {
+        subjectSelect.append($('<option>').val(el.id).text(el.name));
+    });
+
+    subjectSelect.on('change', function () {
+        if ($('#subjectSelect option:checked').val() != '-') {
+            classSelect.removeAttr('disabled').css('background-color', 'white');
+            classSelect.empty();
+            classSelect.append($('<option>').val('-').text('-----------------------'));
+
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchClassList",
+                data: "{'subjectId':'" + $('#subjectSelect option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var json = JSON.parse(data.d);
+
+                    $.each(json, function (i, el) {
+                        classSelect.append($('<option>').val(el.id).text(el.name));
+                    });
+                }
+            });
+        }
+    });
+
+    subjectSelect.appendTo(subjectCont);
+    classSelect.appendTo(classCont);
+
+    mainGroup.appendTo(form);
+    form.show();
+}
+
+function CreateEditSection() {
+    if ($('#sectionName').val() != '') {
+        if ($('#createSectionButton').val() == 'Create') {
+
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/CreateSection",
+                data: "{'subjectId':'" + $('#subjectSelect option:checked').val() + "', 'classId':'" + $('#classSelect option:checked').val() + "', 'name':'" + $('#sectionName').val() + "', 'desc':'" + $('#description').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var json = JSON.parse(data.d);
+
+                    if (json == 'success') {
+                        $('#sectionStatus').text('Success!  Your section was successfully created');
+                    }
+                    else {
+                        $('#sectionStatus').text(json);
+                    }
+                }
+            });
+        }
+    }
+}
+
+function SubmitSection() {
+
 }

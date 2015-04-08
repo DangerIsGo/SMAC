@@ -29,6 +29,116 @@ namespace SMAC
             }
         }
 
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string DeleteSection(string id)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                SectionEntity.DeleteSection(int.Parse(id));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject("Section currently in use and cannot be deleted.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string UpdateSection(string subjectId, string classId, string id, string name, string desc)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                SectionEntity.UpdateSection(int.Parse(schoolId), int.Parse(subjectId), int.Parse(classId), int.Parse(id), name, desc);
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchSection(string id)
+        {
+            try
+            {
+                var section = SectionEntity.GetSection(int.Parse(id));
+
+                var obj = new
+                {
+                    name = section.SectionName,
+                    desc = section.Description,
+                    id = section.SectionId
+                };
+
+                return JsonConvert.SerializeObject(obj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchSectionList(string classId)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                var sections = SectionEntity.GetSections(int.Parse(classId));
+
+                var rtnObj = new object[sections.Count];
+
+                for (int i = 0; i < sections.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        id = sections[i].SectionId,
+                        name = sections[i].SectionName
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string CreateSection(string subjectId, string classId, string name, string desc)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                SectionEntity.CreateSection(int.Parse(schoolId), int.Parse(subjectId), int.Parse(classId), name, desc);
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        #region Club Schedule
+
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string DeleteClubSchedule(string id, string yearId, string day, string tsId)
@@ -91,6 +201,8 @@ namespace SMAC
                 return JsonConvert.SerializeObject(ex.Message);
             }
         }
+
+        #endregion
 
         #region Marking Period
 
