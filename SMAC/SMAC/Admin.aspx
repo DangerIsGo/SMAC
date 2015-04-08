@@ -49,15 +49,16 @@
                     <option value="2">Club</option>
                     <option value="3">Club Enrollment</option>
                     <option value="4">Club Schedule</option>
-                    <option value="5">Marking Period</option>
-                    <option value="6">News</option>
-                    <option value="7">Section</option>
-                    <option value="8">Section Schedule</option>
-                    <option value="9">School Year</option>
-                    <option value="10">Student Enrollment</option>
-                    <option value="11">Subject</option>
-                    <option value="12">Time Slot</option>
-                    <option value="13">User</option>
+                    <option value="5">Grade</option>
+                    <option value="6">Marking Period</option>
+                    <option value="7">News</option>
+                    <option value="8">Section</option>
+                    <option value="9">Section Schedule</option>
+                    <option value="10">School Year</option>
+                    <option value="11">Student Enrollment</option>
+                    <option value="12">Subject</option>
+                    <option value="13">Time Slot</option>
+                    <option value="14">User</option>
                 </select>
             </div>
             <div class="col-md-1">

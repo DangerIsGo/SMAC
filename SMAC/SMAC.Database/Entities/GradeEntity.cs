@@ -2,42 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SMAC.Database.Entities
+namespace SMAC.Database
 {
     public class GradeEntity
     {
-        public static void UpdateGrade(string grade, int schoolId, string newGrade)
-        {
-            try
-            {
-                using (SmacEntities context = new SmacEntities())
-                {
-                    var gr = (from a in context.Grades where a.GradeValue == grade && a.SchoolId == schoolId select a).FirstOrDefault();
-
-                    if (gr != null)
-                    {
-                        gr.GradeValue = newGrade;
-                        context.Entry(gr).State = System.Data.Entity.EntityState.Modified;
-                        context.SaveChanges();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
         public static void CreateGrade(string val, int schoolId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
+                    if ((from a in context.Grades where a.SchoolId == schoolId && a.GradeValue == val select a).FirstOrDefault() != null)
+                    {
+                        throw new Exception("Grade not created as it already exists.");
+                    }
+
                     Grade grade = new Grade()
                     {
                         GradeValue = val,
-                        School = SchoolEntity.GetSchool(schoolId)
+                        School = (from a in context.Schools where a.SchoolId == schoolId select a).FirstOrDefault()
                     };
 
                     context.Grades.Add(grade);
@@ -56,7 +39,7 @@ namespace SMAC.Database.Entities
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    return SchoolEntity.GetSchool(schoolId).Grades.ToList();
+                    return (from a in context.Grades where a.SchoolId == schoolId select a).ToList();
                 }
             }
             catch (Exception ex)

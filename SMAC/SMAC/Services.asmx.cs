@@ -31,6 +31,74 @@ namespace SMAC
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string DeleteGrade(string grade)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                GradeEntity.DeleteGrade(grade, int.Parse(schoolId));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception)
+            {
+                return JsonConvert.SerializeObject("Grade could not be deleted as it is currently in use.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchGradeList()
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                var grades = GradeEntity.GetGrades(int.Parse(schoolId));
+
+                var rtnObj = new object[grades.Count];
+
+                for (int i = 0; i < grades.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        grade = grades[i].GradeValue
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string CreateGrade(string grade)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                GradeEntity.CreateGrade(grade, int.Parse(schoolId));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        #region Section
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string DeleteSection(string id)
         {
             try
@@ -41,9 +109,9 @@ namespace SMAC
 
                 return JsonConvert.SerializeObject("success");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return JsonConvert.SerializeObject("Section currently in use and cannot be deleted.");
+                return JsonConvert.SerializeObject("Section cannot be deleted as it is currently in use.");
             }
         }
 
@@ -136,6 +204,8 @@ namespace SMAC
                 return JsonConvert.SerializeObject(ex.Message);
             }
         }
+
+        #endregion
 
         #region Club Schedule
 
@@ -1107,6 +1177,8 @@ namespace SMAC
 
         #endregion
 
+        #region Threads, PMs and Control Panel
+
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string PostNewThreadReply(string threadId, string sectionId, string content)
@@ -1268,5 +1340,7 @@ namespace SMAC
                 return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
             }
         }
+
+        #endregion
     }
 }

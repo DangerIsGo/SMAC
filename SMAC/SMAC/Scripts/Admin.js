@@ -68,38 +68,42 @@ function PopulateEntityList() {
             DrawClubScheduleForm_Pre();
         }
         else if (eType == 5) {
+            //Grade
+            DrawGradeForm();
+        }
+        else if (eType == 6) {
             //Marking Period
             DrawMarkingPeriodForm();
         }
-        else if (eType == 6) {
+        else if (eType == 7) {
             //News 
             DrawLatestNewsForm();
         }
-        else if (eType == 7) {
+        else if (eType == 8) {
             //Section
             CreateSectionForm_Pre();
         }
-        else if (eType == 8) {
+        else if (eType == 9) {
             //Section Schedule
 
         }
-        else if (eType == 9) {
+        else if (eType == 10) {
             //School Year
             DrawSchoolYearForm();
         }
-        else if (eType == 10) {
+        else if (eType == 11) {
             //Student Enrollment
 
         }
-        else if (eType == 11) {
+        else if (eType == 12) {
             //Subject
             DrawSubjectForm();
         }
-        else if (eType == 12) {
+        else if (eType == 13) {
             //Time Span
             DrawTimeSlotForm();
         }
-        else if (eType == 13) {
+        else if (eType == 14) {
             //User
             DrawUserForm();
         }
@@ -125,38 +129,42 @@ function PopulateEntityList() {
             DrawClubScheduleSelect();
         }
         else if (eType == 5) {
+            //Grade
+            DrawGradeSelect();
+        }
+        else if (eType == 6) {
             //Marking Period
             GetSchoolYearList(DrawMarkingPeriodSelect);
         }
-        else if (eType == 6) {
+        else if (eType == 7) {
             //News 
             GetLatestNewsList(DrawLatestNewsSelect);
         }
-        else if (eType == 7) {
+        else if (eType == 8) {
             //Section
             CreateSectionSelect();
         }
-        else if (eType == 8) {
+        else if (eType == 9) {
             //Section Schedule
 
         }
-        else if (eType == 9) {
+        else if (eType == 10) {
             //School Year
             GetSchoolYearList(DrawSchoolYearSelect);
         }
-        else if (eType == 10) {
+        else if (eType == 11) {
             //Student Enrollment
 
         }
-        else if (eType == 11) {
+        else if (eType == 12) {
             //Subject
             GetSubjectList(DrawSubjectSelect);
         }
-        else if (eType == 12) {
+        else if (eType == 13) {
             //Time Span
             GetTimeSlotList(DrawTimeSlotSelect);
         }
-        else if (eType == 13) {
+        else if (eType == 14) {
             //User
             GetUserList(DrawUserSelect);
         }
@@ -3239,7 +3247,7 @@ function CreateEditSection() {
                     var json = JSON.parse(data.d);
 
                     if (json == 'success') {
-                        $('#sectionStatus').text('Success!  Your section was successfully created');
+                        $('#sectionStatus').text('Success!  Your section \'' + $('#sectionName').val() + '\' was successfully created');
                     }
                     else {
                         $('#sectionStatus').text(json);
@@ -3250,6 +3258,161 @@ function CreateEditSection() {
     }
 }
 
-function SubmitSection() {
 
+
+
+
+
+
+
+
+
+
+function DrawGradeSelect() {
+    var selectGroup = $('<div>').addClass('form-group').attr('id', 'gradeSelectGroup');
+
+    var group1 = $('<div>').addClass('form-group');
+    var group2 = $('<div>').addClass('form-group');
+
+    var clearer1 = $('<div>').addClass('clearer');
+    var clearer2 = $('<div>').addClass('clearer');
+
+    selectGroup.append(group1);
+    selectGroup.append(group2);
+
+    var gradeCont = $('<div>').addClass('col-md-3');
+
+    var gradeLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'gradeLabel').text('Select a Grade');
+
+    var gradeList = $('<select>').addClass('form-control').attr('id', 'gradeSelect').on('change', function () {
+        if ($('#gradeSelect option:checked').val() != '') {
+            $('#acceptGrade').removeAttr('disabled');
+        }
+        else {
+            $('#acceptGrade').attr('disabled', 'disabled');
+        }
+    });
+
+    var selCont = $('<div>').addClass('col-md-1');
+    var select = $('<input>').attr('type', 'button').attr('id', 'acceptGrade').attr('disabled', 'disabled').addClass('btn btn-primary').click(function () {
+        $.ajax({
+            type: "POST",
+            url: "Services.asmx/DeleteGrade",
+            data: "{'grade':'"+$('#gradeSelect option:checked').val()+"'}",
+            contentType: "application/json; charset=UTF-8",
+            success: function (data) {
+                var json = JSON.parse(data.d);
+
+                if (json == 'success') {
+                    $('#gradeStatus').text('Success!  Your grade \'' + $('#gradeSelect option:checked').val() + '\' was successfully deleted');
+                    $('#gradeSelect option:checked').remove();
+                    $('#gradeSelect').prop('selectedIndex', 0);
+                    if ($('#gradeSelect option:checked').val() == '-') {
+                        $('#acceptGrade').attr('disabled', 'disabled');
+                    }
+                }
+                else {
+                    $('#gradeStatus').text(json);
+                }
+            }
+        });
+    }).val('Delete');
+    select.appendTo(selCont);
+
+    gradeList.append($('<option>').val('-').text('----------'));
+    gradeList.appendTo(gradeCont);
+
+    group1.append(gradeLabel);
+    group1.append(gradeCont);
+    group1.append(selCont);
+    group1.append(clearer1);
+
+    var statusCont = $('<div>');
+    var status = $('<label>').addClass('form-control admin').attr('id', 'gradeStatus');
+    status.appendTo(statusCont);
+
+    group2.append(statusCont);
+    group2.append(clearer2);
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchGradeList",
+        data: "{}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            $('#entitySelectGroup').append(selectGroup);
+            $('#entitySelectGroup').show();
+
+            $.each(json, function (i, el) {
+                gradeList.append($('<option>').val(el.grade).text(el.grade));
+            });
+        }
+    });
+}
+
+
+
+function DrawGradeForm() {
+    var form = $('#entityGroup');
+    form.empty();
+
+    var mPeriod = list;
+
+    var mainGroup = $('<div>').addClass('form-group');
+
+    var group1 = $('<div>').addClass('form-group'); //Grade/Button
+    var group2 = $('<div>').addClass('form-group'); //Status
+
+    var clearer1 = $('<div>').addClass('clearer');
+    var clearer2 = $('<div>').addClass('clearer');
+
+    mainGroup.append(group1);
+    mainGroup.append(group2);
+
+    // Containers for controls
+    var gradeCont = $('<div>').addClass('col-md-3');
+
+    //Labels
+    var gradeLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'gradeLabel').text('Grade');
+    var grade = $('<input>').attr('type', 'text').attr('id', 'grade').addClass('form-control');
+
+    group1.append(gradeLabel);
+    gradeCont.append(grade);
+    group1.append(gradeCont);
+
+    var btnCont = $('<div>').addClass('col-md-1');
+    var btn = $('<input>').attr('type', 'button').attr('id', 'createGradeButton').attr('name', 'createGradeButton').addClass('btn btn-success').val('Create').click(function () {
+        $.ajax({
+            type: "POST",
+            url: "Services.asmx/CreateGrade",
+            data: "{'grade':'" + $('#grade').val() + "'}",
+            contentType: "application/json; charset=UTF-8",
+            success: function (data) {
+                var json = JSON.parse(data.d);
+
+                if (json == 'success') {
+                    $('#gradeStatus').text('Success!  Your grade \'' + $('#grade').val() + '\' was successfully created');
+                }
+                else {
+                    $('#gradeStatus').text(json);
+                }
+            }
+        });
+    });
+    btn.appendTo(btnCont);
+
+    var statusCont = $('<div>');
+    var status = $('<label>').addClass('form-control admin').attr('id', 'gradeStatus');
+    status.appendTo(statusCont);
+
+    group1.append(btnCont);
+    group1.append(clearer1);
+
+    group1.append(statusCont);
+
+
+    mainGroup.appendTo(form);
+    form.show();
 }
