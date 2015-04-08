@@ -62,6 +62,7 @@ function PopulateEntityList() {
         }
         else if (eType == 3) {
             //Club Enrollment
+            DrawClubEnrollmentForm_Pre();
         }
         else if (eType == 4) {
             //Club Schedule
@@ -3269,6 +3270,14 @@ function CreateEditSection() {
 
 
 function DrawGradeSelect() {
+
+    if ($('#entityActionList option:checked').val() == 'update') {
+
+        var noUpdate = $('<label>').addClass('col-md-12 control-label').attr('id', 'noUpdate').text('Only create and delete actions are available for grades.');
+        $('#entitySelectGroup').append(noUpdate);
+        $('#entitySelectGroup').show()
+        return;
+    }
     var selectGroup = $('<div>').addClass('form-group').attr('id', 'gradeSelectGroup');
 
     var group1 = $('<div>').addClass('form-group');
@@ -3415,4 +3424,51 @@ function DrawGradeForm() {
 
     mainGroup.appendTo(form);
     form.show();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function DrawClubEnrollmentForm_Pre() {
+    var users;
+    var clubs;
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchClubList",
+        data: "{'grade':'" + $('#grade').val() + "'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            clubs = json
+
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchUserList",
+                data: "{'grade':'" + $('#grade').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var json = JSON.parse(data.d);
+
+                    users = json;
+
+                    DrawClubEnrollmentForm(users, clubs);
+                }
+            });
+        }
+    });
+}
+
+function DrawClubEnrollmentForm(users, clubs) {
+    console.log(clubs);
+    console.log(users);
 }

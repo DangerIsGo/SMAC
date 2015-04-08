@@ -31,6 +31,38 @@ namespace SMAC
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchClubRoster(string id)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                
+
+                var rtnObj = new object[users.Count];
+
+                for (int i = 0; i < users.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        id = users[i].UserId,
+                        fName = users[i].FirstName,
+                        lName = users[i].LastName
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string DeleteGrade(string grade)
         {
             try
