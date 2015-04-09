@@ -228,7 +228,6 @@ function DrawSubjectForm() {
     var group = $('<div>').addClass('form-group');
 
     var subject = list;
-    console.log(subject);
 
     var lbl = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'subjectLabel').text('Subject Name');
     var nameCont = $('<div>').addClass('col-md-3');
@@ -1278,7 +1277,6 @@ function DrawLatestNewsForm() {
     group3.appendTo(form);
 
     var latestNews = list;
-    console.log(latestNews);
 
     var lbl = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'latestNewsLabel').text('Content');
     var nameCont = $('<div>').addClass('col-md-9');
@@ -3854,7 +3852,6 @@ function DrawSectionEnrollmentSelect() {
     });
 
     var sectionList = $('<select>').addClass('form-control').attr('id', 'sectionSelect').on('change', function () {
-        console.log('foo')
         if ($('#sectionSelect option:checked').val() != '-') {
             $('#populateSectionButton').removeAttr('disabled');
         }
@@ -3954,11 +3951,9 @@ function PopulateSectionRoster(roster) {
         $('#enroll').append(user);
         $('#enroll option:selected').removeAttr('selected');
         if (origEnrolled[user.val()] == undefined) {
-            console.log('pushing ' + user.val() + ' to addedUsers');
             addedUsers[user.val()] = 1;
         }
         else {
-            console.log('popping ' + user.val() + ' from removedUsers');
             delete removedUsers[user.val()];
         }
     });
@@ -3968,11 +3963,9 @@ function PopulateSectionRoster(roster) {
         $('#avail').append(user);
         $('#avail option:selected').removeAttr('selected');
         if (origEnrolled[user.val()] != undefined) {
-            console.log('pushing ' + user.val() + ' to removedUsers');
             removedUsers[user.val()] = 1;
         }
         else {
-            console.log('popping ' + user.val() + ' from addedUsers');
             delete addedUsers[user.val()];
         }
     });
