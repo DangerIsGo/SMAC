@@ -18,7 +18,6 @@ namespace SMAC.Database
         {
             this.ClubSchedules = new HashSet<ClubSchedule>();
             this.MarkingPeriods = new HashSet<MarkingPeriod>();
-            this.SectionSchedules = new HashSet<SectionSchedule>();
         }
     
         public int SchoolYearId { get; set; }
@@ -30,6 +29,5 @@ namespace SMAC.Database
         public virtual ICollection<ClubSchedule> ClubSchedules { get; set; }
         public virtual ICollection<MarkingPeriod> MarkingPeriods { get; set; }
         public virtual School School { get; set; }
-        public virtual ICollection<SectionSchedule> SectionSchedules { get; set; }
     }
 }

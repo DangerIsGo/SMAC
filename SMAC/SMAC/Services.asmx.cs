@@ -30,6 +30,75 @@ namespace SMAC
             }
         }
 
+        #region Section Schedule
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string DeleteSectionSchedule(string sectionId, string periodId, string day, string tsId)
+        {
+            try
+            {
+                SectionScheduleEntity.DeleteSchedule(int.Parse(sectionId), int.Parse(periodId), int.Parse(tsId), day);
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchSectionSchedule(string sectionId, string periodId)
+        {
+            try
+            {
+                var schedules = ClubScheduleEntity.GetClubScheduleAlt(int.Parse(sectionId), int.Parse(periodId));
+
+                var rtnObj = new object[schedules.Count];
+
+                for (int i = 0; i < schedules.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        id = schedules[i].TimeSlotId,
+                        start = DateTime.Today.Add(schedules[i].TimeSlot.StartTime).ToString("hh:mm tt"),
+                        end = DateTime.Today.Add(schedules[i].TimeSlot.EndTime).ToString("hh:mm tt"),
+                        day = schedules[i].DayValue,
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string CreateSectionSchedule(string sectionId, string day, string timeId, string periodId)
+        {
+            try
+            {
+                SectionScheduleEntity.CreateSchedule(int.Parse(sectionId), int.Parse(timeId), day, int.Parse(periodId));
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch(Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Section Enrollment
+
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string UpdateSectionRoster(string sectionId, string periodId, string addedIds, string removedIds)
@@ -123,6 +192,10 @@ namespace SMAC
             }
         }
 
+        #endregion
+
+        #region Club Enrollment
+
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string UpdateClubRoster(string clubId, string ids)
@@ -189,6 +262,10 @@ namespace SMAC
             }
         }
 
+        #endregion
+
+        #region Grade
+
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string DeleteGrade(string grade)
@@ -254,6 +331,8 @@ namespace SMAC
                 return JsonConvert.SerializeObject(ex.Message);
             }
         }
+
+        #endregion
 
         #region Section
 
@@ -966,7 +1045,7 @@ namespace SMAC
             {
                 var schoolId = Session["SchoolId"].ToString();
 
-                var timeSlots = TimeSlotEntity.GetTimeSlots(int.Parse(schoolId));
+                var timeSlots = TimeSlotEntity.GetTimeSlots(int.Parse(schoolId)).OrderBy(t=>t.StartTime).ToList();
 
                 var rtnObj = new object[timeSlots.Count];
 

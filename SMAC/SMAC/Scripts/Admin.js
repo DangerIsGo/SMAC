@@ -86,7 +86,7 @@ function PopulateEntityList() {
         }
         else if (eType == 9) {
             //Section Schedule
-
+            DrawSectionScheduleForm_Pre();
         }
         else if (eType == 10) {
             //School Year
@@ -120,7 +120,6 @@ function PopulateEntityList() {
         else if (eType == 2) {
             //Club
             GetClubList(DrawClubSelect);
-
         }
         else if (eType == 3) {
             //Club Enrollment
@@ -148,7 +147,7 @@ function PopulateEntityList() {
         }
         else if (eType == 9) {
             //Section Schedule
-
+            DrawSectionScheduleSelect();
         }
         else if (eType == 10) {
             //School Year
@@ -3890,10 +3889,6 @@ function DrawSectionEnrollmentSelect() {
     });
 }
 
-function ApplySubjectChangeHandler(listbox) {
-
-}
-
 function PopulateSectionRoster_Pre() {
 
     $.ajax({
@@ -4054,4 +4049,615 @@ function PopulateSectionRoster(roster) {
 
     mainGroup.appendTo(form);
     form.show();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function DrawSectionScheduleForm_Pre() {
+    var subjects;
+    var timeslots;
+    var years;
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchSubjectList",
+        data: "{}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+            subjects = json;
+
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchTimeSlotList",
+                data: "{}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (ts) {
+                    var json = JSON.parse(ts.d);
+                    timeslots = json;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "Services.asmx/FetchSchoolYearList",
+                        data: "{}",
+                        contentType: "application/json; charset=UTF-8",
+                        success: function (ts) {
+                            var json = JSON.parse(ts.d);
+                            years = json;
+
+                            DrawSectionScheduleForm(subjects, timeslots, years);
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function DrawSectionScheduleForm(subjects, timeslots, years) {
+    var form = $('#entityGroup');
+    form.empty();
+
+    var mainGroup = $('<div>').addClass('form-group');
+
+    var group1 = $('<div>').addClass('form-group');
+    var group2 = $('<div>').addClass('form-group');
+    var group3 = $('<div>').addClass('form-group');
+    var group4 = $('<div>').addClass('form-group');
+    var group5 = $('<div>').addClass('form-group');
+
+    var clearer1 = $('<div>').addClass('clearer');
+    var clearer2 = $('<div>').addClass('clearer');
+    var clearer3 = $('<div>').addClass('clearer');
+    var clearer4 = $('<div>').addClass('clearer');
+    var clearer5 = $('<div>').addClass('clearer');
+
+    mainGroup.append(group1);
+    mainGroup.append(group2);
+    mainGroup.append(group3);
+    mainGroup.append(group4);
+    mainGroup.append(group5);
+
+    // Containers for controls
+    var subjCont = $('<div>').addClass('col-md-2');
+    var classCont = $('<div>').addClass('col-md-2');
+    var sectCont = $('<div>').addClass('col-md-2');
+    var timeCont = $('<div>').addClass('col-md-2');
+    var dayCont = $('<div>').addClass('col-md-2');
+    var yearCont = $('<div>').addClass('col-md-2');
+    var periodCont = $('<div>').addClass('col-md-2');
+
+    var subjectLabel = $('<label>').addClass('col-md-2 control-label').attr('id', 'subjectLabel').text('Subject');
+    var classLabel = $('<label>').addClass('col-md-2 control-label').attr('id', 'classLabel').text('Class');
+    var sectionLabel = $('<label>').addClass('col-md-2 control-label').attr('id', 'sectionLabel').text('Section');
+    var timeLabel = $('<label>').addClass('col-md-2 control-label').attr('id', 'timeLabel').text('Time Slot');
+    var dayLabel = $('<label>').addClass('col-md-2 control-label').attr('id', 'dayLabel').text('Day');
+    var yearLabel = $('<label>').addClass('col-md-2 control-label').attr('id', 'yearLabel').text('School Year');
+    var periodLabel = $('<label>').addClass('col-md-2 control-label').attr('id', 'periodLabel').text('Marking Period');
+
+    var subjectList = $('<select>').addClass('form-control').attr('id', 'subjectSelect').on('change', function () {
+
+        var classSelect = $('#classSelect');
+        classSelect.empty();
+        classSelect.append($('<option>').val('-').text('-----------------------'));
+        classSelect.attr('disabled', 'disabled');
+
+        var sectionSelect = $('#sectionSelect');
+        sectionSelect.empty();
+        sectionSelect.append($('<option>').val('-').text('-----------------------'));
+        sectionSelect.attr('disabled', 'disabled');
+
+        $('#saveSectionScheduleButton').attr('disabled', 'disabled');
+
+        if ($('#subjectSelect option:checked').val() != '-') {
+
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchClassList",
+                data: "{'subjectId':'" + $('#subjectSelect option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (ts) {
+                    var json = JSON.parse(ts.d);
+
+                    $.each(json, function (i, el) {
+                        classSelect.append($('<option>').val(el.id).text(el.name));
+                    });
+
+                    classSelect.removeAttr('disabled');
+                }
+            });
+        }
+    });
+    subjectList.append($('<option>').val('-').text('-----------------------'));
+
+    var classList = $('<select>').addClass('form-control').attr('id', 'classSelect').attr('disabled', 'disabled').on('change', function () {
+
+        var sectionSelect = $('#sectionSelect');
+        sectionSelect.empty();
+        sectionSelect.append($('<option>').val('-').text('-----------------------'));
+        sectionSelect.attr('disabled', 'disabled');
+        $('#saveSectionScheduleButton').attr('disabled', 'disabled');
+
+        if ($('#classSelect option:checked').val() != '-') {
+            
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchSectionList",
+                data: "{'classId':'" + $('#classSelect option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (ts) {
+                    var json = JSON.parse(ts.d);
+
+                    $.each(json, function (i, el) {
+                        sectionSelect.append($('<option>').val(el.id).text(el.name));
+                    });
+
+                    sectionSelect.removeAttr('disabled');
+                }
+            });
+        }
+    });
+    classList.append($('<option>').val('-').text('-----------------------'));
+
+    var sectionList = $('<select>').addClass('form-control').attr('id', 'sectionSelect').attr('disabled', 'disabled').on('change', EnableSectionScheduleSaveButton);
+    sectionList.append($('<option>').val('-').text('-----------------------'));
+
+    var timeList = $('<select>').addClass('form-control').attr('id', 'timeSelect').on('change', EnableSectionScheduleSaveButton);
+    timeList.append($('<option>').val('-').text('-----------------------'));
+
+    var dayList = $('<select>').addClass('form-control').attr('id', 'daySelect').on('change', EnableSectionScheduleSaveButton);
+    dayList.append($('<option>').val('-').text('-----------------------'));
+    dayList.append($('<option>').val('Sunday').text('Sunday'));
+    dayList.append($('<option>').val('Monday').text('Monday'));
+    dayList.append($('<option>').val('Tuesday').text('Tuesday'));
+    dayList.append($('<option>').val('Wednesday').text('Wednesday'));
+    dayList.append($('<option>').val('Thursday').text('Thursday'));
+    dayList.append($('<option>').val('Friday').text('Friday'));
+    dayList.append($('<option>').val('Saturday').text('Saturday'));
+
+    var yearList = $('<select>').addClass('form-control').attr('id', 'yearSelect').on('change', function () {
+
+        var periodSelect = $('#periodSelect');
+        periodSelect.empty();
+        periodSelect.append($('<option>').val('-').text('-----------------------'));
+        periodSelect.attr('disabled', 'disabled');
+        $('#saveSectionScheduleButton').attr('disabled', 'disabled');
+
+        if ($('#yearSelect option:checked').val() != '-') {
+
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchMarkingPeriodList",
+                data: "{'yearId':'" + $('#yearSelect option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (ts) {
+                    var json = JSON.parse(ts.d);
+
+                    $.each(json, function (i, el) {
+                        var name = 
+                        periodList.append($('<option>').val(el.id).text(el.name == null ? 'All Year' : el.name));
+                    });
+
+                    periodSelect.removeAttr('disabled');
+                }
+            });
+        }
+    });
+    yearList.append($('<option>').val('-').text('-----------------------'));
+
+    var periodList = $('<select>').addClass('form-control').attr('disabled', 'disabled').attr('id', 'periodSelect').on('change', EnableSectionScheduleSaveButton);
+    periodList.append($('<option>').val('-').text('-----------------------'));
+
+    $.each(subjects, function (i, el) {
+        subjectList.append($('<option>').val(el.id).text(el.name));
+    });
+
+    $.each(timeslots, function (i, el) {
+        timeList.append($('<option>').val(el.id).text(el.start + ' - ' + el.end));
+    });
+
+    $.each(years, function (i, el) {
+        yearList.append($('<option>').val(el.id).text(el.name));
+    });
+
+    var btnCont = $('<div>').addClass('col-md-12');
+    var btn = $('<input>').attr('type', 'button').attr('disabled', 'disabled').attr('id', 'saveSectionScheduleButton').attr('name', 'saveSectionScheduleButton').addClass('btn btn-success').click(SaveSectionSchedule).val('Save');
+    btn.appendTo(btnCont);
+
+    var statusCont = $('<div>');
+    var status = $('<label>').addClass('form-control admin').attr('id', 'scheduleStatus');
+    status.appendTo(statusCont);
+
+    btnCont.appendTo(group4);
+    group4.append(clearer4);
+
+    statusCont.appendTo(group5);
+    group5.append(clearer5);
+
+    subjCont.append(subjectList);
+    classCont.append(classList);
+    sectCont.append(sectionList);
+    timeCont.append(timeList);
+    dayCont.append(dayList);
+    yearCont.append(yearList);
+    periodCont.append(periodList);
+
+    group1.append(subjectLabel)
+    group1.append(subjCont);
+    group1.append(classLabel);
+    group1.append(classCont);
+    group1.append(sectionLabel);
+    group1.append(sectCont);
+    group1.append(clearer1);
+
+    group2.append(timeLabel);
+    group2.append(timeCont);
+    group2.append(dayLabel)
+    group2.append(dayCont);
+    group2.append(clearer2);
+
+    group3.append(yearLabel);
+    group3.append(yearCont);
+    group3.append(periodLabel);
+    group3.append(periodCont);
+    group3.append(clearer3);
+
+    subjCont.append(subjectList);
+    classCont.append(classList);
+    sectCont.append(sectionList);
+    timeCont.append(timeList);
+    dayCont.append(dayList);
+
+    mainGroup.appendTo(form);
+    form.show();
+}
+
+function EnableSectionScheduleSaveButton() {
+    if ($('#sectionSelect option:checked').val() != '-' && $('#daySelect option:checked').val() != '-' && $('#timeSelect option:checked').val() != '-') {
+        $('#saveSectionScheduleButton').removeAttr('disabled');
+    }
+    else {
+        $('#saveSectionScheduleButton').attr('disabled', 'disabled');
+    }
+}
+
+function SaveSectionSchedule() {
+    if ($('#sectionSelect option:checked').val() != '-' && $('#daySelect option:checked').val() != '-' && $('#timeSelect option:checked').val() != '-') {
+        $.ajax({
+            type: "POST",
+            url: "Services.asmx/CreateSectionSchedule",
+            data: "{'sectionId':'" + $('#sectionSelect option:checked').val() + "', 'day':'" + $('#daySelect option:checked').val() + "', 'timeId':'" + $('#timeSelect option:checked').val() + "', 'periodId':'" + $('#periodSelect option:checked').val() + "'}",
+            contentType: "application/json; charset=UTF-8",
+            success: function (ts) {
+                var json = JSON.parse(ts.d);
+
+                if (json == 'success') {
+                    $('#scheduleStatus').text('Success!  Section schedule was successfully added.');
+                }
+                else {
+                    $('#scheduleStatus').text(json);
+                }
+            }
+        });
+    }
+}
+
+function DrawSectionScheduleSelect() {
+    if ($('#entityActionList option:checked').val() == 'update') {
+        var noUpdate = $('<label>').addClass('col-md-12 control-label').attr('id', 'noUpdate').text('Only create and delete actions are available for section schedule.');
+        $('#entitySelectGroup').append(noUpdate);
+        $('#entitySelectGroup').show();
+        return;
+    }
+
+    var form = $('#entitySelectGroup');
+    form.empty();
+
+    var mainGroup = $('<div>').addClass('form-group');
+
+    var group1 = $('<div>').addClass('form-group');
+    var group2 = $('<div>').addClass('form-group').attr('id', 'sectionGroup2');
+    var group3 = $('<div>').addClass('form-group').attr('id', 'sectionGroup3');
+    var group4 = $('<div>').addClass('form-group').attr('id', 'sectionGroup4');
+    var group5 = $('<div>').addClass('form-group').attr('id', 'sectionGroup5');
+    var group6 = $('<div>').addClass('form-group').attr('id', 'sectionGroup6');
+    var group7 = $('<div>').addClass('form-group').attr('id', 'sectionGroup7');
+
+    var clearer1 = $('<div>').addClass('clearer');
+    var clearer2 = $('<div>').addClass('clearer');
+    var clearer3 = $('<div>').addClass('clearer');
+    var clearer4 = $('<div>').addClass('clearer');
+    var clearer5 = $('<div>').addClass('clearer');
+    var clearer6 = $('<div>').addClass('clearer');
+    var clearer7 = $('<div>').addClass('clearer');
+
+    mainGroup.append(group1);
+    mainGroup.append(group2);
+    mainGroup.append(group3);
+    mainGroup.append(group4);
+    mainGroup.append(group5);
+    mainGroup.append(group6);
+    mainGroup.append(group7);
+
+    // Containers for controls
+    var yearCont = $('<div>').addClass('col-md-3');
+    var periodCont = $('<div>').addClass('col-md-3');
+    var subjCont = $('<div>').addClass('col-md-3');
+    var classCont = $('<div>').addClass('col-md-3');
+    var sectCont = $('<div>').addClass('col-md-3');
+    var schedCont = $('<div>').addClass('col-md-3');
+
+    var yearLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'yearLabel').text('Select a School Year');
+    var subjectLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'subjectLabel').text('Select a Subject');
+    var periodLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'periodLabel').text('Select a Marking Period');
+    var classLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'classLabel').text('Select a Class');
+    var sectionLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'sectionLabel').text('Select a Section');
+    var scheduleLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'scheduleLabel').text('Select a Schedule');
+
+    var yearList = $('<select>').addClass('form-control').attr('id', 'yearSelect').on('change', function () {
+
+        $('#sectionGroup3').hide();
+        $('#sectionGroup4').hide();
+        $('#sectionGroup5').hide();
+        $('#sectionGroup6').hide();
+        $('#sectionGroup7').hide();
+
+        if ($('#yearSelect option:checked').val() != '-') {
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchMarkingPeriodList",
+                data: "{'yearId':'" + $('#yearSelect option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (ts) {
+                    var json = JSON.parse(ts.d);
+
+                    var periodSelect = $('#periodSelect');
+                    periodSelect.empty();
+
+                    periodList.append($('<option>').val('-').text('-----------------------'));
+
+                    $.each(json, function (i, el) {
+                        periodList.append($('<option>').val(el.id).text(el.name == null ? 'All Year' : el.name));
+                    });
+
+                    $('#sectionGroup2').show();
+                }
+            });
+        }
+    });
+    yearList.append($('<option>').val('-').text('-----------------------')).appendTo(yearCont);
+
+    var periodList = $('<select>').addClass('form-control').attr('id', 'periodSelect').on('change', function () {
+
+        $('#sectionGroup4').hide();
+        $('#sectionGroup5').hide();
+        $('#sectionGroup6').hide();
+        $('#sectionGroup7').hide();
+
+        if ($('#periodSelect option:checked').val() != '-') {
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchSubjectList",
+                data: "{}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (ts) {
+                    var json = JSON.parse(ts.d);
+
+                    var subjectSelect = $('#subjectSelect');
+                    subjectSelect.empty();
+
+                    subjectSelect.append($('<option>').val('-').text('-----------------------'));
+
+                    $.each(json, function (i, el) {
+                        subjectSelect.append($('<option>').val(el.id).text(el.name));
+                    });
+
+                    $('#sectionGroup3').show();
+                }
+            });
+        }
+    });
+    periodList.append($('<option>').val('-').text('-----------------------')).appendTo(periodCont);
+
+    var subjectList = $('<select>').addClass('form-control').attr('id', 'subjectSelect').on('change', function () {
+
+        $('#sectionGroup5').hide();
+        $('#sectionGroup6').hide();
+        $('#sectionGroup7').hide();
+
+        if ($('#subjectSelect option:checked').val() != '-') {
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchClassList",
+                data: "{'subjectId':'" + $('#subjectSelect option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (ts) {
+                    var json = JSON.parse(ts.d);
+
+                    var classSelect = $('#classSelect');
+                    classSelect.empty();
+
+                    classSelect.append($('<option>').val('-').text('-----------------------'));
+
+                    $.each(json, function (i, el) {
+                        classSelect.append($('<option>').val(el.id).text(el.name));
+                    });
+
+                    $('#sectionGroup4').show();
+                }
+            });
+        }
+    });
+    subjectList.append($('<option>').val('-').text('-----------------------')).appendTo(subjCont);
+
+    var classList = $('<select>').addClass('form-control').attr('id', 'classSelect').on('change', function () {
+
+        $('#sectionGroup6').hide();
+        $('#sectionGroup7').hide();
+
+        if ($('#classSelect option:checked').val() != '-') {
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchSectionList",
+                data: "{'classId':'" + $('#classSelect option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (ts) {
+                    var json = JSON.parse(ts.d);
+
+                    var sectionSelect = $('#sectionSelect');
+                    sectionSelect.empty();
+
+                    sectionSelect.append($('<option>').val('-').text('-----------------------'));
+
+                    $.each(json, function (i, el) {
+                        sectionSelect.append($('<option>').val(el.id).text(el.name));
+                    });
+
+                    $('#sectionGroup5').show();
+                }
+            });
+        }
+    });
+    classList.append($('<option>').val('-').text('-----------------------')).appendTo(classCont);
+
+    var sectionList = $('<select>').addClass('form-control').attr('id', 'sectionSelect').on('change', function () {
+
+        $('#sectionGroup7').hide();
+
+        if ($('#sectionSelect option:checked').val() != '-') {
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchSectionSchedule",
+                data: "{'sectionId':'" + $('#classSelect option:checked').val() + "', 'periodId':'" + $('#periodSelect option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (ts) {
+                    var json = JSON.parse(ts.d);
+
+                    var scheduleSelect = $('#scheduleSelect');
+                    scheduleSelect.empty();
+
+                    scheduleSelect.append($('<option>').val('-').text('-----------------------'));
+
+                    $.each(json, function (i, el) {
+                        scheduleSelect.append($('<option>').val(el.id + ':' + el.day).text(el.day + ': ' + el.start + ' - ' + el.end));
+                    });
+
+                    $('#sectionGroup6').show();
+                    $('#scheduleStatus').text('');
+                }
+            });
+        }
+    });
+    sectionList.append($('<option>').val('-').text('-----------------------')).appendTo(sectCont);
+
+    var scheduleList = $('<select>').addClass('form-control').attr('id', 'scheduleSelect').on('change', function () {
+        $('#sectionGroup7').show();
+        if ($('#scheduleSelect option:checked').val() != '-') {
+            $('#deleteSectionScheduleButton').removeAttr('disabled');
+        }
+        else {
+            $('#deleteSectionScheduleButton').attr('disabled', 'disabled');
+        }
+    });
+    scheduleList.append($('<option>').val('-').text('-----------------------')).appendTo(schedCont);
+
+    var btnCont = $('<div>').addClass('col-md-1');
+    var btn = $('<input>').attr('type', 'button').attr('disabled', 'disabled').attr('id', 'deleteSectionScheduleButton').attr('name', 'deleteSectionScheduleButton').addClass('btn btn-primary').click(DeleteSectionSchedule).val('Delete');
+    btn.appendTo(btnCont);
+
+    var statusCont = $('<div>');
+    var status = $('<label>').addClass('form-control admin').attr('id', 'scheduleStatus');
+    status.appendTo(statusCont);
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchSchoolYearList",
+        data: "{}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (ts) {
+            var json = JSON.parse(ts.d);
+
+            $.each(json, function (i, el) {
+                yearList.append($('<option>').val(el.id).text(el.name));
+            });
+
+            group1.append(yearLabel);
+            group1.append(yearCont);
+            group1.append(clearer1);
+
+            group2.append(periodLabel);
+            group2.append(periodCont);
+            group2.append(clearer2);
+            group2.hide();
+
+            group3.append(subjectLabel);
+            group3.append(subjCont);
+            group3.append(clearer3);
+            group3.hide();
+
+            group4.append(classLabel);
+            group4.append(classCont);
+            group4.append(clearer4);
+            group4.hide();
+
+            group5.append(sectionLabel);
+            group5.append(sectCont);
+            group5.append(clearer5);
+            group5.hide();
+
+            group6.append(scheduleLabel);
+            group6.append(schedCont);
+            group6.append(btnCont);
+            group6.append(clearer6);
+            group6.hide();
+
+            group7.append(statusCont);
+            group7.append(clearer7);
+            group7.hide();
+
+            mainGroup.appendTo(form);
+            form.show();
+        }
+    });
+
+
+    
+}
+
+function DeleteSectionSchedule() {
+    var ids = $('#scheduleSelect option:checked').val().split(':');
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/DeleteSectionSchedule",
+        data: "{'sectionId':'" + $('#classSelect option:checked').val() + "', 'periodId':'" + $('#periodSelect option:checked').val() + "', 'day':'" + ids[1] + "', 'tsId':'" + ids[0] + "'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (ts) {
+            var json = JSON.parse(ts.d);
+
+            if (json == 'success') {
+                $('#scheduleStatus').text('Success!  Your section schedule was successfully deleted');
+            }
+            else {
+                $('#scheduleStatus').text(disposition);
+            }
+
+            $('#scheduleSelect option:checked').remove();
+        }
+    });
 }

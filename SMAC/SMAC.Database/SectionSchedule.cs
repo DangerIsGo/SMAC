@@ -21,11 +21,9 @@ namespace SMAC.Database
         public int TimeSlotId { get; set; }
         public string DayValue { get; set; }
         public int MarkingPeriodId { get; set; }
-        public int SchoolYearId { get; set; }
     
         public virtual Day Day { get; set; }
         public virtual MarkingPeriod MarkingPeriod { get; set; }
-        public virtual SchoolYear SchoolYear { get; set; }
         public virtual Section Section { get; set; }
         public virtual TimeSlot TimeSlot { get; set; }
     }
