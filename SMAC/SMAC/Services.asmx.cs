@@ -32,6 +32,72 @@ namespace SMAC
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchSectionRoster(string id)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                var users = StudentEntity.GetAllStudentsInSchool(int.Parse(schoolId));
+
+                //var enrolls = EnrollmentEntity.GetSectionRoster()
+
+                var rtnObj = new object[users.Count];
+
+                for (int i = 0; i < users.Count; ++i)
+                {
+                    //var enroll = enrolls.Where(t=>t.UserId == users[i].UserId).FirstOrDefault();
+                    var obj = new
+                    {
+                    //    name = users[i].FirstName + " " + users[i].LastName,
+                    //    id = users[i].UserId,
+                    //    enrolled = enroll != null  ? 1 : 0
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FetchStudentList()
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                var users = StudentEntity.GetAllStudentsInSchool(int.Parse(schoolId));
+
+                var rtnObj = new object[users.Count];
+
+                for (int i = 0; i < users.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        name = users[i].FirstName + " " + users[i].LastName,
+                        id = users[i].UserId
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string UpdateClubRoster(string clubId, string ids)
         {
             try

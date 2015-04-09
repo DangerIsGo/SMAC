@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Data.Entity;
+using System.Collections.Generic;
 
 namespace SMAC.Database
 {
@@ -45,6 +47,14 @@ namespace SMAC.Database
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public static List<usp_GetUsersInSchool_Result> GetAllStudentsInSchool(int schoolId)
+        {
+            using (SmacEntities context = new SmacEntities())
+            {
+                return context.usp_GetUsersInSchool(schoolId, string.Empty).OrderBy(t => t.LastName).Where(t=>t.Student != null).ToList();
             }
         }
 
