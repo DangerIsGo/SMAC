@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 
 namespace SMAC.Database
 {
     public class ClubEnrollmentEntity
     {
-        public static void CreateEnrollment(string sId, string clubName, int schoolId, bool isLeader)
+        public static void CreateEnrollment(string userId, int clubId, bool isLeader)
         {
             try
             {
@@ -14,8 +15,8 @@ namespace SMAC.Database
                 {
                     ClubEnrollment enroll = new ClubEnrollment()
                     {
-                        User = UserEntity.GetUser(sId),
-                        Club = GetClub(clubName, schoolId),
+                        User = (from a in context.Users where a.UserId == userId select a).FirstOrDefault(),
+                        Club = (from a in context.Clubs where a.ClubId == clubId select a).FirstOrDefault(),
                         IsLeader = isLeader
                     };
 
@@ -35,12 +36,28 @@ namespace SMAC.Database
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    var enroll = GetEnrollment(clubId, userId);
+                    var enroll = (from a in context.ClubEnrollments where a.UserId == userId && a.ClubId == clubId select a).FirstOrDefault();
+
                     if (enroll != null)
                     {
                         context.ClubEnrollments.Remove(enroll);
                         context.SaveChanges();
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static List<ClubEnrollment> GetEnrollments(int clubId)
+        {
+            try
+            {
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.ClubEnrollments where a.ClubId == clubId select a).Include(t=>t.User).Include(t=>t.Club).ToList();
                 }
             }
             catch (Exception ex)

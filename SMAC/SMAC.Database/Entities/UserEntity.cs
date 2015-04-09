@@ -151,7 +151,7 @@ namespace SMAC.Database
         {
             using (SmacEntities context = new SmacEntities())
             {
-                return context.usp_GetUsersInSchool(schoolId, userIdToFilter).ToList();
+                return context.usp_GetUsersInSchool(schoolId, userIdToFilter).OrderBy(t=>t.LastName).ToList();
             }
         }
 

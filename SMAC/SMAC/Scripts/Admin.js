@@ -124,6 +124,7 @@ function PopulateEntityList() {
         }
         else if (eType == 3) {
             //Club Enrollment
+            DrawClubEnrollmentForm_Pre();
         }
         else if (eType == 4) {
             //Club Schedule
@@ -3438,8 +3439,8 @@ function DrawGradeForm() {
 
 
 function DrawClubEnrollmentForm_Pre() {
-    var users;
-    var clubs;
+    $('#entitySelectGroup').empty();
+    $('#entityGroup').empty();
 
     $.ajax({
         type: "POST",
@@ -3449,26 +3450,209 @@ function DrawClubEnrollmentForm_Pre() {
         success: function (data) {
             var json = JSON.parse(data.d);
 
-            clubs = json
-
-            $.ajax({
-                type: "POST",
-                url: "Services.asmx/FetchUserList",
-                data: "{'grade':'" + $('#grade').val() + "'}",
-                contentType: "application/json; charset=UTF-8",
-                success: function (data) {
-                    var json = JSON.parse(data.d);
-
-                    users = json;
-
-                    DrawClubEnrollmentForm(users, clubs);
-                }
-            });
+            DrawClubEnrollmentForm(json);
         }
     });
 }
 
-function DrawClubEnrollmentForm(users, clubs) {
-    console.log(clubs);
-    console.log(users);
+function DrawClubEnrollmentForm(clubs) {
+ 
+    var form = $('#entitySelectGroup');
+
+    form.empty();
+
+    var mPeriod = list;
+
+    var mainGroup = $('<div>').addClass('form-group');
+
+    var group1 = $('<div>').addClass('form-group'); //Grade/Button
+
+    var clearer1 = $('<div>').addClass('clearer');
+
+    mainGroup.append(group1);
+
+    // Containers for controls
+    var clubCont = $('<div>').addClass('col-md-3');
+
+    //Labels
+    var clubLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'clubLabel').text('Select a Club');
+
+    var clubList = $('<select>').addClass('form-control').attr('id', 'clubSelect');
+    clubList.append($('<option>').val('-').text('-----------------------'));
+
+    $.each(clubs, function (i, el) {
+        clubList.append($('<option>').val(el.id).text(el.name));
+    });
+
+    var btnCont = $('<div>').addClass('col-md-1');
+    var btn = $('<input>').attr('type', 'button').attr('id', 'populateClubButton').attr('name', 'populateClubButton').addClass('btn btn-primary').click(PopulateClubRoster_Pre).val('OK');
+    btn.appendTo(btnCont);
+
+    clubList.appendTo(clubCont);
+    clubLabel.appendTo(group1);
+    clubCont.appendTo(group1);
+    btnCont.appendTo(group1);
+    clearer1.appendTo(group1);
+
+    mainGroup.appendTo(form);
+    form.show();
+}
+
+function PopulateClubRoster_Pre() {
+
+    $.ajax({
+        type: "POST",
+        url: "Services.asmx/FetchClubRoster",
+        data: "{'id':'" + $('#clubSelect option:checked').val() + "'}",
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            var json = JSON.parse(data.d);
+
+            PopulateClubRoster(json);
+        }
+    });
+}
+
+function PopulateClubRoster(roster) {
+    var form = $('#entityGroup');
+    form.empty();
+
+    var mainGroup = $('<div>').addClass('form-group');
+
+    var group1 = $('<div>').addClass('form-group');
+    var group2 = $('<div>').addClass('form-group');
+    var group2a = $('<div>').addClass('form-group');
+    var group3 = $('<div>').addClass('form-group');
+    var group4 = $('<div>').addClass('form-group');
+
+    var clearer1 = $('<div>').addClass('clearer');
+    var btnClearer = $('<div>').addClass('clearer');
+    var clearer2 = $('<div>').addClass('clearer');
+    var clearer2a = $('<div>').addClass('clearer');
+    var clearer3 = $('<div>').addClass('clearer');
+    var clearer4 = $('<div>').addClass('clearer');
+
+    mainGroup.append(group1);
+    mainGroup.append(group2);
+    mainGroup.append(group2a);
+    mainGroup.append(group3);
+    mainGroup.append(group4);
+
+    // Containers for controls
+    var availCont = $('<div>').addClass('col-md-4');
+    var enrollCont = $('<div>').addClass('col-md-4');
+    var btnCont = $('<div>').addClass('col-md-2');
+    var saveBtnCont = $('<div>').addClass('col-md-11 admin').css('text-align', 'right');
+    var padCont = $('<div>').addClass('col-md-1');
+    var leaderCont = $('<div>').addClass('col-md-1');
+
+    var availLabel = $('<label>').addClass('col-md-6 control-label').attr('id', 'availLabel').text('Available Users');
+    var enrollLabel = $('<label>').addClass('col-md-6 control-label').attr('id', 'enrollLabel').text('Enrolled Users');
+    var leaderLabel = $('<label>').addClass('col-md-10 control-label admin').attr('id', 'leaderLabel').text('Is Leader?');
+
+    var avail = $('<select>').attr('size', '10').attr('id', 'avail').addClass('form-control');
+    var enroll = $('<select>').attr('size', '10').attr('id', 'enroll').addClass('form-control').on('click', function () {
+        if ($('#enroll option:selected').attr('data-leader') == '1') {
+            $('#leaderChk').prop('checked', true)
+        }
+        else {
+            $('#leaderChk').prop('checked', false);
+        }
+    });
+
+    var leader = $('<input>').attr('type', 'checkbox').attr('id', 'leaderChk').addClass('form-control').on('click', function () {
+        if ($('#leaderChk').is(':checked')) {
+            $('#enroll option:selected').attr('data-leader', '1');
+        }
+        else {
+            $('#enroll option:selected').attr('data-leader', '0');
+        }
+    });
+    leader.appendTo(leaderCont);
+
+    var addBtn = $('<input>').attr('type', 'button').addClass('btn btn-primary add').val('Add').click(function () {
+        var user = $('#avail option:selected');
+        user.remove();
+        user.removeAttr('data-leader');
+        $('#enroll').append(user);
+        $('#enroll option:selected').removeAttr('selected');
+    });
+    var delBtn = $('<input>').attr('type', 'button').addClass('btn btn-warning remove').val('Remove').click(function () {
+        var user = $('#enroll option:selected');
+        user.remove();
+        user.attr('data-leader', '0');
+        $('#avail').append(user);
+        $('#avail option:selected').removeAttr('selected');
+    });
+
+    addBtn.appendTo(btnCont);
+    btnClearer.appendTo(btnCont);
+    delBtn.appendTo(btnCont);
+
+    $.each(roster, function (i, el) {
+        if (el.enrolled) {
+            enroll.append($('<option>').val(el.id).attr('data-leader', el.leader).text(el.name));
+        }
+        else {
+            avail.append($('<option>').val(el.id).text(el.name));
+        }
+    });
+
+    availLabel.appendTo(group1);
+    enrollLabel.appendTo(group1);
+    clearer1.appendTo(group1)
+
+    padCont.appendTo(group2)
+    avail.appendTo(availCont);
+    availCont.appendTo(group2);
+    btnCont.appendTo(group2);
+    enroll.appendTo(enrollCont);
+    enrollCont.appendTo(group2);
+    clearer2.appendTo(group2);
+
+    leaderLabel.appendTo(group2a);
+    leaderCont.appendTo(group2a);
+    clearer2a.appendTo(group2a);
+
+    saveBtnCont.appendTo(group3);
+    clearer3.appendTo(group3);
+
+    var statusCont = $('<div>');
+    var status = $('<label>').addClass('form-control admin').attr('id', 'enrollStatus');
+    status.appendTo(statusCont);
+
+    group4.append(statusCont);
+    group4.append(clearer4);
+
+    var saveBtn = $('<input>').attr('type', 'button').addClass('btn btn-success wide').val('Save').click(function () {
+
+        var ids = '';
+
+        $.each($('#enroll option'), function (i, el) {
+            var option = $(el);
+            ids += option.val() + ':' + (option.attr('data-leader') == '1' ? 'true' : 'false') + ',';
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "Services.asmx/UpdateClubRoster",
+            data: "{'clubId':'" + $('#clubSelect option:checked').val() + "', 'ids':'" + ids + "'}",
+            contentType: "application/json; charset=UTF-8",
+            success: function (data) {
+                var json = JSON.parse(data.d);
+
+                if (json == 'success') {
+                    $('#enrollStatus').text('Success!  Club enrollment was successfully updated.');
+                }
+                else {
+                    $('#enrollStatus').text(json);
+                }
+            }
+        });
+    });
+
+    saveBtn.appendTo(saveBtnCont);
+
+    mainGroup.appendTo(form);
+    form.show();
 }

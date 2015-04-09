@@ -4,6 +4,7 @@ using System;
 using System.Web.Script.Services;
 using System.Web.Security;
 using System.Web.Services;
+using System.Linq;
 
 namespace SMAC
 {
@@ -31,23 +32,57 @@ namespace SMAC
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string UpdateClubRoster(string clubId, string ids)
+        {
+            try
+            {
+                var schoolId = Session["SchoolId"].ToString();
+
+                var newEnrolls = ids.Split(new string[] {","}, StringSplitOptions.RemoveEmptyEntries);
+
+                var curEnrolls = ClubEnrollmentEntity.GetEnrollments(int.Parse(clubId));
+
+                foreach (var enroll in curEnrolls)
+                {
+                    ClubEnrollmentEntity.DeleteEnrollment(enroll.UserId, enroll.ClubId);
+                }
+
+                foreach (var user in newEnrolls)
+                {
+                    ClubEnrollmentEntity.CreateEnrollment(user.Split(':')[0], int.Parse(clubId), bool.Parse(user.Split(':')[1]));
+                }
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string FetchClubRoster(string id)
         {
             try
             {
                 var schoolId = Session["SchoolId"].ToString();
 
-                
+                var users = UserEntity.GetAllUsersInSchool(int.Parse(schoolId), string.Empty);
+
+                var enrolls = ClubEnrollmentEntity.GetEnrollments(int.Parse(id));
 
                 var rtnObj = new object[users.Count];
 
                 for (int i = 0; i < users.Count; ++i)
                 {
+                    var enroll = enrolls.Where(t=>t.UserId == users[i].UserId).FirstOrDefault();
                     var obj = new
                     {
+                        name = users[i].FirstName + " " + users[i].LastName,
                         id = users[i].UserId,
-                        fName = users[i].FirstName,
-                        lName = users[i].LastName
+                        enrolled = enroll != null  ? 1 : 0,
+                        leader = enroll != null && enroll.IsLeader ? 1 : 0
                     };
 
                     rtnObj[i] = obj;

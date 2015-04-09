@@ -23,7 +23,7 @@ namespace SMAC
 
                     foreach (var club in myClubs)
                     {
-                        myClubList += club.ClubName + ";";
+                        myClubList += club.ClubId + ";";
                     }
 
                     this.myClubNames.Value = myClubList.Substring(0, myClubList.LastIndexOf(";"));
