@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data.Entity;
 
 namespace SMAC.Database
 {
@@ -22,6 +23,21 @@ namespace SMAC.Database
 
                     context.TeacherSchedules.Add(sch);
                     context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static List<TeacherSchedule> GetTeacherSchedule(string teacherId, int periodId)
+        {
+            try
+            {
+                using (SmacEntities context = new SmacEntities())
+                {
+                    return (from a in context.TeacherSchedules where a.UserId == teacherId && a.MarkingPeriodId == periodId select a).Include(t=>t.Section.Class).ToList();
                 }
             }
             catch (Exception ex)

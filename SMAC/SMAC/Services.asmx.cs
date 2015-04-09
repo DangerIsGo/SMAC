@@ -30,6 +30,37 @@ namespace SMAC
             }
         }
 
+        [WebMethod(EnableSession=true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string PopulateTeachersClasses(string periodId)
+        {
+            try
+            {
+                var userId = Session["UserId"].ToString();
+
+                var schedules = TeacherScheduleEntity.GetTeacherSchedule(userId, int.Parse(periodId));
+
+                var rtnObj = new object[schedules.Count];
+
+                for (int i = 0; i < schedules.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        id = schedules[i].SectionId,
+                        name = schedules[i].Section.SectionName + " - " + schedules[i].Section.Class.ClassName
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
         #region Section Schedule
 
         [WebMethod]

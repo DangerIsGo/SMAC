@@ -7,7 +7,7 @@
             $('select').prop('selectedIndex', 0);
 
             $('#yearList').on('change', PopulateMarkingPeriods);
-            $('#periodList').on('change', EnableSearchButton);
+            $('#periodList').on('change', PopulateClasses);
 
             $('#periodList').append('<option value="-">-----------------------------</option>');
             $('#periodList').attr('disabled', 'disabled');
@@ -15,15 +15,57 @@
             $('#periodList').css('background-color', 'silver');
 
             $('#searchButton').on('click', DrawGradesTable);
-        });
 
-        function EnableSearchButton() {
-
-            if ($('#yearList option:selected').val() != '-' && $('#periodList option:selected').val() != '-') {
-                $('#searchButton').removeAttr('disabled');
+            if ($('#userRole').val() != 'teacher') {
+                $('#classCont').hide();
             }
             else {
-                $('#searchButton').attr('disabled', 'disabled');
+                $('#classList').append('<option value="-">-----------------------------</option>');
+                $('#classList').attr('disabled', 'disabled');
+                $('#classList').css('background-color', 'silver');
+            }
+        });
+
+        function PopulateClasses() {
+            if ($('#userRole').val() == 'teacher') {
+                $.ajax({
+                    type: "POST",
+                    url: "Services.asmx/PopulateTeachersClasses",
+                    data: "{'periodId':'" + $('#periodList option:checked').val() + "'}",
+                    contentType: "application/json; charset=UTF-8",
+                    success: function (data) {
+                        var res = JSON.parse(data.d);
+
+                        $.each(res, function (i, el) {
+                            $('#classList').append($('<option>').val(el.id).text(el.name));
+                        });
+
+                        $('#classList').removeAttr('disabled');
+                        $('#classList').css('background-color', 'white');
+                    }
+                });
+            }
+            else {
+                EnableSearchButton();
+            }
+        }
+
+        function EnableSearchButton() {
+            if ($('#userRole').val() != 'teacher') {
+                if ($('#yearList option:selected').val() != '-' && $('#periodList option:selected').val() != '-') {
+                    $('#searchButton').removeAttr('disabled');
+                }
+                else {
+                    $('#searchButton').attr('disabled', 'disabled');
+                }
+            }
+            else {
+                if ($('#yearList option:selected').val() != '-' && $('#periodList option:selected').val() != '-' && $('#classList option:selected').val() != '-') {
+                    $('#searchButton').removeAttr('disabled');
+                }
+                else {
+                    $('#searchButton').attr('disabled', 'disabled');
+                }
             }
         }
 
@@ -126,8 +168,13 @@
             <div class="gradeHeader" id="mpLbl">Select Marking Period:</div>
             <select id="periodList"></select>
         </div>
+        <div class="gradeSelect" id="classCont">
+            <div class="gradeHeader" id="classLbl">Select Class:</div>
+            <select id="classList"></select>
+        </div>
         <input type="button" id="searchButton" class="btn btn-primary searchButton" value="Search" />
         <span><asp:Image ImageUrl="~/Images/ajax-loader-white.gif" runat="server" ID="spinner" ClientIDMode="Static" /></span>
         <div><table id="gradeTable" class=""></table></div>
+        <asp:HiddenField ID="userRole" runat="server" ClientIDMode="Static" />
     </div>
 </asp:Content>

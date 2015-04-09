@@ -9,10 +9,13 @@ namespace SMAC
         protected void Page_Load(object sender, EventArgs e)
         {
             var schoolId = int.Parse(Request.Cookies["SmacCookie"]["SchoolId"]);
+            var userId = int.Parse(Request.Cookies["SmacCookie"]["UserId"]);
 
             if (!IsPostBack)
             {
                 var years = SchoolYearEntity.GetSchoolYears(schoolId);
+
+                this.userRole.Value = Database.Helpers.GetUserRole(userId.ToString()).ToString().ToLower();
 
                 this.yearList.Items.Add(new ListItem("-----------------------------", "-"));
 
