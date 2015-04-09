@@ -30,9 +30,36 @@ namespace SMAC
             }
         }
 
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string UpdateSectionRoster(string sectionId, string periodId, string addedIds, string removedIds)
+        {
+            try
+            {
+                var added = addedIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                var removed = removedIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var add in added)
+                {
+                    EnrollmentEntity.CreateEnrollment(add, int.Parse(periodId), int.Parse(sectionId));
+                }
+
+                foreach (var remove in removed)
+                {
+                    EnrollmentEntity.DeleteEnrollment(remove, int.Parse(periodId), int.Parse(sectionId));
+                }
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch
+            {
+                return JsonConvert.SerializeObject("An internal error has occurred.  Please try again later or contact an administrator.");
+            }
+        }
+
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public string FetchSectionRoster(string id)
+        public string FetchSectionRoster(string sectionId, string periodId)
         {
             try
             {
@@ -40,18 +67,18 @@ namespace SMAC
 
                 var users = StudentEntity.GetAllStudentsInSchool(int.Parse(schoolId));
 
-                //var enrolls = EnrollmentEntity.GetSectionRoster()
+                var enrolls = EnrollmentEntity.GetSectionRoster(int.Parse(sectionId), int.Parse(periodId));
 
                 var rtnObj = new object[users.Count];
 
                 for (int i = 0; i < users.Count; ++i)
                 {
-                    //var enroll = enrolls.Where(t=>t.UserId == users[i].UserId).FirstOrDefault();
+                    var enroll = enrolls.Where(t=>t.UserId == users[i].UserId).FirstOrDefault();
                     var obj = new
                     {
-                    //    name = users[i].FirstName + " " + users[i].LastName,
-                    //    id = users[i].UserId,
-                    //    enrolled = enroll != null  ? 1 : 0
+                        name = users[i].FirstName + " " + users[i].LastName,
+                        id = users[i].UserId,
+                        enrolled = enroll != null  ? 1 : 0
                     };
 
                     rtnObj[i] = obj;

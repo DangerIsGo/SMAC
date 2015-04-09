@@ -1,8 +1,8 @@
 ﻿var list;
-var subjects;
-var classes;
-var sections;
 var disposition;
+var addedUsers = new Array();
+var removedUsers = new Array();
+var origEnrolled = new Array();
 
 //Enables the Accept action button when item is selected
 function EnableActionButton() {
@@ -3672,35 +3672,121 @@ function PopulateClubRoster(roster) {
 
 function DrawSectionEnrollmentSelect() {
 
-    var form = $('#entityGroup');
+    var form = $('#entitySelectGroup');
     form.empty();
+
+    $('#entityGroup').empty();
 
     var mainGroup = $('<div>').addClass('form-group');
 
     var group1 = $('<div>').addClass('form-group');
     var group2 = $('<div>').addClass('form-group').attr('id', 'sectionGroup2');
     var group3 = $('<div>').addClass('form-group').attr('id', 'sectionGroup3');
+    var group4 = $('<div>').addClass('form-group').attr('id', 'sectionGroup4');
+    var group5 = $('<div>').addClass('form-group').attr('id', 'sectionGroup5');
 
     var clearer1 = $('<div>').addClass('clearer');
     var clearer2 = $('<div>').addClass('clearer');
     var clearer3 = $('<div>').addClass('clearer');
+    var clearer4 = $('<div>').addClass('clearer');
+    var clearer5 = $('<div>').addClass('clearer');
 
     mainGroup.append(group1);
     mainGroup.append(group2);
     mainGroup.append(group3);
+    mainGroup.append(group4);
+    mainGroup.append(group5);
 
     // Containers for controls
     var subjectCont = $('<div>').addClass('col-md-3');
     var classCont = $('<div>').addClass('col-md-3');
     var sectionCont = $('<div>').addClass('col-md-3');
+    var yearCont = $('<div>').addClass('col-md-3');
+    var periodCont = $('<div>').addClass('col-md-3');
 
     var subjectLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'subjectLabel').text('Select a Subject');
     var classLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'classLabel').text('Select a Class');
     var sectionLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'sectionLabel').text('Select a Section');
+    var yearLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'sectionLabel').text('Select a School Year');
+    var periodLabel = $('<label>').addClass('col-md-3 control-label admin').attr('id', 'sectionLabel').text('Select a Marking Period');
+
+    var yearList = $('<select>').addClass('form-control').attr('id', 'yearSelect').on('change', function () {
+
+        if ($('#yearSelect option:checked').val() != '-') {
+            $('#entityGroup').empty();
+            $('#sectionGroup2').hide();
+            $('#sectionGroup3').hide();
+            $('#sectionGroup4').hide();
+            $('#sectionGroup5').hide();
+
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchMarkingPeriodList",
+                data: "{'yearId':'" + $('#yearSelect option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var classes = JSON.parse(data.d);
+
+                    var sectionGroup2 = $('#sectionGroup2');
+
+                    periodList.empty();
+
+                    periodList.append($('<option>').val('-').text('-----------------------'));
+
+                    $.each(classes, function (i, el) {
+                        periodList.append($('<option>').val(el.id).text(el.name));
+                    });
+
+                    sectionGroup2.append(periodLabel);
+                    sectionGroup2.append(periodCont);
+                    sectionGroup2.append(clearer2);
+                    sectionGroup2.show();
+                }
+            });
+        }
+    });
+
+    var periodList = $('<select>').addClass('form-control').attr('id', 'periodSelect').on('change', function () {
+
+        if ($('#periodSelect option:checked').val() != '-') {
+            $('#entityGroup').empty();
+            $('#sectionGroup3').hide();
+            $('#sectionGroup4').hide();
+            $('#sectionGroup5').hide();
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchSubjectList",
+                data: "{'periodId':'" + $('#periodSelect option:checked').val() + "'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var classes = JSON.parse(data.d);
+
+                    var sectionGroup3 = $('#sectionGroup3');
+
+                    subjectList.empty();
+
+                    subjectList.append($('<option>').val('-').text('-----------------------'));
+
+                    $.each(classes, function (i, el) {
+                        subjectList.append($('<option>').val(el.id).text(el.name));
+                    });
+
+                    sectionGroup3.append(subjectLabel);
+                    sectionGroup3.append(subjectCont);
+                    sectionGroup3.append(clearer3);
+                    sectionGroup3.show();
+                }
+            });
+        }
+    });
 
     var subjectList = $('<select>').addClass('form-control').attr('id', 'subjectSelect').on('change', function () {
 
         if ($('#subjectSelect option:checked').val() != '-') {
+            $('#entityGroup').empty();
+            $('#sectionGroup4').hide();
+            $('#sectionGroup5').hide();
+
             $.ajax({
                 type: "POST",
                 url: "Services.asmx/FetchClassList",
@@ -3709,7 +3795,9 @@ function DrawSectionEnrollmentSelect() {
                 success: function (data) {
                     var classes = JSON.parse(data.d);
 
-                    var sectionGroup2 = $('#sectionGroup2');
+                    var sectionGroup4 = $('#sectionGroup4');
+
+                    classList.empty();
 
                     classList.append($('<option>').val('-').text('-----------------------'));
 
@@ -3717,9 +3805,10 @@ function DrawSectionEnrollmentSelect() {
                         classList.append($('<option>').val(el.id).text(el.name));
                     });
 
-                    sectionGroup2.append(classLabel);
-                    sectionGroup2.append(classCont);
-                    sectionGroup2.append(clearer2);
+                    sectionGroup4.append(classLabel);
+                    sectionGroup4.append(classCont);
+                    sectionGroup4.append(clearer4);
+                    sectionGroup4.show();
                 }
             });
         }
@@ -3728,6 +3817,8 @@ function DrawSectionEnrollmentSelect() {
     var classList = $('<select>').addClass('form-control').attr('id', 'classSelect').on('change', function () {
 
         if ($('#classSelect option:checked').val() != '-') {
+            $('#entityGroup').empty();
+            $('#sectionGroup5').hide();
             $.ajax({
                 type: "POST",
                 url: "Services.asmx/FetchSectionList",
@@ -3736,7 +3827,9 @@ function DrawSectionEnrollmentSelect() {
                 success: function (data) {
                     var sections = JSON.parse(data.d);
 
-                    var sectionGroup3 = $('#sectionGroup3');
+                    var sectionGroup5 = $('#sectionGroup5');
+
+                    sectionList.empty();
 
                     sectionList.append($('<option>').val('-').text('-----------------------'));
 
@@ -3744,20 +3837,24 @@ function DrawSectionEnrollmentSelect() {
                         sectionList.append($('<option>').val(el.id).text(el.name));
                     });
 
-                    sectionGroup3.append(sectionLabel);
-                    sectionGroup3.append(sectionCont);
+                    sectionGroup5.append(sectionLabel);
+                    sectionGroup5.append(sectionCont);
+
+                    $($('#populateSectionButton').parent()).remove();
 
                     var btnCont = $('<div>').addClass('col-md-1');
                     var btn = $('<input>').attr('type', 'button').attr('disabled', 'disabled').attr('id', 'populateSectionButton').attr('name', 'populateSectionButton').addClass('btn btn-primary').click(PopulateSectionRoster_Pre).val('OK');
                     btn.appendTo(btnCont);
-                    sectionGroup3.append(btnCont);
-                    sectionGroup3.append(clearer3);
+                    sectionGroup5.append(btnCont);
+                    sectionGroup5.append(clearer5);
+                    sectionGroup5.show();
                 }
             });
         }
     });
 
     var sectionList = $('<select>').addClass('form-control').attr('id', 'sectionSelect').on('change', function () {
+        console.log('foo')
         if ($('#sectionSelect option:checked').val() != '-') {
             $('#populateSectionButton').removeAttr('disabled');
         }
@@ -3766,26 +3863,28 @@ function DrawSectionEnrollmentSelect() {
         }
     });
 
-    subjectList.append($('<option>').val('-').text('-----------------------'));
+    yearList.append($('<option>').val('-').text('-----------------------'));
 
     subjectCont.append(subjectList);
     classCont.append(classList);
     sectionCont.append(sectionList);
+    yearCont.append(yearList);
+    periodCont.append(periodList);
 
     $.ajax({
         type: "POST",
-        url: "Services.asmx/FetchSubjectList",
+        url: "Services.asmx/FetchSchoolYearList",
         data: "{}",
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
             var subjects = JSON.parse(data.d);
 
             $.each(subjects, function (i, el) {
-                subjectList.append($('<option>').val(el.id).text(el.name));
+                yearList.append($('<option>').val(el.id).text(el.name));
             });
 
-            group1.append(subjectLabel);
-            group1.append(subjectCont);
+            group1.append(yearLabel);
+            group1.append(yearCont);
             group1.append(clearer1);
 
             mainGroup.appendTo(form);
@@ -3794,12 +3893,16 @@ function DrawSectionEnrollmentSelect() {
     });
 }
 
+function ApplySubjectChangeHandler(listbox) {
+
+}
+
 function PopulateSectionRoster_Pre() {
 
     $.ajax({
         type: "POST",
         url: "Services.asmx/FetchSectionRoster",
-        data: "{'id':'" + $('#sectionSelect option:checked').val() + "'}",
+        data: "{'sectionId':'" + $('#sectionSelect option:checked').val() + "', 'periodId':'" + $('#periodSelect option:checked').val() + "'}",
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
             var json = JSON.parse(data.d);
@@ -3850,12 +3953,28 @@ function PopulateSectionRoster(roster) {
         user.remove();
         $('#enroll').append(user);
         $('#enroll option:selected').removeAttr('selected');
+        if (origEnrolled[user.val()] == undefined) {
+            console.log('pushing ' + user.val() + ' to addedUsers');
+            addedUsers[user.val()] = 1;
+        }
+        else {
+            console.log('popping ' + user.val() + ' from removedUsers');
+            delete removedUsers[user.val()];
+        }
     });
     var delBtn = $('<input>').attr('type', 'button').addClass('btn btn-warning remove').val('Remove').click(function () {
         var user = $('#enroll option:selected');
         user.remove();
         $('#avail').append(user);
         $('#avail option:selected').removeAttr('selected');
+        if (origEnrolled[user.val()] != undefined) {
+            console.log('pushing ' + user.val() + ' to removedUsers');
+            removedUsers[user.val()] = 1;
+        }
+        else {
+            console.log('popping ' + user.val() + ' from addedUsers');
+            delete addedUsers[user.val()];
+        }
     });
 
     addBtn.appendTo(btnCont);
@@ -3865,6 +3984,7 @@ function PopulateSectionRoster(roster) {
     $.each(roster, function (i, el) {
         if (el.enrolled) {
             enroll.append($('<option>').val(el.id).text(el.name));
+            origEnrolled[el.id] = 1;
         }
         else {
             avail.append($('<option>').val(el.id).text(el.name));
@@ -3895,20 +4015,37 @@ function PopulateSectionRoster(roster) {
 
     var saveBtn = $('<input>').attr('type', 'button').addClass('btn btn-success wide').val('Save').click(function () {
 
-        var ids = '';
+        var addedIds = '';
+        var removedIds = '';
 
-        $.each($('#enroll option'), function (i, el) {
-            var option = $(el);
-            ids += option.val() + ',';
-        });
+        for (var key in addedUsers) {
+            addedIds += key + ',';
+        };
+
+        for (var key in removedUsers) {
+            removedIds += key + ',';
+        };
 
         $.ajax({
             type: "POST",
             url: "Services.asmx/UpdateSectionRoster",
-            data: "{'clubId':'" + $('#sectionSelect option:checked').val() + "', 'ids':'" + ids + "'}",
+            data: "{'sectionId':'" + $('#sectionSelect option:checked').val() + "', 'periodId':'" + $('#periodSelect option:checked').val() + "', 'addedIds':'" + addedIds + "', 'removedIds':'" + removedIds + "'}",
             contentType: "application/json; charset=UTF-8",
             success: function (data) {
                 var json = JSON.parse(data.d);
+
+                for (var key in addedUsers) {
+                    origEnrolled[key] = 1;
+                };
+
+                for (var key in removedUsers) {
+                    delete origEnrolled[key];
+                };
+
+                removedIds = '';
+                addedIds = '';
+                addedUsers = new Array();
+                removedUsers = new Array();
 
                 if (json == 'success') {
                     $('#enrollStatus').text('Success!  Section enrollment was successfully updated.');

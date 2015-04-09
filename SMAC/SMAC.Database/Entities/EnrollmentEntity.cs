@@ -7,29 +7,33 @@ namespace SMAC.Database
 {
     public class EnrollmentEntity
     {
-        //public static void CreateEnrollment(string studentId, int schoolId, string subjectId, int classId, 
-        //    int sectionId, int markingPeriodId)
-        //{
-        //    try
-        //    {
-        //        using (SmacEntities context = new SmacEntities())
-        //        {
-        //            var enroll = new Enrollment()
-        //            {
-        //                Student = StudentEntity.GetStudent(studentId),
-        //                MarkingPeriod = MarkingPeriodEntity.GetMarkingPeriod(schoolId, markingPeriodId),
-        //                Section = SectionEntity.GetSection(schoolId, subjectId, classId, sectionId)
-        //            };
+        public static void CreateEnrollment(string studentId, int periodId, int sectionId)
+        {
+            try
+            {
+                using (SmacEntities context = new SmacEntities())
+                {
+                    var curEnroll = (from a in context.Enrollments where a.UserId == studentId && a.MarkingPeriodId == periodId && a.SectionId == sectionId select a).FirstOrDefault();
+                    if (curEnroll != null)
+                    {
+                        throw new Exception("Enrollment already exists for " + curEnroll.Student.User.FirstName + " " + curEnroll.Student.User.LastName);
+                    }
+                    var enroll = new Enrollment()
+                    {
+                        Student = (from a in context.Students where a.UserId == studentId select a).FirstOrDefault(),
+                        MarkingPeriod = (from a in context.MarkingPeriods where a.MarkingPeriodId == periodId select a).FirstOrDefault(),
+                        Section = (from a in context.Sections where a.SectionId == sectionId select a).FirstOrDefault()
+                    };
 
-        //            context.Enrollments.Add(enroll);
-        //            context.SaveChanges();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+                    context.Enrollments.Add(enroll);
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public static Enrollment GetEnrollment(string sId, int schoolId, int subjectId, int classId, 
             int sectionId, int markingPeriodId)
@@ -44,14 +48,13 @@ namespace SMAC.Database
             }
         }
 
-        public static void DeleteEnrollment(string studentId, int schoolId, int subjectId, int classId,
-            int sectionId, int markingPeriodId)
+        public static void DeleteEnrollment(string studentId, int periodId, int sectionId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    var enroll = GetEnrollment(studentId, schoolId, subjectId, classId, sectionId, markingPeriodId);
+                    var enroll = (from a in context.Enrollments where a.UserId == studentId && a.MarkingPeriodId == periodId && a.SectionId == sectionId select a).FirstOrDefault();
 
                     if (enroll != null)
                     {
@@ -59,7 +62,7 @@ namespace SMAC.Database
                         context.SaveChanges();
                     }
                     else
-                        throw new Exception("Enrollment not found.  Grade not set.");
+                        throw new Exception("Enrollment not found.");
                 }
             }
             catch (Exception ex)
@@ -138,17 +141,14 @@ namespace SMAC.Database
             }
         }
 
-        public static List<Student> GetSectionRoster(int schoolId, int subjectId, int classId,
-            int sectionId, int markingPeriodId)
+        public static List<Student> GetSectionRoster(int sectionId, int periodId)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
                     return (from a in context.Enrollments
-                            where a.MarkingPeriodId == markingPeriodId
-                                && a.SchoolId == schoolId && a.SubjectId == subjectId && a.ClassId == classId
-                                && a.SectionId == sectionId
+                            where a.MarkingPeriodId == periodId && a.SectionId == sectionId
                             select a.Student).ToList();
                 }
             }

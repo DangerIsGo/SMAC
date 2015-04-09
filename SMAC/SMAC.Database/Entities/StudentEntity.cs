@@ -54,7 +54,7 @@ namespace SMAC.Database
         {
             using (SmacEntities context = new SmacEntities())
             {
-                return context.usp_GetUsersInSchool(schoolId, string.Empty).OrderBy(t => t.LastName).Where(t=>t.Student != null).ToList();
+                return context.usp_GetUsersInSchool(schoolId, string.Empty).OrderBy(t => t.LastName).Where(t=>t.Student == true).ToList();
             }
         }
 
