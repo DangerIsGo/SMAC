@@ -1,6 +1,9 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Grades.aspx.cs" Inherits="SMAC.Grades" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ScriptContent" runat="server">
     <script>
+
+        var gradeList = undefined;
+
         $(document).ready(function () {
             $('#spinner').hide();
 
@@ -8,23 +11,53 @@
 
             $('#yearList').on('change', PopulateMarkingPeriods);
             $('#periodList').on('change', PopulateClasses);
+            $('#classList').on('change', EnableSearchButton);
 
             $('#periodList').append('<option value="-">-----------------------------</option>');
             $('#periodList').attr('disabled', 'disabled');
             $('#searchButton').attr('disabled', 'disabled');
             $('#periodList').css('background-color', 'silver');
 
-            $('#searchButton').on('click', DrawGradesTable);
+            $('#submitGrades').hide().click(SubmitGrades);
 
             if ($('#userRole').val() != 'teacher') {
                 $('#classCont').hide();
+                $('#searchButton').on('click', DrawGradesTable);
+                $('#gradeStatus').hide();
             }
             else {
                 $('#classList').append('<option value="-">-----------------------------</option>');
                 $('#classList').attr('disabled', 'disabled');
                 $('#classList').css('background-color', 'silver');
+                $('#searchButton').on('click', DrawSetGradesTable);
             }
         });
+
+        function SubmitGrades() {
+            var rows = $('#gradeTable tbody tr:not(.gradeTableHeader)');
+            var grades = '';
+
+            $.each(rows, function (i, el) {
+                grades += $(el).data('id') + ':' + $(el).find('select option:checked').val() + ','
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/UpdateTeacherGrades",
+                data: "{'periodId':'" + $('#periodList option:checked').val() + "', 'sectionId':'" + $('#classList option:checked').val() + "', 'grades':'"+grades+"'}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    var json = JSON.parse(data.d);
+                    
+                    if (json == 'success') {
+                        $('#gradeStatus').text('Success!  Grades have been successfully updated.');
+                    }
+                    else {
+                        $('#gradeStatus').text(json);
+                    }
+                }
+            });
+        }
 
         function PopulateClasses() {
             if ($('#userRole').val() == 'teacher') {
@@ -103,6 +136,69 @@
             });
         }
 
+        function DrawSetGradesTable() {
+            var mp = $('#periodList option:selected').val();
+            var sId = $('#classList option:selected').val();
+
+            $.ajax({
+                type: "POST",
+                url: "Services.asmx/FetchGradeList",
+                data: "{}",
+                contentType: "application/json; charset=UTF-8",
+                success: function (data) {
+                    gradeList = JSON.parse(data.d);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "Services.asmx/FillTeacherGradeTable",
+                        data: "{'periodId':'" + mp + "', 'sectionId':'" + sId + "'}",
+                        contentType: "application/json; charset=UTF-8",
+                        success: function (data) {
+                            //Populate news info in block
+                            var result = JSON.parse(data.d);
+
+                            var table = $('#gradeTable');
+
+                            if (result == '') {
+                                table.append($('<tr>').append($('<td>').text('There are no students enrolled in this class.')));
+                                table.removeClass('enroll');
+                            }
+                            else {
+                                table.addClass('enroll');
+                                var headerRow = $('<tr>').addClass('gradeTableHeader')
+                                        .append($('<th>').addClass('teacher').text('Student'))
+                                        .append($('<th>').addClass('teacher').text('Grade'));
+
+                                table.append(headerRow);
+
+                                $.each(result, function (i, el) {
+                                    var row = $('<tr>').addClass('gradeTableRow').attr('data-id', el.id);
+                                    var name = $('<td>').text(el.name);
+
+                                    var gradeSel = $('<select>').addClass('form-control').append($('<option>').val('-').text('---'));
+
+                                    $.each(gradeList, function (i, elm) {
+                                        gradeSel.append($('<option>').val(elm.grade).text(elm.grade));
+                                    });
+
+                                    gradeSel.val(el.grade)
+
+                                    var grade = $('<td>').append(gradeSel);
+                                    row.append(name).append(grade);
+
+                                    table.append(row);
+                                });
+                            }
+
+                            $('#gradeTable').show();
+                            $('#submitGrades').show();
+                            $('#gradeStatus').show();
+                        }
+                    });
+                }
+            });
+        }
+
         function DrawGradesTable() {
             var sy = $('#yearList option:selected').val();
             var mp = $('#periodList option:selected').val();
@@ -175,6 +271,8 @@
         <input type="button" id="searchButton" class="btn btn-primary searchButton" value="Search" />
         <span><asp:Image ImageUrl="~/Images/ajax-loader-white.gif" runat="server" ID="spinner" ClientIDMode="Static" /></span>
         <div><table id="gradeTable" class=""></table></div>
+        <div class="form-group col-md-8" style="text-align: right; margin-top: 10px;"><input type="button" id="submitGrades" class="btn btn-success searchButton" value="Submit" /></div>
+        <div class="form-group col-md-12"><label class="control-label admin" id="gradeStatus"></label></div>
         <asp:HiddenField ID="userRole" runat="server" ClientIDMode="Static" />
     </div>
 </asp:Content>

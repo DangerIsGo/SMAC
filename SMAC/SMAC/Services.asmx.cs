@@ -30,6 +30,60 @@ namespace SMAC
             }
         }
 
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string UpdateTeacherGrades(string periodId, string sectionId, string grades)
+        {
+            try
+            {
+                var userId = Session["UserId"].ToString();
+                var userGradePair = grades.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach(var pair in userGradePair)
+                {
+                    EnrollmentEntity.SetGrade(pair.Split(':')[0], int.Parse(sectionId), int.Parse(periodId), pair.Split(':')[1] == "-" ? null : pair.Split(':')[1]);
+                }                
+
+                return JsonConvert.SerializeObject("success");
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string FillTeacherGradeTable(string periodId, string sectionId)
+        {
+            try
+            {
+                var userId = Session["UserId"].ToString();
+
+                var students = EnrollmentEntity.GetSectionRoster(int.Parse(sectionId), int.Parse(periodId));
+
+                var rtnObj = new object[students.Count];
+
+                for (int i = 0; i < students.Count; ++i)
+                {
+                    var obj = new
+                    {
+                        id = students[i].UserId,
+                        name = students[i].Student.User.FirstName + " " + students[i].Student.User.LastName,
+                        grade = students[i].GradeValue
+                    };
+
+                    rtnObj[i] = obj;
+                }
+
+                return JsonConvert.SerializeObject(rtnObj);
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(ex.Message);
+            }
+        }
+
         [WebMethod(EnableSession=true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string PopulateTeachersClasses(string periodId)

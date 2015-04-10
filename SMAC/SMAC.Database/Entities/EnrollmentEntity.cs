@@ -71,14 +71,13 @@ namespace SMAC.Database
             }
         }
 
-        public static void SetGrade(string studentId, int schoolId, int subjectId, int classId,
-            int sectionId, int markingPeriodId, string grade)
+        public static void SetGrade(string studentId, int sectionId, int markingPeriodId, string grade)
         {
             try
             {
                 using (SmacEntities context = new SmacEntities())
                 {
-                    var enroll = GetEnrollment(studentId, schoolId, subjectId, classId, sectionId, markingPeriodId);
+                    var enroll = (from a in context.Enrollments where a.UserId == studentId && a.SectionId == sectionId && a.MarkingPeriodId == markingPeriodId select a).FirstOrDefault();
 
                     if (enroll != null)
                     {
@@ -141,7 +140,7 @@ namespace SMAC.Database
             }
         }
 
-        public static List<Student> GetSectionRoster(int sectionId, int periodId)
+        public static List<Enrollment> GetSectionRoster(int sectionId, int periodId)
         {
             try
             {
@@ -149,7 +148,7 @@ namespace SMAC.Database
                 {
                     return (from a in context.Enrollments
                             where a.MarkingPeriodId == periodId && a.SectionId == sectionId
-                            select a.Student).ToList();
+                            select a).Include(t=>t.Student.User).ToList();
                 }
             }
             catch (Exception ex)
