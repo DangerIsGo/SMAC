@@ -46,6 +46,10 @@
             var secId = getParameterByName('secId');
             var content = $('#replyInput').val();
 
+            console.log(threadId);
+            console.log(secId);
+            console.log(content);
+
             $.ajax({
                 type: "POST",
                 url: "Services.asmx/PostNewThreadReply",

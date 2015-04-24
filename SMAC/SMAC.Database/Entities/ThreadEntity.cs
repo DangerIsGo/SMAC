@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 
 namespace SMAC.Database
 {
@@ -16,12 +17,12 @@ namespace SMAC.Database
                 {
                     var thread = new Thread()
                     {
-                        Section = SectionEntity.GetSection(sectionId, context),
+                        Section = (from a in context.Sections where a.SectionId == sectionId select a).FirstOrDefault(),
                         RepliedTo = repliedTo,
                         DateTimePosted = DateTime.Now,
                         Content = content,
                         ThreadTitle = title,
-                        User = UserEntity.GetUser(userId, context)
+                        User = (from a in context.Users where a.UserId == userId select a).FirstOrDefault()
                     };
 
                     context.Threads.Add(thread);
